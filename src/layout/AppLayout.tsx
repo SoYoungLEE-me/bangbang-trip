@@ -1,10 +1,13 @@
+import { Box } from "@mui/material";
 import { Outlet } from "react-router-dom";
+import NavBar from "./components/NavBar";
 
 const AppLayout = () => {
   return (
-    <div>
+    <Box>
+      <NavBar />
       <Outlet />
-    </div>
+    </Box>
   );
 };
 

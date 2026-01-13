@@ -26,7 +26,7 @@ const theme = createTheme({
     },
   },
   typography: {
-    fontFamily: "Roboto, Arial, sans-serif",
+    fontFamily: '"Paperozi", system-ui, -apple-system, BlinkMacSystemFont',
     h1: {
       fontWeight: 700,
       fontSize: "24px",

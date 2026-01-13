@@ -3,12 +3,21 @@
   padding: 0;
   box-sizing: border-box;
   font-family: "Paperozi";
+  background-color: "#f9f9f9ff";
 }
 
 html,
 body,
 #root {
   height: 100%;
+}
+
+@font-face {
+  font-family: "KnpsOdaesan";
+  src: url("https://cdn.jsdelivr.net/gh/projectnoonnu/2510-2@1.0/KNPSOdaesan-Regular.woff2")
+    format("woff2");
+  font-weight: normal;
+  font-display: swap;
 }
 
 @font-face {

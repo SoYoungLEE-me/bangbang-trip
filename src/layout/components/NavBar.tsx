@@ -1,102 +1,157 @@
-import { Box, AppBar, Toolbar, Typography, Button, useTheme } from "@mui/material";
-import { useNavigate } from "react-router-dom";
-import { Home, MapPin, User, Sparkles } from "lucide-react";
+import { alpha, Box, IconButton, Link } from "@mui/material";
+import theme from "../../theme";
+import { LogIn, User } from "lucide-react";
+import { NavLink, useNavigate } from "react-router-dom";
 
 const NavBar = () => {
   const navigate = useNavigate();
-  const theme = useTheme();
 
   return (
-    <AppBar
-      position="sticky"
+    <Box
       sx={{
-        backgroundColor: theme.palette.background.paper,
-        color: theme.palette.text.primary,
-        boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
+        width: "100%",
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        position: "fixed",
+        padding: "0.625rem 1rem",
+        backdropFilter: "blur(3px)",
+        backgroundColor: `${alpha(theme.palette.background.default, 0.2)}`,
+        boxShadow: `0 0.1rem 0.5rem ${alpha(
+          theme.palette.text.secondary,
+          0.2
+        )}`,
       }}
     >
-      <Toolbar sx={{ justifyContent: "space-between", px: { xs: 2, md: 4 } }}>
-        <Box
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          gap: "2rem",
+        }}
+      >
+        <Link
+          component={NavLink}
+          to="/"
           sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 1,
-            cursor: "pointer",
-            transition: "opacity 0.3s ease-in-out",
-            "&:hover": {
-              opacity: 0.8,
+            color: "text.primary",
+            fontFamily: "KnpsOdaesan",
+            fontWeight: "900",
+            textDecoration: "none",
+            fontSize: {
+              lg: "2rem",
+              md: "1.875rem",
+              sm: "1.875rem",
+              xs: "1.625rem",
             },
           }}
-          onClick={() => navigate("/")}
         >
-          <MapPin size={24} color={theme.palette.primary.main} />
-          <Typography
-            variant="h1"
-            sx={{
-              fontWeight: 700,
-              fontSize: { xs: "20px", md: "24px" },
-              color: theme.palette.primary.main,
-            }}
-          >
-            전국: 방방곡곡
-          </Typography>
-        </Box>
+          전국: 방방곡곡
+        </Link>
 
-        <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
-          <Button
-            color="inherit"
-            onClick={() => navigate("/spots")}
+        <ul
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            gap: "1.875rem",
+            listStyle: "none",
+            padding: 0,
+            margin: 0,
+          }}
+        >
+          <Link
+            component={NavLink}
+            to="/"
             sx={{
-              display: { xs: "none", md: "flex" },
-              gap: 0.5,
+              fontSize: { lg: "1rem", md: "0.875rem" },
+              fontWeight: "500",
+              textDecoration: "none",
+              color: "inherit",
+              transition: "all 0.2s ease",
               "&:hover": {
-                backgroundColor: theme.palette.action.hover,
+                color: "action.hover",
               },
-              "&:active": {
-                backgroundColor: theme.palette.action.active,
+              "&.active": {
+                color: "action.active",
               },
             }}
           >
-            <MapPin size={18} />
-            관광지
-          </Button>
-          <Button
-            color="inherit"
-            onClick={() => navigate("/ai-planner")}
+            홈
+          </Link>
+          <Link
+            component={NavLink}
+            to="/spots"
             sx={{
-              display: { xs: "none", md: "flex" },
-              gap: 0.5,
+              fontSize: { lg: "1rem", md: "0.875rem" },
+              fontWeight: "500",
+              textDecoration: "none",
+              color: "inherit",
+              transition: "all 0.2s ease",
               "&:hover": {
-                backgroundColor: theme.palette.action.hover,
+                color: "action.hover",
               },
-              "&:active": {
-                backgroundColor: theme.palette.action.active,
+              "&.active": {
+                color: "action.active",
               },
             }}
           >
-            <Sparkles size={18} />
+            탐색
+          </Link>
+          <Link
+            component={NavLink}
+            to="/ai-planner"
+            sx={{
+              fontSize: { lg: "1rem", md: "0.875rem" },
+              fontWeight: "500",
+              textDecoration: "none",
+              color: "inherit",
+              transition: "all 0.2s ease",
+              "&:hover": {
+                color: "action.hover",
+              },
+              "&.active": {
+                color: "action.active",
+              },
+            }}
+          >
             AI 플래너
-          </Button>
-          <Button
-            color="inherit"
-            onClick={() => navigate("/my")}
-            sx={{
-              display: "flex",
-              gap: 0.5,
-              "&:hover": {
-                backgroundColor: theme.palette.action.hover,
-              },
-              "&:active": {
-                backgroundColor: theme.palette.action.active,
-              },
-            }}
-          >
-            <User size={18} />
-            마이페이지
-          </Button>
-        </Box>
-      </Toolbar>
-    </AppBar>
+          </Link>
+        </ul>
+      </Box>
+      <Box
+        sx={{ display: "flex", justifyContent: "center", alignItems: "center" }}
+      >
+        <IconButton
+          onClick={() => navigate("/login")}
+          sx={{
+            width: "2rem",
+            color: "text.primary",
+            "&:hover": {
+              color: "action.hover",
+            },
+          }}
+        >
+          <LogIn size={16} />
+        </IconButton>
+        {/* <IconButton
+          sx={{
+            width: "2rem",
+            backgroundColor: theme.palette.primary.main,
+            color: theme.palette.background.paper,
+            borderRadius: "0.875rem",
+            transition: "all 0.3s ease",
+            "&:hover": {
+              backgroundColor: theme.palette.primary.main,
+              color: theme.palette.background.default,
+            },
+          }}
+        >
+          <User size={16} />
+        </IconButton> */}
+      </Box>
+    </Box>
   );
 };
 

@@ -21,12 +21,12 @@ const theme = createTheme({
       secondary: "#434343ff",
     },
     action: {
-      hover: "#F9E685",
-      active: "#f7dc79ff",
+      hover: "#dab80eff",
+      active: "#f2cb0bff",
     },
   },
   typography: {
-    fontFamily: "Roboto, Arial, sans-serif",
+    fontFamily: "Paperozi, Arial, sans-serif",
     h1: {
       fontWeight: 700,
       fontSize: "24px",

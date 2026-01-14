@@ -1,18 +1,30 @@
-import { Box, Button, Card, CardActions, CardContent, CardMedia, IconButton, Typography } from "@mui/material";
+import { Box, Card, CardContent, CardMedia, IconButton, Typography } from "@mui/material";
 import type { SpotItem } from "../../../models/spot";
 import NoImage from "./NoImage";
 import { Heart } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 interface SpotCardProps {
   spot: SpotItem;
 }
 
 const SpotCard = ({ spot }: SpotCardProps) => {
+  const navigate = useNavigate();
+
+  const handleNavigateToDetail = () => {
+    navigate(`/spots/${spot.contentid}`);
+  };
+
+  const handleToggleFavorite = (e: React.MouseEvent) => {
+    e.stopPropagation();
+  };
+
   return (
     <Card
       sx={{
         width: "100%",
         position: "relative",
+        cursor: "pointer",
         "&:hover": {
           ".MuiCardMedia-img": {
             transform: "scale(1.2)",
@@ -22,12 +34,11 @@ const SpotCard = ({ spot }: SpotCardProps) => {
           },
         },
       }}
+      onClick={handleNavigateToDetail}
     >
       <IconButton
         aria-label=""
         sx={(theme) => ({
-          width: "36px",
-          height: "36px",
           position: "absolute",
           top: "8px",
           right: "8px",
@@ -38,8 +49,9 @@ const SpotCard = ({ spot }: SpotCardProps) => {
             background: "rgba(255,255,255,1)",
           },
         })}
+        onClick={handleToggleFavorite}
       >
-        <Heart />
+        <Heart size={20} />
       </IconButton>
       {spot.firstimage ? (
         <Box sx={{ overflow: "hidden" }}>
@@ -71,11 +83,6 @@ const SpotCard = ({ spot }: SpotCardProps) => {
           {spot.addr1} {spot.addr2 && spot.addr2}
         </Typography>
       </CardContent>
-      <CardActions>
-        <Button size="small" sx={{ marginLeft: "auto" }}>
-          상세 보기
-        </Button>
-      </CardActions>
     </Card>
   );
 };

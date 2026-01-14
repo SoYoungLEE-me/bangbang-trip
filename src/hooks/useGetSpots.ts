@@ -1,6 +1,6 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
 import { getReginalSpots } from "../apis/spotApi";
-import type { SpotResponse } from "../models/spot";
+import type { SpotApiResponse } from "../models/spot";
 
 const useGetSpots = () => {
   const queryInfo = useInfiniteQuery({
@@ -20,10 +20,11 @@ const useGetSpots = () => {
 
       return isLastPage ? undefined : pageNo + 1;
     },
+    staleTime: 1000 * 60 * 60,
   });
 
   const flatData =
-    queryInfo.data?.pages.flatMap((page: SpotResponse) => {
+    queryInfo.data?.pages.flatMap((page: SpotApiResponse) => {
       const items = page.response?.body?.items;
 
       if (!items || !("item" in items) || !items.item) {

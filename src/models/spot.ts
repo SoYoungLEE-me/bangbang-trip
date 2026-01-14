@@ -1,4 +1,4 @@
-export interface SpotResponse {
+export interface SpotApiResponse {
   response: {
     body: {
       items: { item: SpotItem[] } | Record<string, never>;

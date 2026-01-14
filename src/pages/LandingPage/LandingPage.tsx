@@ -13,7 +13,12 @@ import {
   Button,
   useTheme,
 } from "@mui/material";
-import { Heart, ChevronLeft, ChevronRight, ChevronRightIcon } from "lucide-react";
+import {
+  Heart,
+  ChevronLeft,
+  ChevronRight,
+  ChevronRightIcon,
+} from "lucide-react";
 import { usePopularSpots, useNearbyCourses } from "../../hooks/useTourSpots";
 import { useNavigate } from "react-router-dom";
 import TourCourseCard from "../../layout/components/TourCourseCard";
@@ -38,23 +43,17 @@ const LandingPage = () => {
   } = useNearbyCourses();
 
   const handlePrevSlide = () => {
-    setCurrentSlide((prev) =>
-      prev === 0 ? SLIDE_COUNT - 1 : prev - 1
-    );
+    setCurrentSlide((prev) => (prev === 0 ? SLIDE_COUNT - 1 : prev - 1));
   };
 
   const handleNextSlide = () => {
-    setCurrentSlide((prev) =>
-      prev === SLIDE_COUNT - 1 ? 0 : prev + 1
-    );
+    setCurrentSlide((prev) => (prev === SLIDE_COUNT - 1 ? 0 : prev + 1));
   };
 
-   // 4초마다 자동으로 슬라이드 넘기기
+  // 4초마다 자동으로 슬라이드 넘기기
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prev) =>
-        prev === SLIDE_COUNT - 1 ? 0 : prev + 1
-      );
+      setCurrentSlide((prev) => (prev === SLIDE_COUNT - 1 ? 0 : prev + 1));
     }, 4000);
 
     // 컴포넌트 언마운트 시 interval 정리
@@ -123,7 +122,7 @@ const LandingPage = () => {
               justifyContent: "center",
             }}
           >
-           {/* 슬라이드 이미지에 그라데이션 */}
+            {/* 슬라이드 이미지에 그라데이션 */}
             {popularSpots.slice(0, SLIDE_COUNT).map((spot, index) => (
               <Box
                 key={spot.contentid}
@@ -146,16 +145,17 @@ const LandingPage = () => {
                     backgroundColor: "rgba(0,0,0,0.4)",
                   },
                   // 슬라이드 아래에서 위로 밝아지는 그라데이션
-                  "&::after":  {
+                  "&::after": {
                     content: '""',
                     position: "absolute",
                     top: 0,
                     left: 0,
                     right: 0,
                     bottom: 0,
-                    background: "linear-gradient(180deg, rgba(0, 0, 0, 0) 20.32%, rgba(0, 0, 0, 0.00735012) 26.35%, rgba(0, 0, 0, 0.0301835) 32.38%, rgba(0, 0, 0, 0.0694109) 38.41%, rgba(0, 0, 0, 0.1253) 44.44%, rgba(0, 0, 0, 0.197009) 50.46%, rgba(0, 0, 0, 0.282101) 56.49%, rgba(0, 0, 0, 0.376288) 62.52%, rgba(0, 0, 0, 0.473712) 68.55%, rgba(0, 0, 0, 0.567899) 74.58%, rgba(0, 0, 0, 0.652991) 80.61%, rgba(0, 0, 0, 0.7247) 86.64%, rgba(0, 0, 0, 0.780589) 92.67%, rgba(0, 0, 0, 0.819817) 98.7%, rgba(0, 0, 0, 0.84265) 104.73%, rgba(0, 0, 0, 0.85) 110.76%);",
+                    background:
+                      "linear-gradient(180deg, rgba(0, 0, 0, 0) 20.32%, rgba(0, 0, 0, 0.00735012) 26.35%, rgba(0, 0, 0, 0.0301835) 32.38%, rgba(0, 0, 0, 0.0694109) 38.41%, rgba(0, 0, 0, 0.1253) 44.44%, rgba(0, 0, 0, 0.197009) 50.46%, rgba(0, 0, 0, 0.282101) 56.49%, rgba(0, 0, 0, 0.376288) 62.52%, rgba(0, 0, 0, 0.473712) 68.55%, rgba(0, 0, 0, 0.567899) 74.58%, rgba(0, 0, 0, 0.652991) 80.61%, rgba(0, 0, 0, 0.7247) 86.64%, rgba(0, 0, 0, 0.780589) 92.67%, rgba(0, 0, 0, 0.819817) 98.7%, rgba(0, 0, 0, 0.84265) 104.73%, rgba(0, 0, 0, 0.85) 110.76%);",
                     pointerEvents: "none",
-                  }, 
+                  },
                 }}
               >
                 <Box
@@ -197,7 +197,7 @@ const LandingPage = () => {
                       mb: { xs: 1, md: 1 },
                       display: "flex",
                       alignItems: "center",
-                      margin: 'auto',
+                      margin: "auto",
                       gap: 1,
                       "&:hover": {
                         backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -268,7 +268,9 @@ const LandingPage = () => {
                       height: 8,
                       borderRadius: 4,
                       backgroundColor:
-                        currentSlide === index ? "white" : "rgba(255,255,255,0.5)",
+                        currentSlide === index
+                          ? "white"
+                          : "rgba(255,255,255,0.5)",
                       cursor: "pointer",
                       transition: "all 0.3s ease",
                     }}
@@ -296,7 +298,7 @@ const LandingPage = () => {
           </Typography>
           <Grid container spacing={3}>
             {nearbyCourses.map((course) => (
-              <Grid size={{xs:12, sm:6, md:3}} key={course.contentid}>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }} key={course.contentid}>
                 <TourCourseCard
                   course={course}
                   isSaved={savedCourses.has(course.contentid)}
@@ -340,11 +342,10 @@ const LandingPage = () => {
               mx: "auto",
             }}
           >
-            한국관광공사 Tour API와 AI를 활용한 국내 여행 정보 조회 및 여행
-            일정 생성 서비스입니다. 전국 방방곡곡의 아름다운 관광지를 탐험하고,
-            AI 플래너를 통해 나만의 맞춤형 여행 코스를 만들어보세요. 다양한
-            관광지 정보를 확인하고, 원하는 코스를 저장하여 나중에 다시 볼 수
-            있습니다.
+            한국관광공사 Tour API와 AI를 활용한 국내 여행 정보 조회 및 여행 일정
+            생성 서비스입니다. 전국 방방곡곡의 아름다운 관광지를 탐험하고, AI
+            플래너를 통해 나만의 맞춤형 여행 코스를 만들어보세요. 다양한 관광지
+            정보를 확인하고, 원하는 코스를 저장하여 나중에 다시 볼 수 있습니다.
           </Typography>
         </Box>
       </Container>

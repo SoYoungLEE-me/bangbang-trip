@@ -1,4 +1,11 @@
-import { Card, CardMedia, CardContent, IconButton, Typography, useTheme } from "@mui/material";
+import {
+  Card,
+  CardMedia,
+  CardContent,
+  IconButton,
+  Typography,
+  useTheme,
+} from "@mui/material";
 import { Heart } from "lucide-react";
 import type { TourSpot } from "../../models/tour";
 
@@ -46,7 +53,9 @@ const TourCourseCard = ({ course, isSaved, onSave }: TourCourseCardProps) => {
         <Heart
           size={20}
           fill={isSaved ? theme.palette.error.main : "none"}
-          color={isSaved ? theme.palette.error.main : theme.palette.text.secondary}
+          color={
+            isSaved ? theme.palette.error.main : theme.palette.text.secondary
+          }
         />
       </IconButton>
       <CardContent>

@@ -20,7 +20,7 @@ const RegisterPage = () => {
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   //에러 제어
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
@@ -121,6 +121,7 @@ const RegisterPage = () => {
         justifyContent: "center",
         alignItems: "center",
       }}
+      mt={5}
     >
       <Box sx={{ width: 380, px: 2 }}>
         <Typography variant="h1" textAlign="center" mb={5}>
@@ -200,7 +201,7 @@ const RegisterPage = () => {
         <TextField
           fullWidth
           label="비밀번호 확인 *"
-          type={showPassword ? "text" : "password"}
+          type={showConfirmPassword ? "text" : "password"}
           margin="normal"
           value={confirmPassword}
           error={!!confirmPasswordError}
@@ -220,11 +221,15 @@ const RegisterPage = () => {
             endAdornment: (
               <InputAdornment position="end">
                 <IconButton
-                  onClick={() => setShowPassword((prev) => !prev)}
+                  onClick={() => setShowConfirmPassword((prev) => !prev)}
                   edge="end"
                   sx={{ color: "grey.500" }}
                 >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  {showConfirmPassword ? (
+                    <EyeOff size={20} />
+                  ) : (
+                    <Eye size={20} />
+                  )}
                 </IconButton>
               </InputAdornment>
             ),
@@ -244,6 +249,27 @@ const RegisterPage = () => {
         >
           회원가입
         </Button>
+        <Box
+          sx={{
+            mt: 3,
+            display: "flex",
+            justifyContent: "center",
+            gap: 1,
+          }}
+        >
+          <Typography variant="body2">이미 계정이 있나요?</Typography>
+          <Typography
+            variant="body2"
+            sx={{
+              cursor: "pointer",
+              fontWeight: 600,
+              textDecoration: "underline",
+            }}
+            onClick={() => navigate("/login")}
+          >
+            로그인
+          </Typography>
+        </Box>
       </Box>
       <AppAlert
         open={alertOpen}
@@ -251,7 +277,7 @@ const RegisterPage = () => {
         severity="success"
         onClose={() => {
           setAlertOpen(false);
-          navigate("/login");
+          navigate("/");
         }}
       />
     </Box>
@@ -261,3 +287,5 @@ const RegisterPage = () => {
 export default RegisterPage;
 
 //이메일 중복 검사 (O)
+//로그인 페이지로 이동하는 링크 추가 (O)
+//비밀번호 확인 아이콘 따로 움직이게 (O)

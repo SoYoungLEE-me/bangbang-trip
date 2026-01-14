@@ -8,7 +8,7 @@ interface SpotFilterBarProps {
 
 const SpotFilterBar = ({ isFilterActive, setIsFilterActive }: SpotFilterBarProps) => {
   const handleFilterClick = () => {
-    setIsFilterActive((prevIsFilterActive) => !prevIsFilterActive);
+    setIsFilterActive(!isFilterActive);
   };
 
   return (
@@ -26,9 +26,9 @@ const SpotFilterBar = ({ isFilterActive, setIsFilterActive }: SpotFilterBarProps
           sx={(theme) => ({
             display: "flex",
             alignItems: "center",
-            gap: "16px",
-            border: `2px solid ${theme.palette.text.secondary}`,
-            padding: "0 16px",
+            gap: "8px",
+            border: `1px solid ${theme.palette.text.secondary}`,
+            padding: "0 12px",
             borderRadius: "50px",
             flex: "1",
             "& svg": {
@@ -49,7 +49,7 @@ const SpotFilterBar = ({ isFilterActive, setIsFilterActive }: SpotFilterBarProps
             },
           })}
         >
-          <Search />
+          <Search size={20} />
           <TextField
             placeholder=""
             sx={{
@@ -66,7 +66,7 @@ const SpotFilterBar = ({ isFilterActive, setIsFilterActive }: SpotFilterBarProps
                   border: "none",
                 },
                 "& input": {
-                  padding: "12px 0",
+                  padding: "8px 0",
                 },
               },
             }}
@@ -74,18 +74,20 @@ const SpotFilterBar = ({ isFilterActive, setIsFilterActive }: SpotFilterBarProps
         </Box>
         <IconButton
           sx={(theme) => ({
-            border: `2px solid ${isFilterActive ? theme.palette.action.active : theme.palette.text.secondary}`,
+            border: `1px solid ${isFilterActive ? theme.palette.action.active : theme.palette.text.secondary}`,
             borderRadius: "4px",
             color: isFilterActive ? theme.palette.action.active : theme.palette.text.secondary,
-            "&:hover": {
-              borderColor: theme.palette.action.hover,
-              color: theme.palette.action.hover,
-              transition: "all 0.3s",
+            "@media (hover: hover)": {
+              "&:hover": {
+                borderColor: theme.palette.action.hover,
+                color: theme.palette.action.hover,
+                transition: "all 0.3s",
+              },
             },
           })}
           onClick={handleFilterClick}
         >
-          <SlidersHorizontal />
+          <SlidersHorizontal size={20} />
         </IconButton>
       </Box>
     </Box>

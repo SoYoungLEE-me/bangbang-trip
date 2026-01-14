@@ -6,9 +6,10 @@ import { useNavigate } from "react-router-dom";
 
 interface SpotCardProps {
   spot: SpotItem;
+  contentTypeId: string;
 }
 
-const SpotCard = ({ spot }: SpotCardProps) => {
+const SpotCard = ({ spot, contentTypeId }: SpotCardProps) => {
   const navigate = useNavigate();
 
   const handleNavigateToDetail = () => {
@@ -17,6 +18,15 @@ const SpotCard = ({ spot }: SpotCardProps) => {
 
   const handleToggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
+  };
+
+  const formatAddress = (addr: string): string => {
+    if (!addr) {
+      return "";
+    }
+
+    const addrArray = addr.split(" ");
+    return addrArray.length > 1 ? `${addrArray[0]} ${addrArray[1]}` : addrArray[0];
   };
 
   return (
@@ -75,13 +85,15 @@ const SpotCard = ({ spot }: SpotCardProps) => {
         >
           {spot.title}
         </Typography>
-        <Typography
-          variant="body1"
-          color="text.secondary"
-          sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
-        >
-          {spot.addr1} {spot.addr2 && spot.addr2}
-        </Typography>
+        {contentTypeId === "12" && (
+          <Typography
+            variant="body1"
+            color="text.secondary"
+            sx={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+          >
+            {formatAddress(spot.addr1)}
+          </Typography>
+        )}
       </CardContent>
     </Card>
   );

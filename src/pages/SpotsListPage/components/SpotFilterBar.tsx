@@ -19,7 +19,6 @@ const SpotFilterBar = ({ isFilterActive, setIsFilterActive }: SpotFilterBarProps
           display: "flex",
           alignItems: "center",
           gap: "16px",
-          margin: "0 auto 16px",
         }}
       >
         <Box

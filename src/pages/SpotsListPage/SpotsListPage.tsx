@@ -16,8 +16,8 @@ const SpotsListPage = () => {
 
   const {
     flatData: spots,
-    isLoading,
-    error,
+    // isLoading,
+    // error,
     hasNextPage,
     isFetchingNextPage,
     fetchNextPage,
@@ -34,12 +34,18 @@ const SpotsListPage = () => {
   }, [inView, hasNextPage, isFetchingNextPage]);
 
   return (
-    <Box sx={{ marginTop: "68px", padding: "16px" }}>
+    <Box sx={{ padding: "16px" }}>
       <Box sx={{ maxWidth: "calc(1200px - 48px)", margin: "0 auto 16px" }}>
         <SpotFilterBar isFilterActive={isFilterActive} setIsFilterActive={setIsFilterActive} />
-        {isFilterActive && <SpotFilterModal setContentTypeId={setContentTypeId} />}
+        {isFilterActive && (
+          <SpotFilterModal
+            setContentTypeId={setContentTypeId}
+            setSelectedArea={setSelectedArea}
+            setSelectedSigungu={setSelectedSigungu}
+          />
+        )}
       </Box>
-      <Box component="section">
+      <Box>
         <Grid
           container
           spacing={2}

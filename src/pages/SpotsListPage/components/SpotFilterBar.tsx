@@ -12,7 +12,7 @@ const SpotFilterBar = ({ isFilterActive, setIsFilterActive }: SpotFilterBarProps
   };
 
   return (
-    <Box component="section">
+    <>
       <Box
         sx={{
           maxWidth: "calc(1200px - 48px)",
@@ -26,7 +26,7 @@ const SpotFilterBar = ({ isFilterActive, setIsFilterActive }: SpotFilterBarProps
             display: "flex",
             alignItems: "center",
             gap: "8px",
-            border: `1px solid ${theme.palette.text.secondary}`,
+            border: `1.5px solid ${theme.palette.text.secondary}`,
             padding: "0 12px",
             borderRadius: "50px",
             flex: "1",
@@ -73,9 +73,12 @@ const SpotFilterBar = ({ isFilterActive, setIsFilterActive }: SpotFilterBarProps
         </Box>
         <IconButton
           sx={(theme) => ({
-            border: `1px solid ${isFilterActive ? theme.palette.action.active : theme.palette.text.secondary}`,
+            border: `1.5px solid ${isFilterActive ? theme.palette.action.active : theme.palette.text.secondary}`,
             borderRadius: "4px",
             color: isFilterActive ? theme.palette.action.active : theme.palette.text.secondary,
+            "&:hover": {
+              background: "none",
+            },
             "@media (hover: hover)": {
               "&:hover": {
                 borderColor: theme.palette.action.hover,
@@ -89,7 +92,7 @@ const SpotFilterBar = ({ isFilterActive, setIsFilterActive }: SpotFilterBarProps
           <SlidersHorizontal size={20} />
         </IconButton>
       </Box>
-    </Box>
+    </>
   );
 };
 

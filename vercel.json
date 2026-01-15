@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/tour/:path*",
+      "destination": "https://apis.data.go.kr/B551011/KorService2/:path*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/"
+    }
+  ]
+}

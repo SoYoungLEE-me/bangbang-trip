@@ -47,7 +47,7 @@ export const getNearbyCourses = async (): Promise<TourSpot[]> => {
 
 // 축제
 export const getFestivals = async (): Promise<Festival[]> => {
-  const url = `/api/tour/searchFestival2`;
+  const url = `${TOUR_BASE_URL}/searchFestival2`;
   const serviceKey = getServiceKey();
 
   const today = new Date();
@@ -122,7 +122,7 @@ export const getFestivals = async (): Promise<Festival[]> => {
 
 // 인기 관광지
 export const getPopularSpots = async (): Promise<TourSpot[]> => {
-  const url = `/api/tour/areaBasedList2`;
+  const url = `${TOUR_BASE_URL}/areaBasedList2`;
   const serviceKey = getServiceKey();
 
   const otherParams = new URLSearchParams();

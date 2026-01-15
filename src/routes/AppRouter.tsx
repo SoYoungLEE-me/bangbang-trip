@@ -25,17 +25,17 @@ const SpotsListPage = React.lazy(
 const AppRouter = () => {
   return (
     <Routes>
-      <Route element={<PublicRouter />}>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-      </Route>
       <Route path="/" element={<AppLayout />}>
         <Route index element={<LandingPage />} />
         <Route path="spots" element={<SpotsListPage />} />
         <Route path="spots/:id" element={<SpotDetailPage />} />
+        <Route path="ai-planner" element={<AiPlannerPage />} />
         <Route element={<PrivateRoute />}>
-          <Route path="my" element={<MyPage />} />
-          <Route path="ai-planner" element={<AiPlannerPage />} />
+          <Route path="/mypage" element={<MyPage />} />
+        </Route>
+        <Route element={<PublicRouter />}>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterPage />} />
         </Route>
       </Route>
     </Routes>

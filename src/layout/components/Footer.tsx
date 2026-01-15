@@ -1,6 +1,7 @@
 import { Box, Container, Typography, useTheme, Link } from "@mui/material";
 import { MapPin, Mail, Phone, Facebook, Instagram, Twitter } from "lucide-react";
 
+
 const Footer = () => {
   const theme = useTheme();
 

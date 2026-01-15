@@ -9,8 +9,9 @@ import {
   Alert,
   Button,
   useTheme,
+  Tooltip,
 } from "@mui/material";
-import { ChevronLeft, ChevronRight, ChevronRightIcon, Pause, Play } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronRightIcon, Pause, Play, Sparkles } from "lucide-react";
 import { usePopularSpots, useNearbyCourses, useFestivals } from "../../hooks/useTourSpots";
 import { useNavigate } from "react-router-dom";
 import TourCourseCard from "../../layout/components/TourCourseCard";
@@ -65,7 +66,7 @@ const LandingPage = () => {
 
    // 4초마다 자동으로 슬라이드 넘기기
   useEffect(() => {
-    if (isPaused || actualSlideCount === 0) return; // 데이터가 없으면 실행 안 함
+    if (isPaused || actualSlideCount === 0) return;
     const interval = setInterval(() => {
       setCurrentSlide((prev) =>
         prev === actualSlideCount - 1 ? 0 : prev + 1
@@ -120,7 +121,7 @@ const LandingPage = () => {
 
   return (
     <Box sx={{ backgroundColor: theme.palette.background.default }}>
-      {/* 슬라이드 섹션 - 축제 정보 */}
+      {/* 슬라이드 섹션 */}
       {nearbyCourses.length > 0 && (
         <Box
           sx={{
@@ -183,7 +184,7 @@ const LandingPage = () => {
                   <Typography
                     variant="h1"
                     sx={{
-                      fontSize: { xs: "32px", md: "48px" },
+                      fontSize: { xs: "24px", md: "48px" },
                       fontWeight: 700,
                       mb: { xs: 1, md: 1 },
                     }}
@@ -200,8 +201,9 @@ const LandingPage = () => {
                       color: "white",
                       borderRadius: 1,
                       px: { xs: 1, md: 2 },
-                      mb: { xs: 3, md: -2 },
-                      fontSize: {xs: '11px', md: '15px'},
+                      py: { xs: 0.5, md: 0.5},
+                      mb: { xs: 2, md: -1 },
+                      fontSize: {xs: '10px', md: '15px'},
                       display: "flex",
                       alignItems: "center",
                       margin: 'auto',
@@ -233,7 +235,7 @@ const LandingPage = () => {
                   backgroundColor: "rgba(255,255,255,0.3)",
                   color: theme.palette.text.secondary,
                   "&:hover": { backgroundColor: "rgba(255,255,255,0.8)" },
-                  zIndex: 2,
+                  zIndex: 1,
                 }}
               >
                 <ChevronLeft size={24} />
@@ -248,7 +250,7 @@ const LandingPage = () => {
                   backgroundColor: "rgba(255,255,255,0.3)",
                   color: theme.palette.text.secondary,
                   "&:hover": { backgroundColor: "rgba(255,255,255,0.8)" },
-                  zIndex: 2,
+                  zIndex: 1,
                 }}
               >
                 <ChevronRight size={24} />
@@ -286,18 +288,20 @@ const LandingPage = () => {
                 </Box>
                 
                 {/* 일시정지/재생 버튼 */}
-                <IconButton
-                  onClick={handleTogglePause}
-                  sx={{
-                    backgroundColor: "rgba(255,255,255,0.3)",
-                    color: theme.palette.background.paper,
-                    "&:hover": { backgroundColor: "rgba(255,255,255,0.8)", color: theme.palette.text.secondary },
-                    width: 30,
-                    height: 30,
-                  }}
-                >
-                  {isPaused ? <Play size={18} /> : <Pause size={18} />}
-                </IconButton>
+                <Tooltip title={isPaused ? "재생" : "일시정지"} placement="top">
+                  <IconButton
+                    onClick={handleTogglePause}
+                    sx={{
+                      backgroundColor: "rgba(255,255,255,0.3)",
+                      color: theme.palette.background.paper,
+                      "&:hover": { backgroundColor: "rgba(255,255,255,0.8)", color: theme.palette.text.secondary },
+                      width: 30,
+                      height: 30,
+                    }}
+                  >
+                    {isPaused ? <Play size={18} /> : <Pause size={18} />}
+                  </IconButton>
+                </Tooltip>
               </Box>
             </>
           )}
@@ -391,6 +395,7 @@ const LandingPage = () => {
               textAlign: "center",
               maxWidth: "800px",
               mx: "auto",
+              my: "25px",
             }}
           >
             한국관광공사 Tour API와 AI를 활용한 국내 여행 정보 조회 및 여행
@@ -399,6 +404,32 @@ const LandingPage = () => {
             관광지 정보를 확인하고, 원하는 코스를 저장하여 나중에 다시 볼 수
             있습니다.
           </Typography>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Button
+              onClick={() => navigate("/ai-planner")}
+              variant="contained"
+              sx={{
+                backgroundColor: theme.palette.primary.main,
+                color: "white",
+                px: { xs: 3, md: 4 },
+                py: { xs: 1.5, md: 2 },
+                fontSize: { xs: "14px", md: "16px" },
+                fontWeight: 600,
+                borderRadius: 2,
+                textTransform: "none",
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                "&:hover": {
+                  backgroundColor: theme.palette.action.hover,
+                  color: theme.palette.text.secondary
+                },
+              }}
+            >
+              <Sparkles size={20} />
+              지금 나만의 여행 코스 만들기
+            </Button>
+          </Box>
         </Box>
       </Container>
     </Box>

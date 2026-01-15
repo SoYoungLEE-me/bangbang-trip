@@ -31,3 +31,44 @@ export interface TourApiResponse {
     };
   };
 }
+
+export interface Festival {
+  contentid: string;
+  contenttypeid: string;
+  title: string;
+  addr1?: string;
+  addr2?: string;
+  firstimage?: string;
+  firstimage2?: string;
+  mapx?: string;
+  mapy?: string;
+  tel?: string;
+  areacode?: string;
+  sigungucode?: string;
+  cat1?: string;
+  cat2?: string;
+  cat3?: string;
+  createdtime?: string;
+  modifiedtime?: string;
+  eventstartdate?: string;
+  eventenddate?: string;
+  cpyrhtDivCd?: string;
+  mlevel?: string;
+}
+
+export interface FestivalApiResponse {
+  response: {
+    header: {
+      resultCode: string;
+      resultMsg: string;
+    };
+    body: {
+      items: {
+        item: Festival | Festival[];
+      };
+      numOfRows: number;
+      pageNo: number;
+      totalCount: number;
+    };
+  };
+}

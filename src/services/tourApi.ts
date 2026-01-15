@@ -7,7 +7,7 @@ const getServiceKey = (): string => {
 
 // 주변 관광지
 export const getNearbyCourses = async (): Promise<TourSpot[]> => {
-  const url = `${TOUR_BASE_URL}/api/tour/areaBasedList2`;
+  const url = new URL(`${TOUR_BASE_URL}/api/tour/areaBasedList2`);
   const serviceKey = getServiceKey();
 
   const otherParams = new URLSearchParams();

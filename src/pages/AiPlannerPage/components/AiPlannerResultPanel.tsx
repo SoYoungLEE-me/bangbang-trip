@@ -64,6 +64,7 @@ const AiPlannerResultPanel = ({ result }: AiPlannerResultPanelProps) => {
                     mb: 4,
                   }}
                 >
+                  {/* 컨셉 제목 */}
                   <Typography fontWeight={800} fontSize={14}>
                     Day {day.day} &nbsp; {day.title}
                   </Typography>

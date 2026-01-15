@@ -102,7 +102,7 @@ const AiPlannerPage = () => {
 
   return (
     <Box
-      mt={20}
+      mt={13}
       mb={20}
       px={{
         xs: 3,

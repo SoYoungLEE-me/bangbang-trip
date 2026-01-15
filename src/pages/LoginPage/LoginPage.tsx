@@ -102,7 +102,6 @@ const LoginPage = () => {
         justifyContent: "center",
         alignItems: "center",
       }}
-      mt={5}
     >
       <Box sx={{ width: 380, px: 2 }}>
         <Typography variant="h1" textAlign="center" mb={5}>

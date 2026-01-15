@@ -3,23 +3,27 @@ import {
   Box,
   Container,
   Typography,
-  Card,
-  CardMedia,
-  CardContent,
   IconButton,
   Grid,
   CircularProgress,
   Alert,
   Button,
   useTheme,
+  Tooltip,
 } from "@mui/material";
 import {
-  Heart,
   ChevronLeft,
   ChevronRight,
   ChevronRightIcon,
+  Pause,
+  Play,
+  Sparkles,
 } from "lucide-react";
-import { usePopularSpots, useNearbyCourses } from "../../hooks/useTourSpots";
+import {
+  usePopularSpots,
+  useNearbyCourses,
+  useFestivals,
+} from "../../hooks/useTourSpots";
 import { useNavigate } from "react-router-dom";
 import TourCourseCard from "../../layout/components/TourCourseCard";
 
@@ -28,7 +32,14 @@ const LandingPage = () => {
   const theme = useTheme();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [savedCourses, setSavedCourses] = useState<Set<string>>(new Set());
+  const [isPaused, setIsPaused] = useState(false);
   const SLIDE_COUNT = 10;
+
+  const {
+    data: festivals = [],
+    isLoading: isLoadingFestivals,
+    isError: isErrorFestivals,
+  } = useFestivals();
 
   const {
     data: popularSpots = [],
@@ -42,23 +53,37 @@ const LandingPage = () => {
     isError: isErrorCourses,
   } = useNearbyCourses();
 
+  // SLIDE_COUNT를 축제 데이터 길이에 맞게 조정
+  const actualSlideCount = Math.min(nearbyCourses.length, SLIDE_COUNT);
+
+  // currentSlide가 데이터 범위를 벗어나지 않도록 보정
+  useEffect(() => {
+    if (actualSlideCount > 0 && currentSlide >= actualSlideCount) {
+      setCurrentSlide(0);
+    }
+  }, [actualSlideCount, currentSlide]);
+
   const handlePrevSlide = () => {
-    setCurrentSlide((prev) => (prev === 0 ? SLIDE_COUNT - 1 : prev - 1));
+    setCurrentSlide((prev) => (prev === 0 ? actualSlideCount - 1 : prev - 1));
   };
 
   const handleNextSlide = () => {
-    setCurrentSlide((prev) => (prev === SLIDE_COUNT - 1 ? 0 : prev + 1));
+    setCurrentSlide((prev) => (prev === actualSlideCount - 1 ? 0 : prev + 1));
   };
 
   // 4초마다 자동으로 슬라이드 넘기기
   useEffect(() => {
+    if (isPaused || actualSlideCount === 0) return;
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev === SLIDE_COUNT - 1 ? 0 : prev + 1));
+      setCurrentSlide((prev) => (prev === actualSlideCount - 1 ? 0 : prev + 1));
     }, 4000);
 
-    // 컴포넌트 언마운트 시 interval 정리
     return () => clearInterval(interval);
-  }, [SLIDE_COUNT]);
+  }, [actualSlideCount, isPaused]);
+
+  const handleTogglePause = () => {
+    setIsPaused((prev) => !prev);
+  };
 
   const handleSaveCourse = (id: string) => {
     setSavedCourses((prev) => {
@@ -73,7 +98,7 @@ const LandingPage = () => {
   };
 
   // 로딩 상태
-  if (isLoadingSpots || isLoadingCourses) {
+  if (isLoadingFestivals || isLoadingCourses || isLoadingSpots) {
     return (
       <Box
         sx={{
@@ -89,7 +114,7 @@ const LandingPage = () => {
   }
 
   // 에러 상태
-  if (isErrorSpots || isErrorCourses) {
+  if (isErrorFestivals || isErrorCourses || isErrorSpots) {
     return (
       <Container maxWidth="lg" sx={{ py: 4 }}>
         <Alert severity="error">
@@ -101,8 +126,8 @@ const LandingPage = () => {
 
   return (
     <Box sx={{ backgroundColor: theme.palette.background.default }}>
-      {/* 슬라이드 섹션 - 인기 관광지 */}
-      {popularSpots.length > 0 && (
+      {/* 슬라이드 섹션 */}
+      {nearbyCourses.length > 0 && (
         <Box
           sx={{
             position: "relative",
@@ -122,42 +147,34 @@ const LandingPage = () => {
               justifyContent: "center",
             }}
           >
-            {/* 슬라이드 이미지에 그라데이션 */}
-            {popularSpots.slice(0, SLIDE_COUNT).map((spot, index) => (
+            {/* 코스 슬라이드 */}
+            {nearbyCourses.slice(0, actualSlideCount).map((course, index) => (
               <Box
-                key={spot.contentid}
+                key={course.contentid}
                 sx={{
                   position: "absolute",
                   width: "100%",
                   height: "100%",
                   opacity: index === currentSlide ? 1 : 0,
                   transition: "opacity 0.5s ease-in-out",
-                  backgroundImage: `url(${spot.firstimage})`,
+                  backgroundImage: `url(${course.firstimage})`,
                   backgroundSize: "cover",
                   backgroundPosition: "center",
-                  "&::before": {
-                    content: '""',
-                    position: "absolute",
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                    backgroundColor: "rgba(0,0,0,0.4)",
-                  },
-                  // 슬라이드 아래에서 위로 밝아지는 그라데이션
                   "&::after": {
                     content: '""',
+                    display: "block",
+                    width: "100%",
+                    height: "100%",
                     position: "absolute",
-                    top: 0,
                     left: 0,
-                    right: 0,
-                    bottom: 0,
+                    top: 0,
                     background:
                       "linear-gradient(180deg, rgba(0, 0, 0, 0) 20.32%, rgba(0, 0, 0, 0.00735012) 26.35%, rgba(0, 0, 0, 0.0301835) 32.38%, rgba(0, 0, 0, 0.0694109) 38.41%, rgba(0, 0, 0, 0.1253) 44.44%, rgba(0, 0, 0, 0.197009) 50.46%, rgba(0, 0, 0, 0.282101) 56.49%, rgba(0, 0, 0, 0.376288) 62.52%, rgba(0, 0, 0, 0.473712) 68.55%, rgba(0, 0, 0, 0.567899) 74.58%, rgba(0, 0, 0, 0.652991) 80.61%, rgba(0, 0, 0, 0.7247) 86.64%, rgba(0, 0, 0, 0.780589) 92.67%, rgba(0, 0, 0, 0.819817) 98.7%, rgba(0, 0, 0, 0.84265) 104.73%, rgba(0, 0, 0, 0.85) 110.76%);",
                     pointerEvents: "none",
                   },
                 }}
               >
+                {/* 코스 Title */}
                 <Box
                   sx={{
                     position: "absolute",
@@ -173,28 +190,26 @@ const LandingPage = () => {
                   <Typography
                     variant="h1"
                     sx={{
-                      fontSize: { xs: "32px", md: "48px" },
+                      fontSize: { xs: "24px", md: "48px" },
                       fontWeight: 700,
                       mb: { xs: 1, md: 1 },
                     }}
                   >
-                    {spot.title}
+                    {course.title}
                   </Typography>
-                  <Typography
-                    variant="body1"
-                    sx={{ fontSize: { xs: "16px", md: "20px" }, mb: 2 }}
-                  >
-                    {spot.addr1}
-                  </Typography>
+
+                  {/* 자세히 보기 버튼 */}
                   <Button
-                    onClick={() => navigate(`/spots/${spot.contentid}`)}
+                    onClick={() => navigate(`/spots/${course.contentid}`)}
                     sx={{
                       backgroundColor: "rgba(0, 0, 0, 0.3)",
                       border: "1px solid rgba(255, 255, 255, 0.5)",
                       color: "white",
                       borderRadius: 1,
                       px: { xs: 1, md: 2 },
-                      mb: { xs: 1, md: 1 },
+                      py: { xs: 0.5, md: 0.5 },
+                      mb: { xs: 2, md: -1 },
+                      fontSize: { xs: "10px", md: "15px" },
                       display: "flex",
                       alignItems: "center",
                       margin: "auto",
@@ -214,7 +229,7 @@ const LandingPage = () => {
           </Box>
 
           {/* 슬라이드 네비게이션 버튼 */}
-          {popularSpots.length > 1 && (
+          {nearbyCourses.length > 1 && actualSlideCount > 1 && (
             <>
               <IconButton
                 onClick={handlePrevSlide}
@@ -223,10 +238,10 @@ const LandingPage = () => {
                   left: { xs: 10, md: 20 },
                   top: "50%",
                   transform: "translateY(-50%)",
-                  backgroundColor: "rgba(255,255,255,0.8)",
-                  color: theme.palette.primary.main,
-                  "&:hover": { backgroundColor: "rgba(255,255,255,1)" },
-                  zIndex: 2,
+                  backgroundColor: "rgba(255,255,255,0.3)",
+                  color: theme.palette.text.secondary,
+                  "&:hover": { backgroundColor: "rgba(255,255,255,0.8)" },
+                  zIndex: 1,
                 }}
               >
                 <ChevronLeft size={24} />
@@ -238,10 +253,10 @@ const LandingPage = () => {
                   right: { xs: 10, md: 20 },
                   top: "50%",
                   transform: "translateY(-50%)",
-                  backgroundColor: "rgba(255,255,255,0.8)",
-                  color: theme.palette.primary.main,
-                  "&:hover": { backgroundColor: "rgba(255,255,255,1)" },
-                  zIndex: 2,
+                  backgroundColor: "rgba(255,255,255,0.3)",
+                  color: theme.palette.text.secondary,
+                  "&:hover": { backgroundColor: "rgba(255,255,255,0.8)" },
+                  zIndex: 1,
                 }}
               >
                 <ChevronRight size={24} />
@@ -255,27 +270,49 @@ const LandingPage = () => {
                   left: "50%",
                   transform: "translateX(-50%)",
                   display: "flex",
-                  gap: 1,
+                  alignItems: "center",
+                  gap: 2,
                   zIndex: 2,
                 }}
               >
-                {popularSpots.slice(0, SLIDE_COUNT).map((_, index) => (
-                  <Box
-                    key={index}
-                    onClick={() => setCurrentSlide(index)}
+                <Box sx={{ display: "flex", gap: 1 }}>
+                  {nearbyCourses.slice(0, actualSlideCount).map((_, index) => (
+                    <Box
+                      key={index}
+                      onClick={() => setCurrentSlide(index)}
+                      sx={{
+                        width: currentSlide === index ? 24 : 8,
+                        height: 8,
+                        borderRadius: 4,
+                        backgroundColor:
+                          currentSlide === index
+                            ? "white"
+                            : "rgba(255,255,255,0.5)",
+                        cursor: "pointer",
+                        transition: "all 0.3s ease",
+                      }}
+                    />
+                  ))}
+                </Box>
+
+                {/* 일시정지/재생 버튼 */}
+                <Tooltip title={isPaused ? "재생" : "일시정지"} placement="top">
+                  <IconButton
+                    onClick={handleTogglePause}
                     sx={{
-                      width: currentSlide === index ? 24 : 8,
-                      height: 8,
-                      borderRadius: 4,
-                      backgroundColor:
-                        currentSlide === index
-                          ? "white"
-                          : "rgba(255,255,255,0.5)",
-                      cursor: "pointer",
-                      transition: "all 0.3s ease",
+                      backgroundColor: "rgba(255,255,255,0.3)",
+                      color: theme.palette.background.paper,
+                      "&:hover": {
+                        backgroundColor: "rgba(255,255,255,0.8)",
+                        color: theme.palette.text.secondary,
+                      },
+                      width: 30,
+                      height: 30,
                     }}
-                  />
-                ))}
+                  >
+                    {isPaused ? <Play size={18} /> : <Pause size={18} />}
+                  </IconButton>
+                </Tooltip>
               </Box>
             </>
           )}
@@ -283,7 +320,7 @@ const LandingPage = () => {
       )}
 
       <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
-        {/* 주변 관광지 코스 카드 섹션 */}
+        {/* 진행 중인 축제 카드 섹션 */}
         <Box sx={{ mb: { xs: 6, md: 8 } }}>
           <Typography
             variant="h1"
@@ -294,14 +331,42 @@ const LandingPage = () => {
               color: theme.palette.text.primary,
             }}
           >
-            주변 관광지 코스
+            진행 중인 축제
           </Typography>
+
           <Grid container spacing={3}>
-            {nearbyCourses.map((course) => (
-              <Grid size={{ xs: 12, sm: 6, md: 3 }} key={course.contentid}>
+            {festivals.map((festival) => (
+              <Grid size={{ xs: 12, sm: 6, md: 3 }} key={festival.contentid}>
                 <TourCourseCard
-                  course={course}
-                  isSaved={savedCourses.has(course.contentid)}
+                  course={festival}
+                  isSaved={savedCourses.has(festival.contentid)}
+                  onSave={handleSaveCourse}
+                />
+              </Grid>
+            ))}
+          </Grid>
+        </Box>
+
+        {/* 인기 관광지 카드 섹션 */}
+        <Box sx={{ mt: { xs: 6, md: 8 } }}>
+          <Typography
+            variant="h1"
+            sx={{
+              fontSize: { xs: "24px", md: "32px" },
+              fontWeight: 700,
+              mb: 4,
+              color: theme.palette.text.primary,
+            }}
+          >
+            인기 관광지
+          </Typography>
+
+          <Grid container spacing={3}>
+            {popularSpots.slice(0, 8).map((spot) => (
+              <Grid size={{ xs: 12, sm: 6, md: 3 }} key={spot.contentid}>
+                <TourCourseCard
+                  course={spot}
+                  isSaved={savedCourses.has(spot.contentid)}
                   onSave={handleSaveCourse}
                 />
               </Grid>
@@ -315,8 +380,9 @@ const LandingPage = () => {
             backgroundColor: theme.palette.background.paper,
             borderRadius: 3,
             p: { xs: 4, md: 6 },
-            boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
-            mb: { xs: 6, md: 8 },
+            boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+            mt: { xs: 6, md: 8 },
+            mb: { xs: 4, md: 4 },
           }}
         >
           <Typography
@@ -340,6 +406,7 @@ const LandingPage = () => {
               textAlign: "center",
               maxWidth: "800px",
               mx: "auto",
+              my: "25px",
             }}
           >
             한국관광공사 Tour API와 AI를 활용한 국내 여행 정보 조회 및 여행 일정
@@ -347,6 +414,32 @@ const LandingPage = () => {
             플래너를 통해 나만의 맞춤형 여행 코스를 만들어보세요. 다양한 관광지
             정보를 확인하고, 원하는 코스를 저장하여 나중에 다시 볼 수 있습니다.
           </Typography>
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            <Button
+              onClick={() => navigate("/ai-planner")}
+              variant="contained"
+              sx={{
+                backgroundColor: theme.palette.primary.main,
+                color: "white",
+                px: { xs: 3, md: 4 },
+                py: { xs: 1.5, md: 2 },
+                fontSize: { xs: "14px", md: "16px" },
+                fontWeight: 600,
+                borderRadius: 2,
+                textTransform: "none",
+                display: "flex",
+                alignItems: "center",
+                gap: 1,
+                "&:hover": {
+                  backgroundColor: theme.palette.action.hover,
+                  color: theme.palette.text.secondary,
+                },
+              }}
+            >
+              <Sparkles size={20} />
+              지금 나만의 여행 코스 만들기
+            </Button>
+          </Box>
         </Box>
       </Container>
     </Box>

@@ -29,9 +29,9 @@ const NavBar = () => {
         justifyContent: "space-between",
         alignItems: "center",
         position: "fixed",
+        zIndex: 2,
         padding: "0.625rem 1rem",
         top: 0,
-        zIndex: 2,
         backgroundColor: "background.default",
         boxShadow: `0 0.1rem 0.5rem ${alpha(
           theme.palette.text.secondary,
@@ -244,3 +244,4 @@ const NavBar = () => {
 };
 
 export default NavBar;
+

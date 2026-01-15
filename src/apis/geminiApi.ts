@@ -18,6 +18,7 @@ export const requestAiPlanner = async (
 2. 각 itinerary 원소는 "day", "title", "activities"를 가져야 함.
 3. "activities"는 "time", "location", "description"을 가진 객체의 배열이어야 함.
 4. "preparations"는 문자열 배열이어야 함.
+5. "Day" 필드는 반드시 1, 2, 3... 과 같은 정수(Number)만 사용하세요.
 `;
 
   const userPrompt = `

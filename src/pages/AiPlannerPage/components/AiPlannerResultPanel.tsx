@@ -65,7 +65,7 @@ const AiPlannerResultPanel = ({ result }: AiPlannerResultPanelProps) => {
                   }}
                 >
                   <Typography fontWeight={800} fontSize={14}>
-                    Day {day.day}: {day.title}
+                    Day {day.day} &nbsp; {day.title}
                   </Typography>
                 </Box>
 
@@ -90,7 +90,7 @@ const AiPlannerResultPanel = ({ result }: AiPlannerResultPanelProps) => {
                         key={idx}
                         sx={{ position: "relative", minHeight: 80 }}
                       >
-                        {/* 타인라인 도트  */}
+                        {/* 타임라인 도트  */}
                         <Box
                           sx={{
                             position: "absolute",

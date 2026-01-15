@@ -11,8 +11,19 @@ import {
   useTheme,
   Tooltip,
 } from "@mui/material";
-import { ChevronLeft, ChevronRight, ChevronRightIcon, Pause, Play, Sparkles } from "lucide-react";
-import { usePopularSpots, useNearbyCourses, useFestivals } from "../../hooks/useTourSpots";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ChevronRightIcon,
+  Pause,
+  Play,
+  Sparkles,
+} from "lucide-react";
+import {
+  usePopularSpots,
+  useNearbyCourses,
+  useFestivals,
+} from "../../hooks/useTourSpots";
 import { useNavigate } from "react-router-dom";
 import TourCourseCard from "../../layout/components/TourCourseCard";
 
@@ -53,28 +64,22 @@ const LandingPage = () => {
   }, [actualSlideCount, currentSlide]);
 
   const handlePrevSlide = () => {
-    setCurrentSlide((prev) =>
-      prev === 0 ? actualSlideCount - 1 : prev - 1
-    );
+    setCurrentSlide((prev) => (prev === 0 ? actualSlideCount - 1 : prev - 1));
   };
 
   const handleNextSlide = () => {
-    setCurrentSlide((prev) =>
-      prev === actualSlideCount - 1 ? 0 : prev + 1
-    );
+    setCurrentSlide((prev) => (prev === actualSlideCount - 1 ? 0 : prev + 1));
   };
 
-   // 4초마다 자동으로 슬라이드 넘기기
+  // 4초마다 자동으로 슬라이드 넘기기
   useEffect(() => {
     if (isPaused || actualSlideCount === 0) return;
     const interval = setInterval(() => {
-      setCurrentSlide((prev) =>
-        prev === actualSlideCount - 1 ? 0 : prev + 1
-      );
+      setCurrentSlide((prev) => (prev === actualSlideCount - 1 ? 0 : prev + 1));
     }, 4000);
 
-  return () => clearInterval(interval);
-}, [actualSlideCount, isPaused]);
+    return () => clearInterval(interval);
+  }, [actualSlideCount, isPaused]);
 
   const handleTogglePause = () => {
     setIsPaused((prev) => !prev);
@@ -163,7 +168,8 @@ const LandingPage = () => {
                     position: "absolute",
                     left: 0,
                     top: 0,
-                    background: "linear-gradient(180deg, rgba(0, 0, 0, 0) 20.32%, rgba(0, 0, 0, 0.00735012) 26.35%, rgba(0, 0, 0, 0.0301835) 32.38%, rgba(0, 0, 0, 0.0694109) 38.41%, rgba(0, 0, 0, 0.1253) 44.44%, rgba(0, 0, 0, 0.197009) 50.46%, rgba(0, 0, 0, 0.282101) 56.49%, rgba(0, 0, 0, 0.376288) 62.52%, rgba(0, 0, 0, 0.473712) 68.55%, rgba(0, 0, 0, 0.567899) 74.58%, rgba(0, 0, 0, 0.652991) 80.61%, rgba(0, 0, 0, 0.7247) 86.64%, rgba(0, 0, 0, 0.780589) 92.67%, rgba(0, 0, 0, 0.819817) 98.7%, rgba(0, 0, 0, 0.84265) 104.73%, rgba(0, 0, 0, 0.85) 110.76%);",
+                    background:
+                      "linear-gradient(180deg, rgba(0, 0, 0, 0) 20.32%, rgba(0, 0, 0, 0.00735012) 26.35%, rgba(0, 0, 0, 0.0301835) 32.38%, rgba(0, 0, 0, 0.0694109) 38.41%, rgba(0, 0, 0, 0.1253) 44.44%, rgba(0, 0, 0, 0.197009) 50.46%, rgba(0, 0, 0, 0.282101) 56.49%, rgba(0, 0, 0, 0.376288) 62.52%, rgba(0, 0, 0, 0.473712) 68.55%, rgba(0, 0, 0, 0.567899) 74.58%, rgba(0, 0, 0, 0.652991) 80.61%, rgba(0, 0, 0, 0.7247) 86.64%, rgba(0, 0, 0, 0.780589) 92.67%, rgba(0, 0, 0, 0.819817) 98.7%, rgba(0, 0, 0, 0.84265) 104.73%, rgba(0, 0, 0, 0.85) 110.76%);",
                     pointerEvents: "none",
                   },
                 }}
@@ -201,12 +207,12 @@ const LandingPage = () => {
                       color: "white",
                       borderRadius: 1,
                       px: { xs: 1, md: 2 },
-                      py: { xs: 0.5, md: 0.5},
+                      py: { xs: 0.5, md: 0.5 },
                       mb: { xs: 2, md: -1 },
-                      fontSize: {xs: '10px', md: '15px'},
+                      fontSize: { xs: "10px", md: "15px" },
                       display: "flex",
                       alignItems: "center",
-                      margin: 'auto',
+                      margin: "auto",
                       gap: 1,
                       "&:hover": {
                         backgroundColor: "rgba(0, 0, 0, 0.5)",
@@ -279,14 +285,16 @@ const LandingPage = () => {
                         height: 8,
                         borderRadius: 4,
                         backgroundColor:
-                          currentSlide === index ? "white" : "rgba(255,255,255,0.5)",
+                          currentSlide === index
+                            ? "white"
+                            : "rgba(255,255,255,0.5)",
                         cursor: "pointer",
                         transition: "all 0.3s ease",
                       }}
                     />
                   ))}
                 </Box>
-                
+
                 {/* 일시정지/재생 버튼 */}
                 <Tooltip title={isPaused ? "재생" : "일시정지"} placement="top">
                   <IconButton
@@ -294,7 +302,10 @@ const LandingPage = () => {
                     sx={{
                       backgroundColor: "rgba(255,255,255,0.3)",
                       color: theme.palette.background.paper,
-                      "&:hover": { backgroundColor: "rgba(255,255,255,0.8)", color: theme.palette.text.secondary },
+                      "&:hover": {
+                        backgroundColor: "rgba(255,255,255,0.8)",
+                        color: theme.palette.text.secondary,
+                      },
                       width: 30,
                       height: 30,
                     }}
@@ -307,7 +318,7 @@ const LandingPage = () => {
           )}
         </Box>
       )}
-        
+
       <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
         {/* 진행 중인 축제 카드 섹션 */}
         <Box sx={{ mb: { xs: 6, md: 8 } }}>
@@ -325,7 +336,7 @@ const LandingPage = () => {
 
           <Grid container spacing={3}>
             {festivals.map((festival) => (
-              <Grid size={{xs:12, sm:6, md:3}} key={festival.contentid}>
+              <Grid size={{ xs: 12, sm: 6, md: 3 }} key={festival.contentid}>
                 <TourCourseCard
                   course={festival}
                   isSaved={savedCourses.has(festival.contentid)}
@@ -398,11 +409,10 @@ const LandingPage = () => {
               my: "25px",
             }}
           >
-            한국관광공사 Tour API와 AI를 활용한 국내 여행 정보 조회 및 여행
-            일정 생성 서비스입니다. 전국 방방곡곡의 아름다운 관광지를 탐험하고,
-            AI 플래너를 통해 나만의 맞춤형 여행 코스를 만들어보세요. 다양한
-            관광지 정보를 확인하고, 원하는 코스를 저장하여 나중에 다시 볼 수
-            있습니다.
+            한국관광공사 Tour API와 AI를 활용한 국내 여행 정보 조회 및 여행 일정
+            생성 서비스입니다. 전국 방방곡곡의 아름다운 관광지를 탐험하고, AI
+            플래너를 통해 나만의 맞춤형 여행 코스를 만들어보세요. 다양한 관광지
+            정보를 확인하고, 원하는 코스를 저장하여 나중에 다시 볼 수 있습니다.
           </Typography>
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Button
@@ -422,7 +432,7 @@ const LandingPage = () => {
                 gap: 1,
                 "&:hover": {
                   backgroundColor: theme.palette.action.hover,
-                  color: theme.palette.text.secondary
+                  color: theme.palette.text.secondary,
                 },
               }}
             >

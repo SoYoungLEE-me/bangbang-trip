@@ -8,6 +8,7 @@ import {
   Button,
   IconButton,
   InputAdornment,
+  CircularProgress,
 } from "@mui/material";
 import {
   CalendarDays,
@@ -19,11 +20,13 @@ import {
 } from "lucide-react";
 import { alpha } from "@mui/material/styles";
 
-import type { UserPlannerFormValue } from "../../../models/userPlanner";
+import type { UserPlannerFormValue } from "../../../models/aiPlanner";
 
 interface UserPlannerFormProps {
   value: UserPlannerFormValue;
   onChange: (next: UserPlannerFormValue) => void;
+  onSubmit: () => void;
+  loading?: boolean;
 }
 
 const MOODS = [
@@ -43,7 +46,12 @@ const COMPANIONS = [
   "아이와 함께",
 ];
 
-const UserPlannerForm = ({ value, onChange }: UserPlannerFormProps) => {
+const UserPlannerForm = ({
+  value,
+  onChange,
+  onSubmit,
+  loading,
+}: UserPlannerFormProps) => {
   const update = (partial: Partial<UserPlannerFormValue>) => {
     onChange({ ...value, ...partial });
   };
@@ -55,8 +63,8 @@ const UserPlannerForm = ({ value, onChange }: UserPlannerFormProps) => {
         borderRadius: 6,
         border: "1px solid",
         borderColor: "grey.100",
-        bgcolor: "background.paper",
-        boxShadow: "0 8px 24px rgba(0,0,0,0.08)",
+        bgcolor: "#ffffff",
+        boxShadow: "0 8px 24px rgba(0,0,0,0.07)",
       }}
     >
       <Stack spacing={5}>
@@ -166,7 +174,7 @@ const UserPlannerForm = ({ value, onChange }: UserPlannerFormProps) => {
               }}
               fullWidth
               InputProps={{
-                // 1. 왼쪽 마이너스 버튼 (Minus 아이콘)
+                //  마이너스 버튼
                 startAdornment: (
                   <InputAdornment position="start">
                     <IconButton
@@ -176,14 +184,13 @@ const UserPlannerForm = ({ value, onChange }: UserPlannerFormProps) => {
                         })
                       }
                       size="small"
-                      sx={{ color: "text.secondary" }} // 아이콘 색상 조절
+                      sx={{ color: "text.secondary" }}
                     >
                       <Minus size={18} strokeWidth={2.5} />{" "}
-                      {/* Lucide 아이콘 적용 */}
                     </IconButton>
                   </InputAdornment>
                 ),
-                // 2. 오른쪽 플러스 버튼 (Plus 아이콘)
+                //플러스 버튼
                 endAdornment: (
                   <InputAdornment position="end">
                     <IconButton
@@ -194,7 +201,6 @@ const UserPlannerForm = ({ value, onChange }: UserPlannerFormProps) => {
                       sx={{ color: "text.secondary" }}
                     >
                       <Plus size={18} strokeWidth={2.5} />{" "}
-                      {/* Lucide 아이콘 적용 */}
                     </IconButton>
                   </InputAdornment>
                 ),
@@ -285,23 +291,35 @@ const UserPlannerForm = ({ value, onChange }: UserPlannerFormProps) => {
           fullWidth
           size="large"
           variant="contained"
-          startIcon={<Sparkles size={18} />}
+          startIcon={loading ? undefined : <Sparkles size={18} />}
+          disabled={loading}
           sx={{
             py: 1.6,
             fontWeight: 900,
             fontSize: 16,
             borderRadius: 999,
-
             boxShadow: "0 8px 20px rgba(0,0,0,0.15)",
             "&:hover": {
               boxShadow: "0 12px 28px rgba(0,0,0,0.25)",
             },
+            "&.Mui-disabled": {
+              backgroundColor: "primary.main",
+              color: "#ffffff",
+              opacity: 0.7,
+              boxShadow: "0 8px 20px rgba(0,0,0,0.1)",
+            },
           }}
-          onClick={() => {
-            //ai 연동 함수
-          }}
+          onClick={onSubmit}
         >
-          타임라인 생성하기
+          {loading ? (
+            <CircularProgress
+              size={24}
+              thickness={5}
+              sx={{ color: "#ffffff" }}
+            />
+          ) : (
+            "타임라인 생성하기"
+          )}
         </Button>
       </Box>
     </Box>

@@ -14,10 +14,10 @@ const NavBar = () => {
         justifyContent: "space-between",
         alignItems: "center",
         position: "fixed",
+        zIndex: 2,
         padding: "0.625rem 1rem",
         backdropFilter: "blur(3px)",
-        backgroundColor: `${alpha(theme.palette.background.default, 10)}`,
-        zIndex: 999,
+        backgroundColor: "white",
         boxShadow: `0 0.1rem 0.5rem ${alpha(
           theme.palette.text.secondary,
           0.2

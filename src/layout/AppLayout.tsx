@@ -8,11 +8,10 @@ const AppLayout = () => {
     <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <NavBar />
       <Box sx={{ flex: 1 }}>
-        <Outlet />        
+        <Outlet />
       </Box>
-      <Footer/>      
+      <Footer />
     </Box>
-    
   );
 };
 

@@ -1,5 +1,5 @@
 import { Box, Tab, Tabs } from "@mui/material";
-import { useState } from "react";
+import React, { useState } from "react";
 
 interface TabPanelProps {
   children?: React.ReactNode;
@@ -32,6 +32,8 @@ const a11yProps = (index: number) => {
 
 interface SpotFilterModalProps {
   setContentTypeId: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedArea: React.Dispatch<React.SetStateAction<string>>;
+  setSelectedSigungu: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const SpotFilterModal = ({ setContentTypeId }: SpotFilterModalProps) => {

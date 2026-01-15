@@ -1,4 +1,4 @@
-import { TOUR_API_KEY } from "../configs/env";
+import { TOUR_API_KEY, TOUR_BASE_URL } from "../configs/env";
 import type { TourApiResponse, TourSpot, Festival } from "../models/tour";
 
 const getServiceKey = (): string => {
@@ -7,7 +7,7 @@ const getServiceKey = (): string => {
 
 // 주변 관광지
 export const getNearbyCourses = async (): Promise<TourSpot[]> => {
-  const url = `/api/tour/areaBasedList2`;
+  const url = `${TOUR_BASE_URL}/api/tour/areaBasedList2`;
   const serviceKey = getServiceKey();
 
   const otherParams = new URLSearchParams();

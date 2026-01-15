@@ -28,8 +28,18 @@ import {
   Phone,
   Dog,
   BookOpenText,
-  BadgeInfo, // 반려동물 아이콘 추가
+  BadgeInfo,
 } from "lucide-react";
+import {
+  isCultureFacility,
+  isLeports,
+  isLodging,
+  isRestaurant,
+  isShopping,
+  isTouristSpot,
+  isFestival, // 타입 가드 추가 확인
+  type SpotDetailIntroItem,
+} from "../../models/tourDetail";
 
 // 이미지 소스셋 설정 함수
 function srcset(image: string, size: number, rows = 1, cols = 1) {
@@ -54,16 +64,17 @@ const formatHtmlText = (htmlString: string): string => {
 // 레이블에 따른 아이콘 매핑
 const getIcon = (label: string = "") => {
   const iconStyle = { size: 18 };
-  if (label.includes("문의") || label.includes("전화"))
+  const lowerLabel = label.toLowerCase();
+  if (lowerLabel.includes("문의") || lowerLabel.includes("전화"))
     return <Phone {...iconStyle} />;
-  if (label.includes("주소") || label.includes("위치"))
+  if (lowerLabel.includes("주소") || lowerLabel.includes("위치"))
     return <Building {...iconStyle} />;
-  if (label.includes("휴일") || label.includes("쉬는날"))
+  if (lowerLabel.includes("휴일") || lowerLabel.includes("쉬는날"))
     return <Calendar {...iconStyle} />;
-  if (label.includes("시간")) return <Clock {...iconStyle} />;
-  if (label.includes("주차")) return <ParkingCircle {...iconStyle} />;
-  if (label.includes("홈페이지")) return <Languages {...iconStyle} />;
-  if (label.includes("반려동물") || label.includes("동반"))
+  if (lowerLabel.includes("시간")) return <Clock {...iconStyle} />;
+  if (lowerLabel.includes("주차")) return <ParkingCircle {...iconStyle} />;
+  if (lowerLabel.includes("홈페이지")) return <Languages {...iconStyle} />;
+  if (lowerLabel.includes("반려동물") || lowerLabel.includes("동반"))
     return <Dog {...iconStyle} />;
   return <Info {...iconStyle} />;
 };
@@ -116,7 +127,7 @@ const InfoItem = ({
         {label}
       </Typography>
     </Stack>
-    <Typography
+    <Box
       sx={{
         fontSize: "0.95rem",
         color: "text.primary",
@@ -127,7 +138,7 @@ const InfoItem = ({
       }}
     >
       {value}
-    </Typography>
+    </Box>
   </Box>
 );
 
@@ -135,11 +146,9 @@ const SpotDetailPage = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
+  // 1. 데이터 페칭
   const { data: spotData, isLoading: isCommonLoading } =
-    useTourSpotDetailCommon({
-      contentId: id!,
-    });
-
+    useTourSpotDetailCommon({ contentId: id! });
   const spot = spotData?.response?.body?.items?.item?.[0];
   const contentTypeId = spot?.contenttypeid;
 
@@ -159,22 +168,83 @@ const SpotDetailPage = () => {
     contentId: id!,
     imageYN: "Y",
   });
-
   const { data: petTourData } = useTourSpotDetailPetTour({ contentId: id! });
 
+  // 2. 변수 정리
   const intro = introData?.response?.body?.items?.item?.[0];
   const infos = infoData?.response?.body?.items?.item || [];
   const images = imageData?.response?.body?.items?.item || [];
   const petInfo = petTourData?.response?.body?.items?.item?.[0];
 
-  const call = intro?.infocenter;
+  // 상세 소개 정보 매핑 함수 (타입 안전성 확보)
+  const getIntroDetails = (introData?: SpotDetailIntroItem) => {
+    if (!introData) return { call: "", restDate: "", useTime: "", parking: "" };
+
+    if (isTouristSpot(introData)) {
+      return {
+        call: introData.infocenter,
+        restDate: introData.restdate,
+        useTime: introData.usetime,
+        parking: introData.parking,
+      };
+    }
+    if (isCultureFacility(introData)) {
+      return {
+        call: introData.infocenterculture,
+        restDate: introData.restdateculture,
+        useTime: introData.usetimeculture,
+        parking: introData.parkingculture,
+      };
+    }
+    if (isLeports(introData)) {
+      return {
+        call: introData.infocenterleports,
+        restDate: introData.restdateleports,
+        useTime: introData.usetimeleports,
+        parking: introData.parkingleports,
+      };
+    }
+    if (isShopping(introData)) {
+      return {
+        call: introData.infocentershopping,
+        restDate: introData.restdateshopping,
+        useTime: introData.opentime,
+        parking: introData.parkingshopping,
+      };
+    }
+    if (isRestaurant(introData)) {
+      return {
+        call: introData.infocenterfood,
+        restDate: introData.restdatefood,
+        useTime: introData.opentimefood,
+        parking: introData.parkingfood,
+      };
+    }
+    if (isLodging(introData)) {
+      return {
+        call: introData.infocenterlodging,
+        restDate: "",
+        useTime: `${introData.checkintime} ~ ${introData.checkouttime}`,
+        parking: introData.parkinglodging,
+      };
+    }
+    if (isFestival(introData)) {
+      return {
+        call: introData.sponsor1tel || introData.sponsor2tel,
+        restDate: `${introData.eventstartdate} ~ ${introData.eventenddate}`,
+        useTime: introData.playtime,
+        parking: "",
+      };
+    }
+    return { call: "", restDate: "", useTime: "", parking: "" };
+  };
+
+  const { call, restDate, useTime, parking } = getIntroDetails(intro);
   const address = spot?.addr1;
-  const restDate = intro?.restdate;
-  const useTime = intro?.usetime;
-  const parking = intro?.parking;
   const rawHomepage = spot?.homepage ?? "";
   const urlMatch = rawHomepage.match(/https?:\/\/[^"]+/);
 
+  // 3. 로딩 및 에러 처리
   if (isCommonLoading || isIntroLoading || isInfoLoading) {
     return (
       <Container sx={{ py: 10, textAlign: "center" }}>
@@ -249,7 +319,7 @@ const SpotDetailPage = () => {
       </Box>
 
       {/* 상세 설명 섹션 */}
-      <Box sx={{ width: "100%", mb: 6 }}>
+      <Box sx={{ width: "100%", mb: 10 }}>
         <Stack
           direction="row"
           spacing={1.5}
@@ -266,11 +336,10 @@ const SpotDetailPage = () => {
           >
             <BookOpenText size={24} color="#2D6A4F" />
           </Box>
-          <Typography variant="h5" sx={{ fontWeight: 800, mb: 4 }}>
+          <Typography variant="h5" sx={{ fontWeight: 800 }}>
             상세 설명
           </Typography>
         </Stack>
-
         <Typography
           sx={{
             fontSize: "1.125rem",
@@ -280,13 +349,14 @@ const SpotDetailPage = () => {
             borderRadius: 4,
             border: "1px solid",
             borderColor: "grey.100",
+            wordBreak: "keep-all",
           }}
         >
           {spot?.overview}
         </Typography>
       </Box>
 
-      {/* 반려동물 동반 정보 섹션 (데이터 있을 때만) */}
+      {/* 반려동물 동반 정보 섹션 */}
       {petInfo && (
         <Box sx={{ width: "100%", mb: 12 }}>
           <Stack
@@ -305,7 +375,7 @@ const SpotDetailPage = () => {
             >
               <Dog size={24} color="#f57c00" />
             </Box>
-            <Typography variant="h5" sx={{ fontWeight: 800, mb: 4 }}>
+            <Typography variant="h5" sx={{ fontWeight: 800 }}>
               반려동물 동반 정보
             </Typography>
           </Stack>
@@ -364,22 +434,12 @@ const SpotDetailPage = () => {
                   />
                 </Box>
               )}
-              {petInfo.relaAcdntRiskMtr && (
-                <Box sx={{ gridColumn: { md: "span 2" } }}>
-                  <InfoItem
-                    label="주의사항"
-                    value={petInfo.relaAcdntRiskMtr}
-                    isMultiline
-                    isPet
-                  />
-                </Box>
-              )}
             </Box>
           </Paper>
         </Box>
       )}
 
-      {/* 추가 이미지 갤러리 */}
+      {/* 이미지 갤러리 */}
       {images.length > 0 && (
         <Box sx={{ width: "100%", mb: 10 }}>
           <ImageList
@@ -389,20 +449,8 @@ const SpotDetailPage = () => {
             sx={{ borderRadius: 2, overflow: "hidden" }}
           >
             {images.map((item: any, index: number) => {
-              let cols = 1;
-              let rows = 1;
-              if (index === 0) {
-                cols = 2;
-                rows = 2;
-              }
-              if (index === 3) {
-                cols = 2;
-                rows = 1;
-              }
-              if (index === 6) {
-                cols = 2;
-                rows = 2;
-              }
+              const cols = index === 0 || index === 6 ? 2 : 1;
+              const rows = index === 0 || index === 6 ? 2 : 1;
               return (
                 <ImageListItem
                   key={item.serialnum || index}
@@ -414,7 +462,6 @@ const SpotDetailPage = () => {
                     alt={item.imgname || "투어 이미지"}
                     loading="lazy"
                     style={{
-                      borderRadius: "4px",
                       width: "100%",
                       height: "100%",
                       objectFit: "cover",
@@ -433,6 +480,7 @@ const SpotDetailPage = () => {
           width: "100%",
           bgcolor: "grey.50",
           py: { xs: 4, md: 8 },
+          px: { xs: 2, md: 6 },
           borderRadius: 8,
         }}
       >
@@ -450,13 +498,12 @@ const SpotDetailPage = () => {
               display: "flex",
             }}
           >
-            <BadgeInfo size={24} color="#000000ff" />
+            <BadgeInfo size={24} color="#333" />
           </Box>
-          <Typography variant="h5" sx={{ fontWeight: 800, mb: 4 }}>
+          <Typography variant="h5" sx={{ fontWeight: 800 }}>
             이용 정보
           </Typography>
         </Stack>
-
         <Divider sx={{ mb: 2, borderColor: "grey.200" }} />
         <Box
           sx={{
@@ -480,9 +527,9 @@ const SpotDetailPage = () => {
               .map((info, i) => (
                 <InfoItem
                   key={`left-${i}`}
-                  label={info.infoname || ""}
-                  value={formatHtmlText(info.infotext || "")}
-                  isMultiline={info.infotext?.includes("<br") ?? false}
+                  label={info.infoname}
+                  value={formatHtmlText(info.infotext)}
+                  isMultiline
                 />
               ))}
           </Box>
@@ -495,15 +542,6 @@ const SpotDetailPage = () => {
                     href={urlMatch[0]}
                     target="_blank"
                     rel="noopener noreferrer"
-                    sx={{
-                      fontSize: "0.875rem",
-                      fontWeight: 500,
-                      textDecoration: "none",
-                      "&:hover": {
-                        textDecoration: "underline",
-                        color: "action.hover",
-                      },
-                    }}
                   >
                     공식 홈페이지 방문하기
                   </Link>
@@ -523,9 +561,9 @@ const SpotDetailPage = () => {
               .map((info, i) => (
                 <InfoItem
                   key={`right-${i}`}
-                  label={info.infoname || ""}
-                  value={formatHtmlText(info.infotext || "")}
-                  isMultiline={info.infotext?.includes("<br") ?? false}
+                  label={info.infoname}
+                  value={formatHtmlText(info.infotext)}
+                  isMultiline
                 />
               ))}
           </Box>

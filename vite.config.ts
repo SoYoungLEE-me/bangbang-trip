@@ -1,20 +1,17 @@
-import { defineConfig } from 'vite'
-import react from '@vitejs/plugin-react'
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      '/api/tour': {
-        target: 'https://apis.data.go.kr',
+      // 이제 /api/tour/areaBasedList2 라고 호출하면
+      // https://apis.data.go.kr/B551011/KorService2/areaBasedList2 로 연결됩니다.
+      "/api/tour": {
+        target: "https://apis.data.go.kr/B551011/KorService2",
         changeOrigin: true,
-        secure: true,
-        rewrite: (path) => {
-          const [pathOnly, queryString] = path.split('?');
-          const newPath = pathOnly.replace(/^\/api\/tour/, '/B551011/KorService2');
-          return queryString ? `${newPath}?${queryString}` : newPath;
-        },
+        rewrite: (path) => path.replace(/^\/api\/tour/, ""), // /api/tour 부분만 제거
       },
     },
   },
-})
+});

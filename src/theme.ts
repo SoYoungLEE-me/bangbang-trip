@@ -22,7 +22,7 @@ const theme = createTheme({
     },
     action: {
       hover: "#dab80eff",
-      active: "#f2cb0bff",
+      active: "#2D6A4F",
     },
   },
   typography: {

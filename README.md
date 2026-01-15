@@ -47,6 +47,7 @@ npm install react-router-dom
 npm install @tanstack/react-query
 npm install @supabase/supabase-js
 npm install lucide-react
+npm install zustand
 ```
 
 <br>

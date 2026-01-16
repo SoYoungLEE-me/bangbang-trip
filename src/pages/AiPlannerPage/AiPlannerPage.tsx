@@ -9,43 +9,13 @@ import { supabase } from "../../lib/supabase";
 import { usePlannerFormStore } from "../../stores/plannerFormStore";
 import AiPlannerResultPanel from "./components/AiPlannerResultPanel";
 import { useAiPlanner } from "../../hooks/useAiPlanner";
-import type { TourSpot } from "../../models/tour";
 import SavePlanDialog from "./components/SavePlanDialog";
-
-const MOCK_TOUR_SPOTS: TourSpot[] = [
-  {
-    contentid: "3027228",
-    title: "경복궁",
-    firstimage:
-      "http://tong.visitkorea.or.kr/cms/resource/94/3027194_image2_1.JPG",
-    firstimage2: "",
-    addr1: "서울특별시 종로구 사직로 161",
-    areacode: "1",
-    sigungucode: "23",
-    contenttypeid: "12",
-    mapx: "126.9769",
-    mapy: "37.5796",
-  },
-  {
-    contentid: "126508",
-    title: "북촌 한옥마을",
-    firstimage:
-      "http://tong.visitkorea.or.kr/cms/resource/01/2678401_image2_1.jpg",
-    firstimage2: "",
-    addr1: "서울특별시 종로구 계동길 37",
-    areacode: "1",
-    sigungucode: "23",
-    contenttypeid: "12",
-    mapx: "126.9849",
-    mapy: "37.5826",
-  },
-];
 
 type SaveStatus = "unsaved" | "saving" | "saved";
 
 const AiPlannerPage = () => {
-  const { removeSpot } = useSelectedSpotsStore();
   const { plannerForm, setPlannerForm } = usePlannerFormStore();
+  const { selectedSpots, removeSpot } = useSelectedSpotsStore();
 
   const { user } = useAuthStore();
   const [loginAlertOpen, setLoginAlertOpen] = useState(false);
@@ -73,7 +43,7 @@ const AiPlannerPage = () => {
       return;
     }
 
-    if (MOCK_TOUR_SPOTS.length === 0) {
+    if (selectedSpots.length === 0) {
       setSpotAlertOpen(true);
       return;
     }
@@ -81,7 +51,7 @@ const AiPlannerPage = () => {
     try {
       setSaveStatus("unsaved");
       await mutateAsync({
-        spots: MOCK_TOUR_SPOTS,
+        spots: selectedSpots,
         form: plannerForm,
       });
 
@@ -107,7 +77,7 @@ const AiPlannerPage = () => {
       await supabase.from("plans").insert({
         user_id: user.id,
         title,
-        spots: MOCK_TOUR_SPOTS,
+        spots: selectedSpots,
         plan: data,
       });
 
@@ -154,7 +124,7 @@ const AiPlannerPage = () => {
       <Grid container spacing={6} alignItems="flex-start">
         {/* 담은 장소 */}
         <Grid size={{ xs: 12, md: 4 }}>
-          <SelectedSpotsPanel spots={MOCK_TOUR_SPOTS} onRemove={removeSpot} />
+          <SelectedSpotsPanel spots={selectedSpots} onRemove={removeSpot} />
         </Grid>
 
         {/* 유저 입력 폼 */}

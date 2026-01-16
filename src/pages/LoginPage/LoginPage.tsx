@@ -236,7 +236,8 @@ const LoginPage = () => {
         open={alertOpen}
         message="로그인 되었습니다."
         severity="success"
-        onClose={() => setAlertOpen(false)}
+        onConfirm={() => setAlertOpen(false)}
+        onCancel={() => setAlertOpen(false)}
       />
     </Box>
   );

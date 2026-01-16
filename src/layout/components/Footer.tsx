@@ -1,6 +1,12 @@
 import { Box, Container, Typography, useTheme, Link } from "@mui/material";
-import { MapPin, Mail, Phone, Facebook, Instagram, Twitter } from "lucide-react";
-
+import {
+  MapPin,
+  Mail,
+  Phone,
+  Facebook,
+  Instagram,
+  Twitter,
+} from "lucide-react";
 
 const Footer = () => {
   const theme = useTheme();
@@ -142,7 +148,7 @@ const Footer = () => {
                 AI 여행 플래너
               </Link>
               <Link
-                href="/my"
+                href="/mypage"
                 sx={{
                   color: "rgba(255,255,255,0.8)",
                   textDecoration: "none",

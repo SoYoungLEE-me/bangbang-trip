@@ -275,7 +275,11 @@ const RegisterPage = () => {
         open={alertOpen}
         message="회원가입이 완료되었습니다."
         severity="success"
-        onClose={() => {
+        onConfirm={() => {
+          setAlertOpen(false);
+          navigate("/");
+        }}
+        onCancel={() => {
           setAlertOpen(false);
           navigate("/");
         }}

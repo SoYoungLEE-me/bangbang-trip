@@ -162,13 +162,15 @@ const AiPlannerPage = () => {
       </Grid>
       <AppAlert
         open={loginAlertOpen}
-        onClose={() => setLoginAlertOpen(false)}
+        onConfirm={() => setLoginAlertOpen(false)}
+        onCancel={() => setLoginAlertOpen(false)}
         severity="info"
         message="로그인 후 이용하실 수 있습니다."
       />
       <AppAlert
         open={creditAlertOpen}
-        onClose={() => setCreditAlertOpen(false)}
+        onConfirm={() => setLoginAlertOpen(false)}
+        onCancel={() => setLoginAlertOpen(false)}
         severity="error"
         message="오늘 사용 가능한 횟수를 모두 사용하셨습니다."
       />

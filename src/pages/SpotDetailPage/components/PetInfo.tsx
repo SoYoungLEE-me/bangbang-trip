@@ -1,14 +1,7 @@
 import { Box, Stack, Typography, Paper } from "@mui/material";
 import { Dog } from "lucide-react";
 import { InfoItem } from "./InfoItem";
-
-interface PetTourItem {
-  acmpyTypeCd?: string;
-  acmpyPsblCpam?: string;
-  acmpyNeedMtr?: string;
-  relaPosesFclty?: string;
-  etcAcmpyInfo?: string;
-}
+import type { PetTourItem } from "../../../models/tourDetail";
 
 export const PetInfo = ({ petInfo }: { petInfo?: PetTourItem }) => {
   if (!petInfo) return null;
@@ -23,7 +16,7 @@ export const PetInfo = ({ petInfo }: { petInfo?: PetTourItem }) => {
   if (!hasData) return null;
 
   return (
-    <Box sx={{ width: "100%", mb: 12 }}>
+    <Box sx={{ width: "100%", mb: { xs: 6, md: 12 } }}>
       <Stack direction="row" spacing={1.5} alignItems="center" sx={{ mb: 3.5 }}>
         <Box
           sx={{ bgcolor: "#f7f1e9ff", p: 1, borderRadius: 4, display: "flex" }}

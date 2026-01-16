@@ -1,4 +1,14 @@
-import { Card, CardMedia, CardContent, IconButton, Typography, useTheme, Box, Snackbar, Button } from "@mui/material";
+import {
+  Card,
+  CardMedia,
+  CardContent,
+  IconButton,
+  Typography,
+  useTheme,
+  Box,
+  Snackbar,
+  Button,
+} from "@mui/material";
 import { Heart, CameraOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -27,8 +37,8 @@ const convertToTourSpot = (course: CardData): TourSpot => {
     addr2: course.addr2,
     firstimage: course.firstimage,
     firstimage2: course.firstimage2,
-    mapx: "mapx" in course ? (course.mapx || "") : "",
-    mapy: "mapy" in course ? (course.mapy || "") : "",
+    mapx: "mapx" in course ? course.mapx || "" : "",
+    mapy: "mapy" in course ? course.mapy || "" : "",
     tel: "tel" in course ? course.tel : undefined,
     areacode: course.areacode,
     sigungucode: course.sigungucode,
@@ -75,7 +85,7 @@ const TourCourseCard = ({
 
   const handleToggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
-    
+
     if (onSave) {
       onSave(course.contentid);
     } else {
@@ -84,7 +94,7 @@ const TourCourseCard = ({
 
       setSnackbarOpen(false);
       toggleSpot(tourSpot);
-      
+
       // Snackbar 메시지 설정
       if (wasSaved) {
         setSnackbarMessage("찜을 취소했습니다.");
@@ -121,7 +131,7 @@ const TourCourseCard = ({
       toggleSpot(lastRemovedSpot);
       setSnackbarOpen(false);
       setLastRemovedSpot(null);
-      
+
       // 실행 취소 완료 메시지 (선택사항)
       setSnackbarMessage("찜하기가 복구되었습니다.");
       setIsAdded(true);
@@ -132,7 +142,9 @@ const TourCourseCard = ({
   const formatAddress = (addr: string | undefined): string => {
     if (!addr) return "";
     const addrArray = addr.split(" ");
-    return addrArray.length > 1 ? `${addrArray[0]} ${addrArray[1]}` : addrArray[0];
+    return addrArray.length > 1
+      ? `${addrArray[0]} ${addrArray[1]}`
+      : addrArray[0];
   };
 
   const shouldShowAddress = showAddress || contentTypeId === "12";
@@ -197,7 +209,11 @@ const TourCourseCard = ({
                 },
               }}
             >
-              <CameraOff className="no-image-icon" size={50} color={theme.palette.text.secondary} />
+              <CameraOff
+                className="no-image-icon"
+                size={50}
+                color={theme.palette.text.secondary}
+              />
             </Box>
           )}
         </Box>
@@ -220,7 +236,11 @@ const TourCourseCard = ({
           <Heart
             size={20}
             fill={finalIsSaved ? theme.palette.error.main : "none"}
-            color={finalIsSaved ? theme.palette.error.main : theme.palette.text.secondary}
+            color={
+              finalIsSaved
+                ? theme.palette.error.main
+                : theme.palette.text.secondary
+            }
           />
         </IconButton>
 
@@ -243,19 +263,28 @@ const TourCourseCard = ({
           </Typography>
 
           {/* 축제 기간 표시 */}
-          {"eventstartdate" in course && course.eventstartdate && course.eventenddate && (
-            <Typography
-              variant="body2"
-              sx={{
-                fontSize: "14px",
-                color: theme.palette.text.secondary,
-                mt: 0.5,
-              }}
-            >
-              {course.eventstartdate.replace(/(\d{4})(\d{2})(\d{2})/, "$1.$2.$3")} ~{" "}
-              {course.eventenddate.replace(/(\d{4})(\d{2})(\d{2})/, "$1.$2.$3")}
-            </Typography>
-          )}
+          {"eventstartdate" in course &&
+            course.eventstartdate &&
+            course.eventenddate && (
+              <Typography
+                variant="body2"
+                sx={{
+                  fontSize: "14px",
+                  color: theme.palette.text.secondary,
+                  mt: 0.5,
+                }}
+              >
+                {course.eventstartdate.replace(
+                  /(\d{4})(\d{2})(\d{2})/,
+                  "$1.$2.$3"
+                )}{" "}
+                ~{" "}
+                {course.eventenddate.replace(
+                  /(\d{4})(\d{2})(\d{2})/,
+                  "$1.$2.$3"
+                )}
+              </Typography>
+            )}
 
           {/* 지역 정보 배지 */}
           {course.addr1 && (
@@ -266,7 +295,7 @@ const TourCourseCard = ({
                 color: theme.palette.primary.main,
                 px: 1,
                 py: 0.5,
-                marginLeft: '-3px',
+                marginLeft: "-3px",
                 borderRadius: "20px",
                 fontSize: "12px",
                 fontWeight: 600,
@@ -292,8 +321,6 @@ const TourCourseCard = ({
               {formatAddress(course.addr1)}
             </Typography>
           )}
-
-          
         </CardContent>
       </Card>
 
@@ -303,7 +330,7 @@ const TourCourseCard = ({
         onClose={handleCloseSnackbar}
         message={snackbarMessage}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
-         sx={{
+        sx={{
           marginLeft: { xs: 12, sm: 2, md: 0 },
           marginRight: { xs: 12, sm: 2, md: 0 },
           maxWidth: { xs: "calc(100% - 32px)", sm: "600px" },
@@ -347,7 +374,7 @@ const TourCourseCard = ({
             </Button>
           ) : undefined
         }
-      />      
+      />
     </>
   );
 };

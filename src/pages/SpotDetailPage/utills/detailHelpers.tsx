@@ -161,8 +161,6 @@ export const getIntroDetails = (introData?: SpotDetailIntroItem) => {
         value: formatHtmlText(introData.schedule),
         isMultiline: true,
       });
-    if (introData.theme)
-      details.push({ label: "코스 테마", value: introData.theme });
   }
 
   // 레포츠(28)

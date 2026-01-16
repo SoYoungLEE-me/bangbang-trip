@@ -41,10 +41,11 @@ export const InfoItem = ({
       </Box>
       <Typography
         sx={{
-          fontSize: "1.05rem",
+          fontSize: { xs: "0.9375rem", md: "1.05rem" },
           fontWeight: "700",
           color: "text.secondary",
           letterSpacing: "-0.01em",
+          wordBreak: "keep-all",
         }}
       >
         {label}

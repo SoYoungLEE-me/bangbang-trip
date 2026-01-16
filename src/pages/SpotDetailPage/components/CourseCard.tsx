@@ -23,6 +23,7 @@ export const CourseCard = ({ course, idx }: CourseItemProps) => {
 
   const handleCardClick = () => {
     if (course.subcontentid) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
       navigate(`/spots/${course.subcontentid}`);
     }
   };
@@ -47,6 +48,7 @@ export const CourseCard = ({ course, idx }: CourseItemProps) => {
             variant="h6"
             sx={{
               fontWeight: 700,
+              wordBreak: "keep-all",
               "&:hover": { cursor: "pointer", textDecoration: "underline" },
             }}
           >
@@ -72,7 +74,7 @@ export const CourseCard = ({ course, idx }: CourseItemProps) => {
             }}
           >
             <MapPin size={14} />
-            {address}
+            {address.split(" ").slice(0, 2).join(" ")}
           </Box>
         )}
 

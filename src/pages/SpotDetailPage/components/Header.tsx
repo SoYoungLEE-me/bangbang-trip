@@ -16,7 +16,7 @@ export const Header = ({ spot }: { spot: SpotCommon }) => {
       <Typography
         variant="h1"
         sx={{
-          fontSize: { xs: "2.25rem", md: "3.5rem" },
+          fontSize: { xs: "2rem", md: "3.5rem" },
           fontWeight: 800,
           mb: { lg: 7, md: 5, xs: 5 },
           wordBreak: "keep-all",

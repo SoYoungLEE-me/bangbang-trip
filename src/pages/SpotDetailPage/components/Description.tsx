@@ -1,6 +1,6 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { BookOpenText } from "lucide-react";
-import { formatHtmlText } from "../utills/formatters";
+import { formatHtmlText } from "../utils/formatters";
 
 export const Description = ({ overview }: { overview?: string }) => {
   if (!overview) return null;

@@ -1,5 +1,5 @@
 import { Box, ImageList, ImageListItem } from "@mui/material";
-import { srcset } from "../utills/formatters";
+import { srcset } from "../utils/formatters";
 import type { SpotImage } from "../../../models/tourDetail";
 
 export const ImageGallery = ({ images }: { images: SpotImage[] }) => {

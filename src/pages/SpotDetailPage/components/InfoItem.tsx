@@ -1,5 +1,5 @@
 import { Box, Stack, Typography } from "@mui/material";
-import { getIcon } from "../utills/detailHelpers";
+import { getIcon } from "../utils/detailHelpers";
 
 interface InfoItemProps {
   label: string;

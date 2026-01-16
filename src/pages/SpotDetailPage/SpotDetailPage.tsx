@@ -14,8 +14,8 @@ import { Course } from "./components/Course";
 import { PetInfo } from "./components/PetInfo";
 import { InfoSection } from "./components/InfoSection";
 
-import { getIntroDetails } from "./utills/detailHelpers";
-import { formatHtmlText } from "./utills/formatters";
+import { getIntroDetails } from "./utils/detailHelpers";
+import { formatHtmlText } from "./utils/formatters";
 import type {
   SpotDetailInfoItem,
   TourCourseInfoItem,

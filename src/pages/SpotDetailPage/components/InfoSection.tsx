@@ -1,7 +1,7 @@
 import { Box, Stack, Typography, Divider, Link } from "@mui/material";
 import { BadgeInfo } from "lucide-react";
 import { InfoItem } from "./InfoItem";
-import { formatHtmlText } from "../utills/formatters";
+import { formatHtmlText } from "../utils/formatters";
 import type {
   IntroDetailItem,
   SpotDetailInfoItem,

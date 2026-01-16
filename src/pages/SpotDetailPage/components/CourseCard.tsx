@@ -1,5 +1,5 @@
 import { Box, Stack, Typography, Paper, Chip } from "@mui/material";
-import { formatHtmlText } from "../utills/formatters";
+import { formatHtmlText } from "../utils/formatters";
 import type { TourCourseInfoItem } from "../../../models/tourDetail";
 import { useTourSpotDetailCommon } from "../../../hooks/useTourSpotDetailCommon";
 import theme from "../../../theme";

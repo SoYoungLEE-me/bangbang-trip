@@ -31,7 +31,6 @@ const LandingPage = () => {
   const navigate = useNavigate();
   const theme = useTheme();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [savedCourses, setSavedCourses] = useState<Set<string>>(new Set());
   const [isPaused, setIsPaused] = useState(false);
   const SLIDE_COUNT = 10;
 
@@ -83,18 +82,6 @@ const LandingPage = () => {
 
   const handleTogglePause = () => {
     setIsPaused((prev) => !prev);
-  };
-
-  const handleSaveCourse = (id: string) => {
-    setSavedCourses((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(id)) {
-        newSet.delete(id);
-      } else {
-        newSet.add(id);
-      }
-      return newSet;
-    });
   };
 
   // 로딩 상태
@@ -183,7 +170,7 @@ const LandingPage = () => {
                     transform: "translateX(-50%)",
                     zIndex: 1,
                     textAlign: "center",
-                    color: "white",
+                    color: theme.palette.background.default,
                     mt: { xs: 10, md: 15 },
                   }}
                 >
@@ -204,7 +191,7 @@ const LandingPage = () => {
                     sx={{
                       backgroundColor: "rgba(0, 0, 0, 0.3)",
                       border: "1px solid rgba(255, 255, 255, 0.5)",
-                      color: "white",
+                      color: theme.palette.background.default,
                       borderRadius: 1,
                       px: { xs: 1, md: 2 },
                       py: { xs: 0.5, md: 0.5 },
@@ -240,7 +227,10 @@ const LandingPage = () => {
                   transform: "translateY(-50%)",
                   backgroundColor: "rgba(255,255,255,0.3)",
                   color: theme.palette.text.secondary,
-                  "&:hover": { backgroundColor: "rgba(255,255,255,0.8)" },
+                  "&:hover": { 
+                    backgroundColor: theme.palette.background.default, 
+                    opacity: 0.8,
+                    color: theme.palette.primary.main },
                   zIndex: 1,
                 }}
               >
@@ -255,7 +245,10 @@ const LandingPage = () => {
                   transform: "translateY(-50%)",
                   backgroundColor: "rgba(255,255,255,0.3)",
                   color: theme.palette.text.secondary,
-                  "&:hover": { backgroundColor: "rgba(255,255,255,0.8)" },
+                  "&:hover": { 
+                    backgroundColor: theme.palette.background.default, 
+                    opacity: 0.8,
+                    color: theme.palette.primary.main },
                   zIndex: 1,
                 }}
               >
@@ -286,7 +279,7 @@ const LandingPage = () => {
                         borderRadius: 4,
                         backgroundColor:
                           currentSlide === index
-                            ? "white"
+                            ? theme.palette.background.default
                             : "rgba(255,255,255,0.5)",
                         cursor: "pointer",
                         transition: "all 0.3s ease",
@@ -339,8 +332,6 @@ const LandingPage = () => {
               <Grid size={{ xs: 12, sm: 6, md: 3 }} key={festival.contentid}>
                 <TourCourseCard
                   course={festival}
-                  isSaved={savedCourses.has(festival.contentid)}
-                  onSave={handleSaveCourse}
                 />
               </Grid>
             ))}
@@ -359,20 +350,19 @@ const LandingPage = () => {
             }}
           >
             인기 관광지
-          </Typography>
+          </Typography>          
 
+          {/* 인기 관광지 카드 섹션 */}
           <Grid container spacing={3}>
             {popularSpots.slice(0, 8).map((spot) => (
               <Grid size={{ xs: 12, sm: 6, md: 3 }} key={spot.contentid}>
                 <TourCourseCard
                   course={spot}
-                  isSaved={savedCourses.has(spot.contentid)}
-                  onSave={handleSaveCourse}
                 />
               </Grid>
             ))}
           </Grid>
-        </Box>
+          </Box>    
 
         {/* 홈페이지 소개글 섹션 */}
         <Box
@@ -416,11 +406,11 @@ const LandingPage = () => {
           </Typography>
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Button
-              onClick={() => navigate("/ai-planner")}
+              onClick={() => {navigate("/ai-planner"); window.scrollTo(0, 0); }}
               variant="contained"
               sx={{
                 backgroundColor: theme.palette.primary.main,
-                color: "white",
+                color: theme.palette.background.default,
                 px: { xs: 3, md: 4 },
                 py: { xs: 1.5, md: 2 },
                 fontSize: { xs: "14px", md: "16px" },

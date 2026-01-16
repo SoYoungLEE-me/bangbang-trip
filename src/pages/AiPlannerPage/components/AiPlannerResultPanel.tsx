@@ -1,13 +1,25 @@
-import { Box, Typography, Stack, Divider, Grid } from "@mui/material";
-import { CalendarDays, Briefcase, Clock } from "lucide-react"; // Clock 아이콘 추가
+import { Box, Typography, Stack, Divider, Grid, Button } from "@mui/material";
+import {
+  CalendarDays,
+  Briefcase,
+  Clock,
+  Bookmark,
+  BookmarkCheck,
+} from "lucide-react";
 import { alpha, useTheme } from "@mui/material/styles";
 import type { AiPlannerResult } from "../../../models/aiPlanner";
 
 interface AiPlannerResultPanelProps {
   result: AiPlannerResult;
+  onSave?: () => void;
+  saveStatus?: "unsaved" | "saving" | "saved";
 }
 
-const AiPlannerResultPanel = ({ result }: AiPlannerResultPanelProps) => {
+const AiPlannerResultPanel = ({
+  result,
+  onSave,
+  saveStatus,
+}: AiPlannerResultPanelProps) => {
   const theme = useTheme();
 
   if (
@@ -32,22 +44,67 @@ const AiPlannerResultPanel = ({ result }: AiPlannerResultPanelProps) => {
         color: theme.palette.text.primary,
       }}
     >
-      <Grid container spacing={5} alignItems="flex-start">
-        {/* 왼쪽: 타임라인 */}
-        <Grid size={{ xs: 12, md: 8 }}>
-          <Typography
-            variant="h1"
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          mb: 5,
+          gap: 2,
+        }}
+      >
+        <Typography
+          variant="h1"
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: 1.5,
+            color: primaryColor,
+            mb: 0,
+          }}
+        >
+          <CalendarDays size={26} /> 여행 타임라인
+        </Typography>
+
+        {/* 저장 버튼 */}
+        {onSave && (
+          <Button
+            variant={saveStatus === "saved" ? "contained" : "outlined"}
+            disabled={saveStatus !== "unsaved"}
+            onClick={onSave}
+            startIcon={
+              saveStatus === "saved" ? (
+                <BookmarkCheck size={18} />
+              ) : (
+                <Bookmark size={18} />
+              )
+            }
             sx={{
-              mb: 5,
-              display: "flex",
-              alignItems: "center",
-              gap: 1.5,
-              color: primaryColor,
+              ml: "auto",
+              borderRadius: 999,
+              px: 2.5,
+              fontWeight: 700,
+              textTransform: "none",
+              whiteSpace: "nowrap",
+              "&.Mui-disabled": {
+                opacity: 1,
+                color:
+                  saveStatus === "saved"
+                    ? "primary.contrastText"
+                    : "text.secondary",
+                backgroundColor:
+                  saveStatus === "saved" ? "primary.main" : "transparent",
+                borderColor:
+                  saveStatus === "saved" ? "primary.main" : "divider",
+              },
             }}
           >
-            <CalendarDays size={26} /> 여행 타임라인
-          </Typography>
-
+            {saveStatus === "saved" ? "저장됨" : "일정 저장하기"}
+          </Button>
+        )}
+      </Box>
+      <Grid container spacing={5} alignItems="flex-start">
+        {/* 타임라인 */}
+        <Grid size={{ xs: 12, md: 8 }}>
           <Stack spacing={6}>
             {result.itinerary.map((day) => (
               <Box key={day.day}>
@@ -72,7 +129,6 @@ const AiPlannerResultPanel = ({ result }: AiPlannerResultPanelProps) => {
 
                 {/* 타임라인 영역 */}
                 <Box sx={{ position: "relative" }}>
-                  {/* 세로선 */}
                   <Box
                     sx={{
                       position: "absolute",

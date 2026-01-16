@@ -30,6 +30,8 @@ const AiPlannerPage = () => {
 
   const { mutateAsync, data, isPending, isError } = useAiPlanner();
 
+  const defaultTitle = "나만의 여행 일정";
+
   // removeSpot 호출 후 localStorage도 업데이트하는 래퍼 함수
   const handleRemoveSpot = (contentid: string) => {
     removeSpot(contentid);
@@ -48,19 +50,33 @@ const AiPlannerPage = () => {
       return;
     }
 
-    // 중복된 dailyCredits 체크 하나로 통합
-    if (dailyCredits === 0) {
-      setCreditAlertOpen(true);
-      return;
-    }
-
     if (selectedSpots.length === 0) {
       setSpotAlertOpen(true);
       return;
     }
 
+    const { data: credits, error } = await supabase.rpc(
+      "reset_daily_credits_if_needed",
+      {
+        user_id: user.id,
+        max_credits: 5,
+      }
+    );
+
+    if (error) {
+      console.error(error);
+      return;
+    }
+
+    if (credits <= 0) {
+      setCreditAlertOpen(true);
+      setDailyCredits(credits);
+      return;
+    }
+
     try {
       setSaveStatus("unsaved");
+
       await mutateAsync({
         spots: selectedSpots,
         form: plannerForm,
@@ -68,10 +84,10 @@ const AiPlannerPage = () => {
 
       await supabase
         .from("profiles")
-        .update({ daily_credits: dailyCredits! - 1 })
+        .update({ daily_credits: credits - 1 })
         .eq("id", user.id);
 
-      setDailyCredits((prev) => prev! - 1);
+      setDailyCredits(credits - 1);
     } catch (error) {
       console.error(error);
       alert("AI 일정 생성 중 오류가 발생했습니다.");
@@ -80,41 +96,48 @@ const AiPlannerPage = () => {
 
   //결과 저장
   const handleSavePlan = async (title: string) => {
-    if (!user || !data) return;
-
-    try {
-      setSaveStatus("saving");
-
-      await supabase.from("plans").insert({
-        user_id: user.id,
-        title,
-        spots: selectedSpots,
-        plan: data,
-      });
-
-      setSaveStatus("saved");
-    } catch (e) {
-      console.error(e);
-      setSaveStatus("unsaved"); // 실패 시 복구
+    if (!user || !data) {
+      throw new Error("저장에 필요한 데이터가 없습니다.");
     }
+
+    setSaveStatus("saving");
+
+    const { error } = await supabase.from("plans").insert({
+      user_id: user.id,
+      title,
+      spots: selectedSpots,
+      plan: data,
+      start_date: plannerForm.startDate || null,
+      end_date: plannerForm.endDate || null,
+    });
+
+    if (error) {
+      console.error("plans insert 실패:", error);
+      setSaveStatus("unsaved");
+      throw error;
+    }
+
+    setSaveStatus("saved");
   };
 
   useEffect(() => {
     if (!user) return;
 
     const fetchDailyCredits = async () => {
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("daily_credits")
-        .eq("id", user.id)
-        .single();
+      const { data, error } = await supabase.rpc(
+        "reset_daily_credits_if_needed",
+        {
+          user_id: user.id,
+          max_credits: 5,
+        }
+      );
 
       if (error) {
-        console.error("크레딧 조회 실패", error);
+        console.error("크레딧 RPC 실패", error);
         return;
       }
 
-      setDailyCredits(data.daily_credits);
+      setDailyCredits(data);
     };
 
     fetchDailyCredits();
@@ -162,8 +185,8 @@ const AiPlannerPage = () => {
       />
       <AppAlert
         open={creditAlertOpen}
-        onConfirm={() => setLoginAlertOpen(false)}
-        onCancel={() => setLoginAlertOpen(false)}
+        onConfirm={() => setCreditAlertOpen(false)}
+        onCancel={() => setCreditAlertOpen(false)}
         severity="error"
         message="오늘 사용 가능한 횟수를 모두 사용하셨습니다."
       />
@@ -189,9 +212,11 @@ const AiPlannerPage = () => {
               saveStatus={saveStatus}
             />
             <SavePlanDialog
+              key={`save-dialog-${saveOpen}`}
               open={saveOpen}
               onClose={() => setSaveOpen(false)}
               onConfirm={handleSavePlan}
+              defaultTitle={defaultTitle}
             />
           </>
         )}

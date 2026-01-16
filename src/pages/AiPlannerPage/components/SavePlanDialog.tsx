@@ -8,17 +8,25 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 interface SavePlanDialogProps {
   open: boolean;
   onClose: () => void;
   onConfirm: (title: string) => Promise<void>;
+  defaultTitle?: string;
 }
 
-const SavePlanDialog = ({ open, onClose, onConfirm }: SavePlanDialogProps) => {
-  const [title, setTitle] = useState("");
+const SavePlanDialog = ({
+  open,
+  onClose,
+  onConfirm,
+  defaultTitle = "",
+}: SavePlanDialogProps) => {
+  const [title, setTitle] = useState(defaultTitle ?? "");
   const [error, setError] = useState("");
+
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const [status, setStatus] = useState<"idle" | "saving" | "success">("idle");
 
@@ -54,6 +62,12 @@ const SavePlanDialog = ({ open, onClose, onConfirm }: SavePlanDialogProps) => {
     <Dialog
       open={open}
       onClose={onClose}
+      TransitionProps={{
+        onEntered: () => {
+          inputRef.current?.focus();
+          inputRef.current?.select();
+        },
+      }}
       maxWidth="xs"
       fullWidth
       PaperProps={{ sx: { borderRadius: 3, p: 2 } }}
@@ -68,8 +82,18 @@ const SavePlanDialog = ({ open, onClose, onConfirm }: SavePlanDialogProps) => {
               label="일정 제목"
               margin="normal"
               value={title}
+              inputRef={inputRef}
               onChange={(e) => setTitle(e.target.value)}
               autoFocus
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+
+                  if (status === "idle") {
+                    handleSubmit();
+                  }
+                }
+              }}
               sx={{
                 "& .MuiOutlinedInput-root fieldset": {
                   borderColor: "text.secondary",
@@ -125,7 +149,16 @@ const SavePlanDialog = ({ open, onClose, onConfirm }: SavePlanDialogProps) => {
         )}
 
         {status === "success" && (
-          <Button onClick={onClose} variant="contained">
+          <Button
+            onClick={onClose}
+            variant="contained"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+                onClose();
+              }
+            }}
+          >
             확인
           </Button>
         )}

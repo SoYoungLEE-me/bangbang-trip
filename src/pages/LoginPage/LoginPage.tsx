@@ -99,7 +99,7 @@ const LoginPage = () => {
         justifyContent: "center",
         alignItems: "center",
         boxSizing: "border-box",
-        transform: "translateY(-42px)",
+        transform: "translateY(-46px)",
       }}
     >
       <Box sx={{ width: 380, px: 2 }}>

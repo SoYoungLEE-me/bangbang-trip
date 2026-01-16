@@ -10,6 +10,7 @@ import { usePlannerFormStore } from "../../stores/plannerFormStore";
 import AiPlannerResultPanel from "./components/AiPlannerResultPanel";
 import { useAiPlanner } from "../../hooks/useAiPlanner";
 import type { TourSpot } from "../../models/tour";
+import SavePlanDialog from "./components/SavePlanDialog";
 
 const MOCK_TOUR_SPOTS: TourSpot[] = [
   {
@@ -40,6 +41,8 @@ const MOCK_TOUR_SPOTS: TourSpot[] = [
   },
 ];
 
+type SaveStatus = "unsaved" | "saving" | "saved";
+
 const AiPlannerPage = () => {
   const { removeSpot } = useSelectedSpotsStore();
   const { plannerForm, setPlannerForm } = usePlannerFormStore();
@@ -49,8 +52,13 @@ const AiPlannerPage = () => {
   const [creditAlertOpen, setCreditAlertOpen] = useState(false);
   const [dailyCredits, setDailyCredits] = useState<number | null>(null);
 
+  const [saveOpen, setSaveOpen] = useState(false);
+
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>("unsaved");
+
   const { mutateAsync, data, isPending, isError } = useAiPlanner();
 
+  //ai 결과 불러오기
   const handleSubmit = async () => {
     if (!user) {
       setLoginAlertOpen(true);
@@ -63,6 +71,7 @@ const AiPlannerPage = () => {
     }
 
     try {
+      setSaveStatus("unsaved");
       await mutateAsync({
         spots: MOCK_TOUR_SPOTS,
         form: plannerForm,
@@ -76,6 +85,27 @@ const AiPlannerPage = () => {
       setDailyCredits((prev) => prev! - 1);
     } catch {
       alert("AI 일정 생성 실패");
+    }
+  };
+
+  //결과 저장
+  const handleSavePlan = async (title: string) => {
+    if (!user || !data) return;
+
+    try {
+      setSaveStatus("saving");
+
+      await supabase.from("plans").insert({
+        user_id: user.id,
+        title,
+        spots: MOCK_TOUR_SPOTS,
+        plan: data,
+      });
+
+      setSaveStatus("saved");
+    } catch (e) {
+      console.error(e);
+      setSaveStatus("unsaved"); // 실패 시 복구
     }
   };
 
@@ -149,7 +179,20 @@ const AiPlannerPage = () => {
           </Typography>
         )}
 
-        {data?.itinerary && <AiPlannerResultPanel result={data} />}
+        {data?.itinerary && (
+          <>
+            <AiPlannerResultPanel
+              result={data}
+              onSave={() => setSaveOpen(true)}
+              saveStatus={saveStatus}
+            />
+            <SavePlanDialog
+              open={saveOpen}
+              onClose={() => setSaveOpen(false)}
+              onConfirm={handleSavePlan}
+            />
+          </>
+        )}
       </Box>
     </Box>
   );

@@ -4,12 +4,8 @@ import { useAuthStore } from "../stores/authStore";
 const PublicRouter = () => {
   const { user } = useAuthStore();
 
-  if (
-    user &&
-    location.pathname !== "/login" &&
-    location.pathname !== "/register"
-  ) {
-    return <Navigate to="/" replace />;
+  if (user) {
+    return <Navigate to="/login" replace />;
   }
 
   return <Outlet />;

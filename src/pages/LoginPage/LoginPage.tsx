@@ -175,7 +175,7 @@ const LoginPage = () => {
             backgroundColor: "action.hover",
             color: "text.primary",
             "&:hover": {
-              backgroundColor: "action.active",
+              backgroundColor: "action.hover",
             },
           }}
           onClick={handleEmailLogin}

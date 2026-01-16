@@ -89,48 +89,105 @@ const UserPlannerForm = ({
             <CalendarDays size={20} /> 여행 일정
           </Typography>
           <Stack direction={{ xs: "column", md: "row" }} spacing={2}>
-            <TextField
-              label="출발일"
-              type="date"
-              value={value.startDate}
-              onChange={(e) => update({ startDate: e.target.value })}
-              InputLabelProps={{ shrink: true }}
-              inputProps={{ min: todayStr }} //오늘 이전 날짜는 선택 불가
-              fullWidth
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: (theme) =>
-                      alpha(theme.palette.primary.main, 0.4),
+            {/* 출발일 */}
+            <Box position="relative" width="100%">
+              <TextField
+                label="출발일"
+                type="date"
+                size="medium"
+                value={value.startDate}
+                onChange={(e) => update({ startDate: e.target.value })}
+                InputLabelProps={{ shrink: true }}
+                inputProps={{ min: todayStr }}
+                fullWidth
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    height: 56,
+                    "& fieldset": {
+                      borderColor: (theme) =>
+                        alpha(theme.palette.primary.main, 0.4),
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "primary.main",
+                      borderWidth: 2,
+                    },
+                    "& input": {
+                      height: "100%",
+                      boxSizing: "border-box",
+                      padding: "16.5px 14px",
+                      WebkitAppearance: "none",
+                      MozAppearance: "textfield",
+                    },
                   },
-                  "&:hover fieldset": {
-                    borderColor: "primary.main",
-                    borderWidth: 2,
+                }}
+              />
+
+              {!value.startDate && (
+                <Typography
+                  sx={{
+                    pointerEvents: "none",
+                    position: "absolute",
+                    top: "50%",
+                    left: 14,
+                    transform: "translateY(-50%)",
+                    color: "text.disabled",
+                    fontSize: 16,
+                  }}
+                >
+                  날짜를 선택해주세요
+                </Typography>
+              )}
+            </Box>
+
+            {/* 도착일 */}
+            <Box position="relative" width="100%">
+              <TextField
+                label="도착일"
+                type="date"
+                size="medium"
+                value={value.endDate}
+                onChange={(e) => update({ endDate: e.target.value })}
+                InputLabelProps={{ shrink: true }}
+                inputProps={{ min: value.startDate || todayStr }}
+                fullWidth
+                sx={{
+                  "& .MuiOutlinedInput-root": {
+                    height: 56,
+                    "& fieldset": {
+                      borderColor: (theme) =>
+                        alpha(theme.palette.primary.main, 0.4),
+                    },
+                    "&:hover fieldset": {
+                      borderColor: "primary.main",
+                      borderWidth: 2,
+                    },
+                    "& input": {
+                      height: "100%",
+                      boxSizing: "border-box",
+                      padding: "16.5px 14px",
+                      WebkitAppearance: "none",
+                      MozAppearance: "textfield",
+                    },
                   },
-                },
-              }}
-            />
-            <TextField
-              label="도착일"
-              type="date"
-              value={value.endDate}
-              onChange={(e) => update({ endDate: e.target.value })}
-              InputLabelProps={{ shrink: true }}
-              inputProps={{ min: value.startDate || todayStr }} //출발일 이전 날짜는 선택 불가
-              fullWidth
-              sx={{
-                "& .MuiOutlinedInput-root": {
-                  "& fieldset": {
-                    borderColor: (theme) =>
-                      alpha(theme.palette.primary.main, 0.4),
-                  },
-                  "&:hover fieldset": {
-                    borderColor: "primary.main",
-                    borderWidth: 2,
-                  },
-                },
-              }}
-            />
+                }}
+              />
+
+              {!value.endDate && (
+                <Typography
+                  sx={{
+                    pointerEvents: "none",
+                    position: "absolute",
+                    top: "50%",
+                    left: 14,
+                    transform: "translateY(-50%)",
+                    color: "text.disabled",
+                    fontSize: 16,
+                  }}
+                >
+                  날짜를 선택해주세요
+                </Typography>
+              )}
+            </Box>
           </Stack>
         </Box>
 

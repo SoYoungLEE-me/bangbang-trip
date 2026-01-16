@@ -80,6 +80,7 @@ const AppAlert = ({
 
       <DialogActions sx={{ px: 3, pb: 2 }}>
         <Button
+          autoFocus
           onClick={onConfirm}
           variant="contained"
           fullWidth

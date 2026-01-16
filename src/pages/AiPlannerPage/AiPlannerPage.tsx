@@ -41,17 +41,6 @@ const AiPlannerPage = () => {
     );
   };
 
-  // removeSpot 호출 후 localStorage도 업데이트하는 래퍼 함수
-  const handleRemoveSpot = (contentid: string) => {
-    removeSpot(contentid);
-    // store 업데이트 후 localStorage에 저장
-    const updatedSpots = selectedSpots.filter((s) => s.contentid !== contentid);
-    localStorage.setItem(
-      "selected-spots-storage",
-      JSON.stringify({ state: { selectedSpots: updatedSpots } })
-    );
-  };
-
   //ai 결과 불러오기
   const handleSubmit = async () => {
     if (!user) {
@@ -150,7 +139,6 @@ const AiPlannerPage = () => {
             spots={selectedSpots}
             onRemove={handleRemoveSpot}
           />
-          <SelectedSpotsPanel spots={selectedSpots} onRemove={removeSpot} />
         </Grid>
 
         {/* 유저 입력 폼 */}

@@ -1,0 +1,66 @@
+import { Box, Stack, Typography } from "@mui/material";
+import { getIcon } from "../utills/detailHelpers";
+
+interface InfoItemProps {
+  label: string;
+  value: string | React.ReactNode;
+  isMultiline?: boolean;
+  isPet?: boolean;
+}
+
+export const InfoItem = ({
+  label,
+  value,
+  isMultiline = false,
+  isPet = false,
+}: InfoItemProps) => (
+  <Box
+    sx={{
+      display: "flex",
+      flexDirection: "column",
+      gap: 0.8,
+      paddingBlock: 2.5,
+      borderBottom: "1px solid",
+      borderColor: isPet ? "rgba(245, 124, 0, 0.1)" : "grey.100",
+      "&:last-child": { borderBottom: "none" },
+    }}
+  >
+    <Stack direction="row" spacing={1.5} alignItems="center">
+      <Box
+        sx={{
+          color: isPet ? "#f57c00" : "primary.main",
+          display: "flex",
+          backgroundColor: isPet ? "#fff4e5" : "rgba(25, 118, 210, 0.08)",
+          p: 0.8,
+          borderRadius: "50%",
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        {getIcon(label)}
+      </Box>
+      <Typography
+        sx={{
+          fontSize: "1.05rem",
+          fontWeight: "700",
+          color: "text.secondary",
+          letterSpacing: "-0.01em",
+        }}
+      >
+        {label}
+      </Typography>
+    </Stack>
+    <Box
+      sx={{
+        fontSize: "0.95rem",
+        color: "text.primary",
+        lineHeight: 1.7,
+        whiteSpace: isMultiline ? "pre-line" : "normal",
+        wordBreak: "keep-all",
+        pl: 5.8,
+      }}
+    >
+      {value}
+    </Box>
+  </Box>
+);

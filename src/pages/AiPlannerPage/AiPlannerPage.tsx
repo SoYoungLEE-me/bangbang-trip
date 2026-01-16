@@ -9,39 +9,9 @@ import { supabase } from "../../lib/supabase";
 import { usePlannerFormStore } from "../../stores/plannerFormStore";
 import AiPlannerResultPanel from "./components/AiPlannerResultPanel";
 import { useAiPlanner } from "../../hooks/useAiPlanner";
-import type { TourSpot } from "../../models/tour";
-
-const MOCK_TOUR_SPOTS: TourSpot[] = [
-  {
-    contentid: "3027228",
-    title: "경복궁",
-    firstimage:
-      "http://tong.visitkorea.or.kr/cms/resource/94/3027194_image2_1.JPG",
-    firstimage2: "",
-    addr1: "서울특별시 종로구 사직로 161",
-    areacode: "1",
-    sigungucode: "23",
-    contenttypeid: "12",
-    mapx: "126.9769",
-    mapy: "37.5796",
-  },
-  {
-    contentid: "126508",
-    title: "북촌 한옥마을",
-    firstimage:
-      "http://tong.visitkorea.or.kr/cms/resource/01/2678401_image2_1.jpg",
-    firstimage2: "",
-    addr1: "서울특별시 종로구 계동길 37",
-    areacode: "1",
-    sigungucode: "23",
-    contenttypeid: "12",
-    mapx: "126.9849",
-    mapy: "37.5826",
-  },
-];
 
 const AiPlannerPage = () => {
-  const { removeSpot } = useSelectedSpotsStore();
+  const { selectedSpots, removeSpot } = useSelectedSpotsStore();
   const { plannerForm, setPlannerForm } = usePlannerFormStore();
 
   const { user } = useAuthStore();
@@ -50,6 +20,17 @@ const AiPlannerPage = () => {
   const [dailyCredits, setDailyCredits] = useState<number | null>(null);
 
   const { mutateAsync, data, isPending, isError } = useAiPlanner();
+
+  // removeSpot 호출 후 localStorage도 업데이트하는 래퍼 함수
+  const handleRemoveSpot = (contentid: string) => {
+    removeSpot(contentid);
+    // store 업데이트 후 localStorage에 저장
+    const updatedSpots = selectedSpots.filter((s) => s.contentid !== contentid);
+    localStorage.setItem(
+      "selected-spots-storage",
+      JSON.stringify({ state: { selectedSpots: updatedSpots } })
+    );
+  };
 
   const handleSubmit = async () => {
     if (!user) {
@@ -62,9 +43,14 @@ const AiPlannerPage = () => {
       return;
     }
 
+    if (selectedSpots.length === 0) {
+      alert("최소 1개 이상의 장소를 선택해주세요.");
+      return;
+    }
+
     try {
       await mutateAsync({
-        spots: MOCK_TOUR_SPOTS,
+        spots: selectedSpots, // MOCK_TOUR_SPOTS 대신 store의 데이터 사용
         form: plannerForm,
       });
 
@@ -136,7 +122,7 @@ const AiPlannerPage = () => {
       <Grid container spacing={6} alignItems="flex-start">
         {/* 담은 장소 */}
         <Grid size={{ xs: 12, md: 4 }}>
-          <SelectedSpotsPanel spots={MOCK_TOUR_SPOTS} onRemove={removeSpot} />
+          <SelectedSpotsPanel spots={selectedSpots} onRemove={handleRemoveSpot} />
         </Grid>
 
         {/* 유저 입력 폼 */}

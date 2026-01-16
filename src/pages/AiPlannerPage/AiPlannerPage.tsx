@@ -50,10 +50,12 @@ const AiPlannerPage = () => {
   const { user } = useAuthStore();
   const [loginAlertOpen, setLoginAlertOpen] = useState(false);
   const [creditAlertOpen, setCreditAlertOpen] = useState(false);
+
+  const [spotAlertOpen, setSpotAlertOpen] = useState(false);
+
   const [dailyCredits, setDailyCredits] = useState<number | null>(null);
 
   const [saveOpen, setSaveOpen] = useState(false);
-
   const [saveStatus, setSaveStatus] = useState<SaveStatus>("unsaved");
 
   const { mutateAsync, data, isPending, isError } = useAiPlanner();
@@ -65,8 +67,14 @@ const AiPlannerPage = () => {
       return;
     }
 
+    // 중복된 dailyCredits 체크 하나로 통합
     if (dailyCredits === 0) {
       setCreditAlertOpen(true);
+      return;
+    }
+
+    if (MOCK_TOUR_SPOTS.length === 0) {
+      setSpotAlertOpen(true);
       return;
     }
 
@@ -83,8 +91,9 @@ const AiPlannerPage = () => {
         .eq("id", user.id);
 
       setDailyCredits((prev) => prev! - 1);
-    } catch {
-      alert("AI 일정 생성 실패");
+    } catch (error) {
+      console.error(error);
+      alert("AI 일정 생성 중 오류가 발생했습니다.");
     }
   };
 
@@ -173,6 +182,13 @@ const AiPlannerPage = () => {
         onCancel={() => setLoginAlertOpen(false)}
         severity="error"
         message="오늘 사용 가능한 횟수를 모두 사용하셨습니다."
+      />
+      <AppAlert
+        open={spotAlertOpen}
+        onConfirm={() => setSpotAlertOpen(false)}
+        onCancel={() => setSpotAlertOpen(false)}
+        severity="info"
+        message="가고 싶은 장소를 먼저 찜해보세요."
       />
       <Box mt={10}>
         {isError && (

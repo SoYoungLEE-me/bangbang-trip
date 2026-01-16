@@ -5,7 +5,7 @@ import {
   Clock,
   Bookmark,
   BookmarkCheck,
-} from "lucide-react"; // Clock 아이콘 추가
+} from "lucide-react";
 import { alpha, useTheme } from "@mui/material/styles";
 import type { AiPlannerResult } from "../../../models/aiPlanner";
 
@@ -59,7 +59,7 @@ const AiPlannerResultPanel = ({
             alignItems: "center",
             gap: 1.5,
             color: primaryColor,
-            mb: 0, // 중요: 기존 mb 제거
+            mb: 0,
           }}
         >
           <CalendarDays size={26} /> 여행 타임라인
@@ -129,7 +129,6 @@ const AiPlannerResultPanel = ({
 
                 {/* 타임라인 영역 */}
                 <Box sx={{ position: "relative" }}>
-                  {/* 세로선 */}
                   <Box
                     sx={{
                       position: "absolute",

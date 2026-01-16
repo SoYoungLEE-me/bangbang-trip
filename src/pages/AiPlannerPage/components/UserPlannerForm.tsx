@@ -20,6 +20,7 @@ import {
   Ticket,
 } from "lucide-react";
 import { alpha } from "@mui/material/styles";
+import dayjs from "dayjs";
 
 import type { UserPlannerFormValue } from "../../../models/aiPlanner";
 
@@ -62,6 +63,8 @@ const UserPlannerForm = ({
     onChange({ ...value, ...partial });
   };
 
+  const todayStr = dayjs().format("YYYY-MM-DD");
+
   return (
     <Box
       sx={{
@@ -92,6 +95,7 @@ const UserPlannerForm = ({
               value={value.startDate}
               onChange={(e) => update({ startDate: e.target.value })}
               InputLabelProps={{ shrink: true }}
+              inputProps={{ min: todayStr }} //오늘 이전 날짜는 선택 불가
               fullWidth
               sx={{
                 "& .MuiOutlinedInput-root": {
@@ -112,6 +116,7 @@ const UserPlannerForm = ({
               value={value.endDate}
               onChange={(e) => update({ endDate: e.target.value })}
               InputLabelProps={{ shrink: true }}
+              inputProps={{ min: value.startDate || todayStr }} //출발일 이전 날짜는 선택 불가
               fullWidth
               sx={{
                 "& .MuiOutlinedInput-root": {

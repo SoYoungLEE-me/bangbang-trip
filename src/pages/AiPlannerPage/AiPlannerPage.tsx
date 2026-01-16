@@ -102,7 +102,7 @@ const AiPlannerPage = () => {
 
   return (
     <Box
-      mt={13}
+      mt={9}
       mb={20}
       px={{
         xs: 3,
@@ -112,27 +112,6 @@ const AiPlannerPage = () => {
         xl: 20,
       }}
     >
-      {user && dailyCredits !== null && (
-        <Box
-          mb={4}
-          px={3}
-          py={2}
-          borderBottom="solid 1px"
-          borderColor="grey.200"
-        >
-          <Typography fontWeight={800}>
-            오늘 남은 이용 횟수 :{" "}
-            <span
-              style={{
-                color: dailyCredits > 0 ? "#48876b" : "#ef5350",
-              }}
-            >
-              {dailyCredits}
-            </span>{" "}
-            / 5
-          </Typography>
-        </Box>
-      )}
       <Grid container spacing={6} alignItems="flex-start">
         {/* 담은 장소 */}
         <Grid size={{ xs: 12, md: 4 }}>
@@ -146,6 +125,8 @@ const AiPlannerPage = () => {
             onChange={setPlannerForm}
             onSubmit={handleSubmit}
             loading={isPending}
+            dailyCredits={user ? dailyCredits : null}
+            maxDailyCredits={5}
           />
         </Grid>
       </Grid>

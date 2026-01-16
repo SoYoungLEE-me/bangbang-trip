@@ -93,14 +93,13 @@ const LoginPage = () => {
 
   return (
     <Box
-      component="form"
-      autoComplete="off"
       sx={{
         minHeight: "100vh",
-        width: "100%",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        boxSizing: "border-box",
+        transform: "translateY(-42px)",
       }}
     >
       <Box sx={{ width: 380, px: 2 }}>

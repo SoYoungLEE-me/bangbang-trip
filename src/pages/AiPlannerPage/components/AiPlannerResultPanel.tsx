@@ -33,7 +33,7 @@ const AiPlannerResultPanel = ({ result }: AiPlannerResultPanelProps) => {
       }}
     >
       <Grid container spacing={5} alignItems="flex-start">
-        {/* 왼쪽: 타임라인 */}
+        {/* 타임라인 */}
         <Grid size={{ xs: 12, md: 8 }}>
           <Typography
             variant="h1"

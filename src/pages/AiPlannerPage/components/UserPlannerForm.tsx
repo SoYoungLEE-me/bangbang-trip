@@ -17,6 +17,7 @@ import {
   Sparkles,
   Minus,
   Plus,
+  Ticket,
 } from "lucide-react";
 import { alpha } from "@mui/material/styles";
 
@@ -27,6 +28,8 @@ interface UserPlannerFormProps {
   onChange: (next: UserPlannerFormValue) => void;
   onSubmit: () => void;
   loading?: boolean;
+  dailyCredits: number | null;
+  maxDailyCredits?: number;
 }
 
 const MOODS = [
@@ -44,6 +47,7 @@ const COMPANIONS = [
   "친구와 함께",
   "가족 여행",
   "아이와 함께",
+  "반려동물과 함께",
 ];
 
 const UserPlannerForm = ({
@@ -51,6 +55,8 @@ const UserPlannerForm = ({
   onChange,
   onSubmit,
   loading,
+  dailyCredits,
+  maxDailyCredits,
 }: UserPlannerFormProps) => {
   const update = (partial: Partial<UserPlannerFormValue>) => {
     onChange({ ...value, ...partial });
@@ -286,7 +292,44 @@ const UserPlannerForm = ({
           </Stack>
         </Box>
       </Stack>
-      <Box mt={7}>
+      <Box
+        mt={5}
+        display="flex"
+        flexDirection="column"
+        alignItems="center"
+        gap={2}
+      >
+        {" "}
+        {dailyCredits !== null && (
+          <Box
+            sx={(theme) => ({
+              display: "inline-flex",
+              alignItems: "center",
+              gap: 1,
+              px: 2,
+              py: 1,
+              borderRadius: 999,
+              border: "1px solid",
+              borderColor:
+                dailyCredits > 0
+                  ? alpha(theme.palette.success.main, 0.35)
+                  : alpha(theme.palette.error.main, 0.35),
+              bgcolor:
+                dailyCredits > 0
+                  ? alpha(theme.palette.success.main, 0.08)
+                  : alpha(theme.palette.error.main, 0.08),
+            })}
+          >
+            <Ticket size={18} />
+            <Typography fontWeight={900} fontSize={14}>
+              오늘 남은 횟수{" "}
+              <span style={{ color: dailyCredits > 0 ? "#48876b" : "#ef5350" }}>
+                {dailyCredits}
+              </span>
+              {` / ${maxDailyCredits ?? 5}`}
+            </Typography>
+          </Box>
+        )}
         <Button
           fullWidth
           size="large"

@@ -1,6 +1,6 @@
 import { Box, Grid, Typography } from "@mui/material";
 import useGetSpots from "../../hooks/useGetSpots";
-import SpotCard from "./components/SpotCard";
+import TourCourseCard from "../../layout/components/TourCourseCard";
 import { useInView } from "react-intersection-observer";
 import { useEffect, useState } from "react";
 import SpotFilterBar from "./components/SpotFilterBar";
@@ -56,7 +56,11 @@ const SpotsListPage = () => {
         >
           {spots.map((spot) => (
             <Grid key={spot.contentid} size={{ xs: 12, sm: 6, md: 3 }}>
-              <SpotCard spot={spot} contentTypeId={contentTypeId} />
+              <TourCourseCard
+                course={spot}
+                contentTypeId={contentTypeId}
+                showAddress={true}
+              />
             </Grid>
           ))}
         </Grid>

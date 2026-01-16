@@ -93,14 +93,13 @@ const LoginPage = () => {
 
   return (
     <Box
-      component="form"
-      autoComplete="off"
       sx={{
         minHeight: "100vh",
-        width: "100%",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        boxSizing: "border-box",
+        transform: "translateY(-46px)",
       }}
     >
       <Box sx={{ width: 380, px: 2 }}>
@@ -176,7 +175,7 @@ const LoginPage = () => {
             backgroundColor: "action.hover",
             color: "text.primary",
             "&:hover": {
-              backgroundColor: "action.active",
+              backgroundColor: "action.hover",
             },
           }}
           onClick={handleEmailLogin}
@@ -237,7 +236,8 @@ const LoginPage = () => {
         open={alertOpen}
         message="로그인 되었습니다."
         severity="success"
-        onClose={() => setAlertOpen(false)}
+        onConfirm={() => setAlertOpen(false)}
+        onCancel={() => setAlertOpen(false)}
       />
     </Box>
   );

@@ -19,6 +19,7 @@ export const requestAiPlanner = async (
 3. "activities"는 "time", "location", "description"을 가진 객체의 배열이어야 함.
 4. "preparations"는 문자열 배열이어야 함.
 5. "Day" 필드는 반드시 1, 2, 3... 과 같은 정수(Number)만 사용하세요.
+6. activity의time은 오전, 오후로 13시가 아니라 오후 1시 이런 식으로 표시해줘.
 `;
 
   const userPrompt = `

@@ -33,7 +33,7 @@ const NavBar = () => {
         justifyContent: "space-between",
         alignItems: "center",
         position: "fixed",
-        zIndex: 2,
+        zIndex: 3,
         padding: "0.625rem 1rem",
         top: 0,
         backgroundColor: "background.default",
@@ -271,4 +271,3 @@ const NavBar = () => {
 };
 
 export default NavBar;
-

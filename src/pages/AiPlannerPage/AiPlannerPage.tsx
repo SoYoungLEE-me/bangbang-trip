@@ -9,15 +9,24 @@ import { supabase } from "../../lib/supabase";
 import { usePlannerFormStore } from "../../stores/plannerFormStore";
 import AiPlannerResultPanel from "./components/AiPlannerResultPanel";
 import { useAiPlanner } from "../../hooks/useAiPlanner";
+import SavePlanDialog from "./components/SavePlanDialog";
+
+type SaveStatus = "unsaved" | "saving" | "saved";
 
 const AiPlannerPage = () => {
-  const { selectedSpots, removeSpot } = useSelectedSpotsStore();
   const { plannerForm, setPlannerForm } = usePlannerFormStore();
+  const { selectedSpots, removeSpot } = useSelectedSpotsStore();
 
   const { user } = useAuthStore();
   const [loginAlertOpen, setLoginAlertOpen] = useState(false);
   const [creditAlertOpen, setCreditAlertOpen] = useState(false);
+
+  const [spotAlertOpen, setSpotAlertOpen] = useState(false);
+
   const [dailyCredits, setDailyCredits] = useState<number | null>(null);
+
+  const [saveOpen, setSaveOpen] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<SaveStatus>("unsaved");
 
   const { mutateAsync, data, isPending, isError } = useAiPlanner();
 
@@ -32,25 +41,28 @@ const AiPlannerPage = () => {
     );
   };
 
+  //ai 결과 불러오기
   const handleSubmit = async () => {
     if (!user) {
       setLoginAlertOpen(true);
       return;
     }
 
+    // 중복된 dailyCredits 체크 하나로 통합
     if (dailyCredits === 0) {
       setCreditAlertOpen(true);
       return;
     }
 
     if (selectedSpots.length === 0) {
-      alert("최소 1개 이상의 장소를 선택해주세요.");
+      setSpotAlertOpen(true);
       return;
     }
 
     try {
+      setSaveStatus("unsaved");
       await mutateAsync({
-        spots: selectedSpots, // MOCK_TOUR_SPOTS 대신 store의 데이터 사용
+        spots: selectedSpots,
         form: plannerForm,
       });
 
@@ -60,8 +72,30 @@ const AiPlannerPage = () => {
         .eq("id", user.id);
 
       setDailyCredits((prev) => prev! - 1);
-    } catch {
-      alert("AI 일정 생성 실패");
+    } catch (error) {
+      console.error(error);
+      alert("AI 일정 생성 중 오류가 발생했습니다.");
+    }
+  };
+
+  //결과 저장
+  const handleSavePlan = async (title: string) => {
+    if (!user || !data) return;
+
+    try {
+      setSaveStatus("saving");
+
+      await supabase.from("plans").insert({
+        user_id: user.id,
+        title,
+        spots: selectedSpots,
+        plan: data,
+      });
+
+      setSaveStatus("saved");
+    } catch (e) {
+      console.error(e);
+      setSaveStatus("unsaved"); // 실패 시 복구
     }
   };
 
@@ -88,7 +122,7 @@ const AiPlannerPage = () => {
 
   return (
     <Box
-      mt={13}
+      mt={9}
       mb={20}
       px={{
         xs: 3,
@@ -98,31 +132,13 @@ const AiPlannerPage = () => {
         xl: 20,
       }}
     >
-      {user && dailyCredits !== null && (
-        <Box
-          mb={4}
-          px={3}
-          py={2}
-          borderBottom="solid 1px"
-          borderColor="grey.200"
-        >
-          <Typography fontWeight={800}>
-            오늘 남은 이용 횟수 :{" "}
-            <span
-              style={{
-                color: dailyCredits > 0 ? "#48876b" : "#ef5350",
-              }}
-            >
-              {dailyCredits}
-            </span>{" "}
-            / 5
-          </Typography>
-        </Box>
-      )}
       <Grid container spacing={6} alignItems="flex-start">
         {/* 담은 장소 */}
         <Grid size={{ xs: 12, md: 4 }}>
-          <SelectedSpotsPanel spots={selectedSpots} onRemove={handleRemoveSpot} />
+          <SelectedSpotsPanel
+            spots={selectedSpots}
+            onRemove={handleRemoveSpot}
+          />
         </Grid>
 
         {/* 유저 입력 폼 */}
@@ -132,20 +148,31 @@ const AiPlannerPage = () => {
             onChange={setPlannerForm}
             onSubmit={handleSubmit}
             loading={isPending}
+            dailyCredits={user ? dailyCredits : null}
+            maxDailyCredits={5}
           />
         </Grid>
       </Grid>
       <AppAlert
         open={loginAlertOpen}
-        onClose={() => setLoginAlertOpen(false)}
+        onConfirm={() => setLoginAlertOpen(false)}
+        onCancel={() => setLoginAlertOpen(false)}
         severity="info"
         message="로그인 후 이용하실 수 있습니다."
       />
       <AppAlert
         open={creditAlertOpen}
-        onClose={() => setCreditAlertOpen(false)}
+        onConfirm={() => setLoginAlertOpen(false)}
+        onCancel={() => setLoginAlertOpen(false)}
         severity="error"
         message="오늘 사용 가능한 횟수를 모두 사용하셨습니다."
+      />
+      <AppAlert
+        open={spotAlertOpen}
+        onConfirm={() => setSpotAlertOpen(false)}
+        onCancel={() => setSpotAlertOpen(false)}
+        severity="info"
+        message="가고 싶은 장소를 먼저 찜해보세요."
       />
       <Box mt={10}>
         {isError && (
@@ -154,7 +181,20 @@ const AiPlannerPage = () => {
           </Typography>
         )}
 
-        {data?.itinerary && <AiPlannerResultPanel result={data} />}
+        {data?.itinerary && (
+          <>
+            <AiPlannerResultPanel
+              result={data}
+              onSave={() => setSaveOpen(true)}
+              saveStatus={saveStatus}
+            />
+            <SavePlanDialog
+              open={saveOpen}
+              onClose={() => setSaveOpen(false)}
+              onConfirm={handleSavePlan}
+            />
+          </>
+        )}
       </Box>
     </Box>
   );

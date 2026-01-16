@@ -3,13 +3,15 @@ import type { SpotItem } from "../../../models/spot";
 import NoImage from "./NoImage";
 import { Heart } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { useSpotFilterStore } from "../../../stores/spotFilterStore";
 
 interface SpotCardProps {
   spot: SpotItem;
-  contentTypeId: string;
 }
 
-const SpotCard = ({ spot, contentTypeId }: SpotCardProps) => {
+const SpotCard = ({ spot }: SpotCardProps) => {
+  const { selectedTouristType } = useSpotFilterStore();
+
   const navigate = useNavigate();
 
   const handleNavigateToDetail = () => {
@@ -85,7 +87,7 @@ const SpotCard = ({ spot, contentTypeId }: SpotCardProps) => {
         >
           {spot.title}
         </Typography>
-        {contentTypeId === "12" && (
+        {selectedTouristType === "12" && (
           <Typography
             variant="body1"
             color="text.secondary"

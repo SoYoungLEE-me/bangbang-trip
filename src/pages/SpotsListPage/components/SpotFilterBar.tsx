@@ -1,56 +1,90 @@
-import { Box, IconButton, TextField } from "@mui/material";
-import { Search, SlidersHorizontal } from "lucide-react";
+import { Box, Button, TextField } from "@mui/material";
+import { Search } from "lucide-react";
+import { useState } from "react";
+import RegionalSpotFilterSelector from "./RegionalSpotFilterSelector";
+import NearbySpotFilterSelector from "./NearbySpotFilterSelector";
+import { useSpotFilterStore } from "../../../stores/spotFilterStore";
 
-interface SpotFilterBarProps {
-  isFilterActive: boolean;
-  setIsFilterActive: React.Dispatch<React.SetStateAction<boolean>>;
-}
+const SpotFilterBar = () => {
+  const [searchTerm, setSearchTerm] = useState<string>("");
 
-const SpotFilterBar = ({ isFilterActive, setIsFilterActive }: SpotFilterBarProps) => {
-  const handleFilterClick = () => {
-    setIsFilterActive(!isFilterActive);
+  const [isRegionalFilterActive, setIsRegionalFilterActive] = useState<boolean>(false);
+  const [isNearbyFilterActive, setIsNearbyFilterActive] = useState<boolean>(false);
+
+  const { setIsNearbyMode, setKeyword } = useSpotFilterStore();
+
+  const handleActivateFilter = (touristType: "regional" | "nearby") => {
+    if (touristType === "regional") {
+      setIsRegionalFilterActive(!isRegionalFilterActive);
+      setIsNearbyFilterActive(false);
+
+      if (!isRegionalFilterActive) {
+        setIsNearbyMode(false);
+      }
+    } else {
+      setIsNearbyFilterActive(!isNearbyFilterActive);
+      setIsRegionalFilterActive(false);
+
+      if (!isNearbyFilterActive) {
+        setIsNearbyMode(true);
+      }
+    }
+  };
+
+  const handleChangeSearchTerm = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    setSearchTerm(e.target.value);
+  };
+
+  const handleSearchByKeyword = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    setKeyword(searchTerm.trim());
+
+    setIsRegionalFilterActive(false);
+    setIsNearbyFilterActive(false);
   };
 
   return (
     <>
       <Box
-        sx={{
+        sx={(theme) => ({
+          maxHeight: "44px",
           maxWidth: "calc(1200px - 48px)",
           display: "flex",
-          alignItems: "center",
           gap: "16px",
-        }}
+
+          [theme.breakpoints.down("sm")]: {
+            maxHeight: "unset",
+            flexDirection: "column",
+          },
+        })}
       >
         <Box
+          component="form"
+          onSubmit={handleSearchByKeyword}
           sx={(theme) => ({
             display: "flex",
             alignItems: "center",
-            gap: "8px",
-            border: `1.5px solid ${theme.palette.text.secondary}`,
-            padding: "0 12px",
+            border: `1px solid ${theme.palette.text.secondary}`,
+            padding: "0 8px 0 16px",
             borderRadius: "50px",
             flex: "1",
-            "& svg": {
-              color: theme.palette.text.secondary,
-            },
+            boxSizing: "border-box",
             "&:hover": {
-              borderColor: theme.palette.action.hover,
-              "& svg": {
-                color: theme.palette.action.hover,
-              },
-              transition: "all 0.3s",
+              border: `2px solid ${theme.palette.primary.main}`,
             },
             "&:focus-within": {
-              borderColor: theme.palette.action.active,
-              "& svg": {
-                color: theme.palette.action.active,
-              },
+              border: `2px solid ${theme.palette.primary.main}`,
+            },
+            [theme.breakpoints.down("sm")]: {
+              width: "100%",
             },
           })}
         >
           <Search size={20} />
           <TextField
-            placeholder=""
+            value={searchTerm}
+            onChange={handleChangeSearchTerm}
             sx={{
               flex: "1",
 
@@ -64,34 +98,40 @@ const SpotFilterBar = ({ isFilterActive, setIsFilterActive }: SpotFilterBarProps
                 "&.Mui-focused fieldset": {
                   border: "none",
                 },
-                "& input": {
-                  padding: "8px 0",
-                },
               },
             }}
           />
+          <button type="submit" hidden></button>
         </Box>
-        <IconButton
+        <Box
           sx={(theme) => ({
-            border: `1.5px solid ${isFilterActive ? theme.palette.action.active : theme.palette.text.secondary}`,
-            borderRadius: "4px",
-            color: isFilterActive ? theme.palette.action.active : theme.palette.text.secondary,
-            "&:hover": {
-              background: "none",
-            },
-            "@media (hover: hover)": {
-              "&:hover": {
-                borderColor: theme.palette.action.hover,
-                color: theme.palette.action.hover,
-                transition: "all 0.3s",
+            display: "flex",
+            gap: "16px",
+            [theme.breakpoints.down("sm")]: {
+              minHeight: "44px",
+              width: "100%",
+              "& button": {
+                width: "100%",
               },
             },
           })}
-          onClick={handleFilterClick}
         >
-          <SlidersHorizontal size={20} />
-        </IconButton>
+          <Button
+            variant={isRegionalFilterActive ? "contained" : "outlined"}
+            onClick={() => handleActivateFilter("regional")}
+          >
+            지역별 관광정보
+          </Button>
+          <Button
+            variant={isNearbyFilterActive ? "contained" : "outlined"}
+            onClick={() => handleActivateFilter("nearby")}
+          >
+            내주변 관광정보
+          </Button>
+        </Box>
       </Box>
+      {isRegionalFilterActive && <RegionalSpotFilterSelector />}
+      {isNearbyFilterActive && <NearbySpotFilterSelector />}
     </>
   );
 };

@@ -1,7 +1,7 @@
 export interface SpotApiResponse {
   response: {
     body: {
-      items: { item: SpotItem[] } | Record<string, never>;
+      items: { item: SpotItem[] | SpotItem } | "" | string;
       numOfRows: number;
       pageNo: number;
       totalCount: number;

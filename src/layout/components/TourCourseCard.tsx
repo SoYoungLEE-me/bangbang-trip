@@ -1,14 +1,4 @@
-import {
-  Card,
-  CardMedia,
-  CardContent,
-  IconButton,
-  Typography,
-  useTheme,
-  Box,
-  Snackbar,
-  Button,
-} from "@mui/material";
+import { Card, CardMedia, CardContent, IconButton, Typography, useTheme, Box, Snackbar, Button } from "@mui/material";
 import { Heart, CameraOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -62,17 +52,12 @@ const TourCourseCard = ({
   const [lastRemovedSpot, setLastRemovedSpot] = useState<TourSpot | null>(null);
 
   // store에서 저장 여부 확인 (onSave가 없을 때만)
-  const isSavedInStore = selectedSpots.some(
-    (spot) => spot.contentid === course.contentid
-  );
+  const isSavedInStore = selectedSpots.some((spot) => spot.contentid === course.contentid);
   const finalIsSaved = isSaved !== undefined ? isSaved : isSavedInStore;
 
   // store 변경 시 localStorage에 자동 저장
   useEffect(() => {
-    localStorage.setItem(
-      "selected-spots-storage",
-      JSON.stringify({ state: { selectedSpots } })
-    );
+    localStorage.setItem("selected-spots-storage", JSON.stringify({ state: { selectedSpots } }));
   }, [selectedSpots]);
 
   const handleCardClick = () => {
@@ -142,9 +127,7 @@ const TourCourseCard = ({
   const formatAddress = (addr: string | undefined): string => {
     if (!addr) return "";
     const addrArray = addr.split(" ");
-    return addrArray.length > 1
-      ? `${addrArray[0]} ${addrArray[1]}`
-      : addrArray[0];
+    return addrArray.length > 1 ? `${addrArray[0]} ${addrArray[1]}` : addrArray[0];
   };
 
   const shouldShowAddress = showAddress || contentTypeId === "12";
@@ -178,7 +161,7 @@ const TourCourseCard = ({
             // height: "200",
             width: "100%",
             overflow: "hidden",
-            aspectRatio: "1.3",///
+            aspectRatio: "1.3", ///
             "&:hover img": {
               transform: "scale(1.2)",
             },
@@ -187,7 +170,7 @@ const TourCourseCard = ({
           {hasImage ? (
             <CardMedia
               component="img"
-              /// height="200"
+              // height="200px"
               image={course.firstimage}
               alt={course.title}
               sx={{
@@ -201,24 +184,18 @@ const TourCourseCard = ({
           ) : (
             <Box
               sx={{
-                /// height: "200",
-                width: "100%", ///
-                height: "100%",
+                // height: "200px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 backgroundColor: theme.palette.background.paper,
-                /// aspectRatio: "1.3",
+                aspectRatio: "1.3",
                 "& svg": {
                   transition: "transform 1s ease-in-out",
                 },
               }}
             >
-              <CameraOff
-                className="no-image-icon"
-                size={50}
-                color={theme.palette.text.secondary}
-              />
+              <CameraOff className="no-image-icon" size={50} color={theme.palette.text.secondary} />
             </Box>
           )}
         </Box>
@@ -241,14 +218,10 @@ const TourCourseCard = ({
           <Heart
             size={20}
             fill={finalIsSaved ? theme.palette.error.main : "none"}
-            color={
-              finalIsSaved
-                ? theme.palette.error.main
-                : theme.palette.text.secondary
-            }
+            color={finalIsSaved ? theme.palette.error.main : theme.palette.text.secondary}
           />
         </IconButton>
-          
+
         <CardContent
           sx={{
             // pt: { xs: 0.5, sm: 1.5 }, ///
@@ -263,7 +236,8 @@ const TourCourseCard = ({
             "&:last-child": {
               paddingBottom: { xs: 3, sm: 3 },
             },
-          }}>
+          }}
+        >
           <Typography
             variant="h2"
             sx={{
@@ -282,28 +256,19 @@ const TourCourseCard = ({
           </Typography>
 
           {/* 축제 기간 표시 */}
-          {"eventstartdate" in course &&
-            course.eventstartdate &&
-            course.eventenddate && (
-              <Typography
-                variant="body2"
-                sx={{
-                  fontSize: "14px",
-                  color: theme.palette.text.secondary,
-                  mt: 0.5,
-                }}
-              >
-                {course.eventstartdate.replace(
-                  /(\d{4})(\d{2})(\d{2})/,
-                  "$1.$2.$3"
-                )}{" "}
-                ~{" "}
-                {course.eventenddate.replace(
-                  /(\d{4})(\d{2})(\d{2})/,
-                  "$1.$2.$3"
-                )}
-              </Typography>
-            )}
+          {"eventstartdate" in course && course.eventstartdate && course.eventenddate && (
+            <Typography
+              variant="body2"
+              sx={{
+                fontSize: "14px",
+                color: theme.palette.text.secondary,
+                mt: 0.5,
+              }}
+            >
+              {course.eventstartdate.replace(/(\d{4})(\d{2})(\d{2})/, "$1.$2.$3")} ~{" "}
+              {course.eventenddate.replace(/(\d{4})(\d{2})(\d{2})/, "$1.$2.$3")}
+            </Typography>
+          )}
 
           {/* 지역 정보 배지 */}
           {course.addr1 && (
@@ -325,22 +290,6 @@ const TourCourseCard = ({
               {formatAddress(course.addr1)}
             </Box>
           )}
-
-          {/* 주소 표시 */}
-          {shouldShowAddress && course.addr1 && (
-            <Typography
-              variant="body1"
-              color="text.secondary"
-              sx={{
-                fontSize: "14px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {formatAddress(course.addr1)}
-            </Typography>
-          )}
         </CardContent>
       </Card>
 
@@ -359,9 +308,7 @@ const TourCourseCard = ({
             backgroundColor: theme.palette.background.default,
             color: theme.palette.text.primary,
             border: `6px solid ${
-              isAdded || snackbarMessage.includes("복구")
-                ? theme.palette.primary.main
-                : theme.palette.error.main
+              isAdded || snackbarMessage.includes("복구") ? theme.palette.primary.main : theme.palette.error.main
             }`,
           },
         }}

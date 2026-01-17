@@ -83,13 +83,11 @@ const SpotFilterBar = () => {
             })}
             onClick={handleCloseSnackbar}
           >
-            <X fontSize="small" />
+            <X />
           </IconButton>
         }
         sx={(theme) => ({
-          marginLeft: { xs: 12, sm: 2, md: 0 },
-          marginRight: { xs: 12, sm: 2, md: 0 },
-          maxWidth: { xs: "calc(100% - 32px)", sm: "600px" },
+          wordBreak: "keep-all",
           "& .MuiSnackbarContent-root": {
             margin: "4px",
             backgroundColor: theme.palette.background.default,

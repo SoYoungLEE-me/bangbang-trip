@@ -85,63 +85,69 @@ const LandingPage = () => {
   };
 
   // 컴포넌트 내부에 헬퍼 함수 추가
-const SectionHeader = ({ title, onMoreClick }: { title: string; onMoreClick: () => void }) => (
-  <Box
-    sx={{
-      display: "flex",
-      justifyContent: "space-between",
-      alignItems: "center",
-      position: { xs: "sticky", md: "static" },
-      top: { xs: "56px", sm: "56px" },
-      zIndex: 2,
-      mb: 4,
-      backgroundColor: theme.palette.background.default,
-      py: { xs: 2, md: 0 },
-      mx: { xs: -2, sm: -3, md: 0 },
-      px: { xs: 2, sm: 3, md: 0 },
-      boxShadow: { 
-        xs: "0 2px 8px rgba(0,0,0,0.1), 0 -2px 8px rgba(0,0,0,0.1)", 
-        md: "none" 
-      },
-    }}
-  >
-    <Container maxWidth="lg" sx={{ px: { xs: 0, sm: 0, md: 0 } }}>
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "space-between",
-          alignItems: "center",
-        }}
-      >
-        <Typography
-          variant="h1"
+  const SectionHeader = ({
+    title,
+    onMoreClick,
+  }: {
+    title: string;
+    onMoreClick: () => void;
+  }) => (
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "center",
+        position: { xs: "sticky", md: "static" },
+        top: { xs: "56px", sm: "56px" },
+        zIndex: 2,
+        mb: 4,
+        backgroundColor: theme.palette.background.default,
+        py: { xs: 2, md: 0 },
+        mx: { xs: -2, sm: -3, md: 0 },
+        px: { xs: 2, sm: 3, md: 0 },
+        boxShadow: {
+          xs: "0 2px 8px rgba(0,0,0,0.1), 0 -2px 8px rgba(0,0,0,0.1)",
+          md: "none",
+        },
+      }}
+    >
+      <Container maxWidth="lg" sx={{ px: { xs: 0, sm: 0, md: 0 } }}>
+        <Box
           sx={{
-            fontSize: { xs: "24px", md: "32px" },
-            fontWeight: 700,
-            color: theme.palette.text.primary,
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
-          {title}
-        </Typography>
-        <Button
-          onClick={onMoreClick}
-          sx={{
-            fontSize: { xs: "14px", md: "16px" },
-            fontWeight: 500,
-            color: theme.palette.text.secondary,
-            textTransform: "none",
-            "&:hover": {
-              color: theme.palette.primary.main,
-              backgroundColor: "transparent",
-            },
-          }}
-        >
-          더 보기
-        </Button>
-      </Box>
-    </Container>
-  </Box>
-);
+          <Typography
+            variant="h1"
+            sx={{
+              fontSize: { xs: "24px", md: "32px" },
+              fontWeight: 700,
+              color: theme.palette.text.primary,
+            }}
+          >
+            {title}
+          </Typography>
+          <Button
+            onClick={onMoreClick}
+            sx={{
+              fontSize: { xs: "14px", md: "16px" },
+              fontWeight: 500,
+              color: theme.palette.text.secondary,
+              textTransform: "none",
+              "&:hover": {
+                color: theme.palette.primary.main,
+                backgroundColor: "transparent",
+              },
+            }}
+          >
+            더 보기
+          </Button>
+        </Box>
+      </Container>
+    </Box>
+  );
 
   // 로딩 상태
   if (isLoadingFestivals || isLoadingCourses || isLoadingSpots) {
@@ -241,7 +247,7 @@ const SectionHeader = ({ title, onMoreClick }: { title: string; onMoreClick: () 
                       mb: { xs: 1, md: 1 },
                     }}
                   >
-                    {course.title}                    
+                    {course.title}
                   </Typography>
 
                   {/* 자세히 보기 버튼 */}
@@ -286,10 +292,11 @@ const SectionHeader = ({ title, onMoreClick }: { title: string; onMoreClick: () 
                   transform: "translateY(-50%)",
                   backgroundColor: "rgba(255,255,255,0.3)",
                   color: theme.palette.background.paper,
-                  "&:hover": { 
-                    backgroundColor: theme.palette.background.default, 
+                  "&:hover": {
+                    backgroundColor: theme.palette.background.default,
                     opacity: 0.8,
-                    color: theme.palette.primary.main },
+                    color: theme.palette.primary.main,
+                  },
                   zIndex: 1,
                 }}
               >
@@ -304,10 +311,11 @@ const SectionHeader = ({ title, onMoreClick }: { title: string; onMoreClick: () 
                   transform: "translateY(-50%)",
                   backgroundColor: "rgba(255,255,255,0.3)",
                   color: theme.palette.background.paper,
-                  "&:hover": { 
-                    backgroundColor: theme.palette.background.default, 
+                  "&:hover": {
+                    backgroundColor: theme.palette.background.default,
                     opacity: 0.8,
-                    color: theme.palette.primary.main },
+                    color: theme.palette.primary.main,
+                  },
                   zIndex: 1,
                 }}
               >
@@ -373,34 +381,36 @@ const SectionHeader = ({ title, onMoreClick }: { title: string; onMoreClick: () 
 
       <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
         {/* 진행 중인 축제 카드 섹션 */}
-        <Box sx={{ mb: { xs: 6, md: 8 } }}>          
-        <SectionHeader title="진행 중인 축제" onMoreClick={() => navigate("/spots")} />
+        <Box sx={{ mb: { xs: 6, md: 8 } }}>
+          <SectionHeader
+            title="진행 중인 축제"
+            onMoreClick={() => navigate("/spots")}
+          />
           {/* 진행 중인 축제 카드 */}
           <Grid container spacing={3}>
             {festivals.map((festival) => (
               <Grid size={{ xs: 12, sm: 6, md: 3 }} key={festival.contentid}>
-                <TourCourseCard
-                  course={festival}
-                />
+                <TourCourseCard course={festival} />
               </Grid>
             ))}
           </Grid>
         </Box>
 
         {/* 인기 관광지 카드 섹션 */}
-        <Box sx={{ mt: { xs: 6, md: 8 } }}>          
-        <SectionHeader title="인기 관광지" onMoreClick={() => navigate("/spots")} />
-          {/* 인기 관광지 카드 */}          
+        <Box sx={{ mt: { xs: 6, md: 8 } }}>
+          <SectionHeader
+            title="인기 관광지"
+            onMoreClick={() => navigate("/spots")}
+          />
+          {/* 인기 관광지 카드 */}
           <Grid container spacing={3}>
             {popularSpots.slice(0, 8).map((spot) => (
               <Grid size={{ xs: 12, sm: 6, md: 3 }} key={spot.contentid}>
-                <TourCourseCard
-                  course={spot}
-                />
+                <TourCourseCard course={spot} />
               </Grid>
             ))}
-          </Grid>          
-        </Box>    
+          </Grid>
+        </Box>
 
         {/* 홈페이지 소개글 섹션 */}
         <Box
@@ -444,7 +454,10 @@ const SectionHeader = ({ title, onMoreClick }: { title: string; onMoreClick: () 
           </Typography>
           <Box sx={{ display: "flex", justifyContent: "center" }}>
             <Button
-              onClick={() => {navigate("/ai-planner"); window.scrollTo(0, 0); }}
+              onClick={() => {
+                navigate("/ai-planner");
+                window.scrollTo(0, 0);
+              }}
               variant="contained"
               sx={{
                 backgroundColor: theme.palette.primary.main,

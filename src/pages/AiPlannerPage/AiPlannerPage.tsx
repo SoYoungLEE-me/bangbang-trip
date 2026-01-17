@@ -15,11 +15,14 @@ type SaveStatus = "unsaved" | "saving" | "saved";
 
 const AiPlannerPage = () => {
   const { plannerForm, setPlannerForm } = usePlannerFormStore();
-  const { selectedSpots, removeSpot } = useSelectedSpotsStore();
+  const { selectedSpots, removeSpot, clear } = useSelectedSpotsStore();
+  const [removeTargetId, setRemoveTargetId] = useState<string | null>(null);
 
   const { user } = useAuthStore();
+
   const [loginAlertOpen, setLoginAlertOpen] = useState(false);
   const [creditAlertOpen, setCreditAlertOpen] = useState(false);
+  const [clearAllAlertOpen, setClearAllAlertOpen] = useState(false);
 
   const [spotAlertOpen, setSpotAlertOpen] = useState(false);
 
@@ -32,6 +35,7 @@ const AiPlannerPage = () => {
 
   const defaultTitle = "나만의 여행 일정";
 
+  //부분 삭제
   // removeSpot 호출 후 localStorage도 업데이트하는 래퍼 함수
   const handleRemoveSpot = (contentid: string) => {
     removeSpot(contentid);
@@ -41,6 +45,26 @@ const AiPlannerPage = () => {
       "selected-spots-storage",
       JSON.stringify({ state: { selectedSpots: updatedSpots } })
     );
+  };
+
+  //전체 삭제
+  const handleOpenClearAllAlert = () => {
+    setClearAllAlertOpen(true);
+  };
+
+  const handleConfirmClearAll = () => {
+    clear();
+
+    localStorage.setItem(
+      "selected-spots-storage",
+      JSON.stringify({ state: { selectedSpots: [] } })
+    );
+
+    setClearAllAlertOpen(false);
+  };
+
+  const handleCancelClearAll = () => {
+    setClearAllAlertOpen(false);
   };
 
   //ai 결과 불러오기
@@ -160,7 +184,8 @@ const AiPlannerPage = () => {
         <Grid size={{ xs: 12, md: 4 }}>
           <SelectedSpotsPanel
             spots={selectedSpots}
-            onRemove={handleRemoveSpot}
+            onRemove={(id) => setRemoveTargetId(id)}
+            onClearAll={handleOpenClearAllAlert}
           />
         </Grid>
 
@@ -196,6 +221,26 @@ const AiPlannerPage = () => {
         onCancel={() => setSpotAlertOpen(false)}
         severity="info"
         message="가고 싶은 장소를 먼저 찜해보세요."
+      />
+      <AppAlert
+        open={clearAllAlertOpen}
+        message="찜한 장소를 모두 삭제할까요? 이 작업은 되돌릴 수 없어요."
+        severity="error"
+        confirmText="전체 삭제"
+        onConfirm={handleConfirmClearAll}
+        onCancel={handleCancelClearAll}
+      />
+      <AppAlert
+        open={Boolean(removeTargetId)}
+        message="이 장소를 찜 목록에서 삭제할까요?"
+        severity="error"
+        confirmText="삭제"
+        onConfirm={() => {
+          if (!removeTargetId) return;
+          handleRemoveSpot(removeTargetId);
+          setRemoveTargetId(null);
+        }}
+        onCancel={() => setRemoveTargetId(null)}
       />
       <Box mt={10}>
         {isError && (

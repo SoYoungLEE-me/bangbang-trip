@@ -1,5 +1,6 @@
-import { Box, Button, TextField } from "@mui/material";
-import { Search } from "lucide-react";
+import { alpha, Box, Button, IconButton, Snackbar, TextField } from "@mui/material";
+import { Search, RotateCcw, X } from "lucide-react";
+
 import { useState } from "react";
 import RegionalSpotFilterSelector from "./RegionalSpotFilterSelector";
 import NearbySpotFilterSelector from "./NearbySpotFilterSelector";
@@ -11,7 +12,9 @@ const SpotFilterBar = () => {
   const [isRegionalFilterActive, setIsRegionalFilterActive] = useState<boolean>(false);
   const [isNearbyFilterActive, setIsNearbyFilterActive] = useState<boolean>(false);
 
-  const { setIsNearbyMode, setKeyword } = useSpotFilterStore();
+  const { setIsNearbyMode, setKeyword, resetFilters, errorMessage, setErrorMessage } = useSpotFilterStore();
+
+  const isSnackbarOpen = !!errorMessage;
 
   const handleActivateFilter = (touristType: "regional" | "nearby") => {
     if (touristType === "regional") {
@@ -29,6 +32,9 @@ const SpotFilterBar = () => {
         setIsNearbyMode(true);
       }
     }
+
+    setSearchTerm("");
+    resetFilters();
   };
 
   const handleChangeSearchTerm = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -38,14 +44,60 @@ const SpotFilterBar = () => {
   const handleSearchByKeyword = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    setKeyword(searchTerm.trim());
+    if (!searchTerm.trim()) {
+      setErrorMessage("검색어를 입력해주세요.");
+      return;
+    }
 
+    setKeyword(searchTerm.trim());
     setIsRegionalFilterActive(false);
     setIsNearbyFilterActive(false);
   };
 
+  const handleReset = () => {
+    setSearchTerm("");
+    resetFilters();
+    setIsRegionalFilterActive(false);
+    setIsNearbyFilterActive(false);
+  };
+
+  const handleCloseSnackbar = () => {
+    setErrorMessage("");
+  };
+
   return (
     <>
+      <Snackbar
+        open={isSnackbarOpen}
+        autoHideDuration={4000}
+        message={errorMessage}
+        onClose={handleCloseSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        action={
+          <IconButton
+            size="small"
+            aria-label="close"
+            color="inherit"
+            sx={(theme) => ({
+              color: theme.palette.error.main,
+            })}
+            onClick={handleCloseSnackbar}
+          >
+            <X fontSize="small" />
+          </IconButton>
+        }
+        sx={(theme) => ({
+          marginLeft: { xs: 12, sm: 2, md: 0 },
+          marginRight: { xs: 12, sm: 2, md: 0 },
+          maxWidth: { xs: "calc(100% - 32px)", sm: "600px" },
+          "& .MuiSnackbarContent-root": {
+            margin: "4px",
+            backgroundColor: theme.palette.background.default,
+            color: theme.palette.text.primary,
+            border: `6px solid ${theme.palette.error.main}`,
+          },
+        })}
+      />
       <Box
         sx={(theme) => ({
           maxHeight: "44px",
@@ -62,46 +114,38 @@ const SpotFilterBar = () => {
         <Box
           component="form"
           onSubmit={handleSearchByKeyword}
-          sx={(theme) => ({
-            display: "flex",
-            alignItems: "center",
-            border: `1px solid ${theme.palette.text.secondary}`,
-            padding: "0 8px 0 16px",
-            borderRadius: "50px",
+          sx={{
             flex: "1",
-            boxSizing: "border-box",
-            "&:hover": {
-              border: `2px solid ${theme.palette.primary.main}`,
-            },
-            "&:focus-within": {
-              border: `2px solid ${theme.palette.primary.main}`,
-            },
-            [theme.breakpoints.down("sm")]: {
-              width: "100%",
-            },
-          })}
+          }}
         >
-          <Search size={20} />
           <TextField
             value={searchTerm}
             onChange={handleChangeSearchTerm}
+            slotProps={{
+              input: {
+                endAdornment: (
+                  <IconButton type="submit">
+                    <Search size={20} />
+                  </IconButton>
+                ),
+              },
+            }}
             sx={{
-              flex: "1",
-
+              width: "100%",
               "& .MuiOutlinedInput-root": {
+                borderRadius: "50px",
+                padding: "0 8px",
+                height: "44px",
                 "& fieldset": {
-                  border: "none",
+                  borderColor: (theme) => alpha(theme.palette.primary.main, 0.4),
                 },
                 "&:hover fieldset": {
-                  border: "none",
-                },
-                "&.Mui-focused fieldset": {
-                  border: "none",
+                  borderColor: "primary.main",
+                  borderWidth: 2,
                 },
               },
             }}
           />
-          <button type="submit" hidden></button>
         </Box>
         <Box
           sx={(theme) => ({
@@ -110,7 +154,7 @@ const SpotFilterBar = () => {
             [theme.breakpoints.down("sm")]: {
               minHeight: "44px",
               width: "100%",
-              "& button": {
+              "& .MuiButton-root": {
                 width: "100%",
               },
             },
@@ -120,18 +164,21 @@ const SpotFilterBar = () => {
             variant={isRegionalFilterActive ? "contained" : "outlined"}
             onClick={() => handleActivateFilter("regional")}
           >
-            지역별 관광정보
+            지역별
           </Button>
           <Button
             variant={isNearbyFilterActive ? "contained" : "outlined"}
             onClick={() => handleActivateFilter("nearby")}
           >
-            내주변 관광정보
+            내주변
           </Button>
+          <IconButton onClick={handleReset}>
+            <RotateCcw />
+          </IconButton>
         </Box>
       </Box>
       {isRegionalFilterActive && <RegionalSpotFilterSelector />}
-      {isNearbyFilterActive && <NearbySpotFilterSelector />}
+      {isNearbyFilterActive && <NearbySpotFilterSelector onFailed={() => setIsNearbyFilterActive(false)} />}
     </>
   );
 };

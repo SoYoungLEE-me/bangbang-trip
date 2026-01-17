@@ -51,6 +51,9 @@ const useGetSpots = () => {
     enabled: isSearchMode ? true : isNearbyMode ? !!(mapX && mapY) : true,
   });
 
+  const isWaitingLocation = isNearbyMode && (!mapX || !mapY);
+  const isTotalLoading = queryInfo.isLoading || isWaitingLocation;
+
   const flatData =
     queryInfo.data?.pages.flatMap((page: SpotApiResponse) => {
       const body = page.response?.body;
@@ -71,6 +74,7 @@ const useGetSpots = () => {
 
   return {
     ...queryInfo,
+    isLoading: isTotalLoading,
     flatData,
   };
 };

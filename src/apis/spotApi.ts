@@ -20,10 +20,16 @@ export const getReginalSpots = async ({
   contentTypeId,
 }: GetSpotsParams): Promise<SpotApiResponse> => {
   const response = await axios.get(
-    `${TOUR_BASE_URL}/areaBasedList2?numOfRows=12&pageNo=${pageParam}&MobileOS=ETC&MobileApp=AppTest&ServiceKey=${TOUR_API_KEY}&arrange=C&contentTypeId=${contentTypeId}&areaCode=${
+    `${TOUR_BASE_URL}/areaBasedList2?numOfRows=12&pageNo=${pageParam}&MobileOS=ETC&MobileApp=AppTest&ServiceKey=${TOUR_API_KEY}&arrange=Q&contentTypeId=${contentTypeId}&areaCode=${
       areaCode === "0" ? "" : areaCode
     }&sigunguCode=${sigunguCode === "0" ? "" : sigunguCode}&cat1=&cat2=&cat3=&_type=json`
   );
+
+  const header = response.data?.response?.header;
+
+  if (header && header.resultCode !== "0000" && header.resultCode !== "00") {
+    throw new Error(`[${header.resultCode}] ${header.resultMsg}`);
+  }
 
   return response.data;
 };
@@ -36,16 +42,28 @@ export const getNearbySpots = async ({
   radius,
 }: GetSpotsParams): Promise<SpotApiResponse> => {
   const response = await axios.get(
-    `http://apis.data.go.kr/B551011/KorService2/locationBasedList2?ServiceKey=${TOUR_API_KEY}&contentTypeId=${contentTypeId}&mapX=${mapX}&mapY=${mapY}&radius=${radius}&MobileOS=ETC&MobileApp=AppTest&arrange=C&numOfRows=12&pageNo=${pageParam}&_type=json`
+    `http://apis.data.go.kr/B551011/KorService2/locationBasedList2?ServiceKey=${TOUR_API_KEY}&contentTypeId=${contentTypeId}&mapX=${mapX}&mapY=${mapY}&radius=${radius}&MobileOS=ETC&MobileApp=AppTest&arrange=Q&numOfRows=12&pageNo=${pageParam}&_type=json`
   );
+
+  const header = response.data?.response?.header;
+
+  if (header && header.resultCode !== "0000" && header.resultCode !== "00") {
+    throw new Error(`[${header.resultCode}] ${header.resultMsg}`);
+  }
 
   return response.data;
 };
 
 export const getSearchSpots = async ({ pageParam, keyword }: GetSpotsParams): Promise<SpotApiResponse> => {
   const response = await axios.get(
-    `http://apis.data.go.kr/B551011/KorService2/searchKeyword2?numOfRows=12&pageNo=${pageParam}&MobileOS=ETC&MobileApp=AppTest&ServiceKey=${TOUR_API_KEY}&arrange=C&areaCode=&sigunguCode=&cat1=&cat2=&cat3=&keyword=${keyword}&_type=json`
+    `http://apis.data.go.kr/B551011/KorService2/searchKeyword2?numOfRows=12&pageNo=${pageParam}&MobileOS=ETC&MobileApp=AppTest&ServiceKey=${TOUR_API_KEY}&arrange=Q&areaCode=&sigunguCode=&cat1=&cat2=&cat3=&keyword=${keyword}&_type=json`
   );
+
+  const header = response.data?.response?.header;
+
+  if (header && header.resultCode !== "0000" && header.resultCode !== "00") {
+    throw new Error(`[${header.resultCode}] ${header.resultMsg}`);
+  }
 
   return response.data;
 };

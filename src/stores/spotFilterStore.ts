@@ -9,6 +9,7 @@ interface SpotFilterState {
   mapY: string;
   isNearbyMode: boolean;
   keyword: string;
+  errorMessage: string;
 
   setTouristType: (type: string) => void;
   setArea: (area: string) => void;
@@ -17,6 +18,7 @@ interface SpotFilterState {
   setLocation: (mapX: string, mapY: string) => void;
   setIsNearbyMode: (isNearby: boolean) => void;
   setKeyword: (keyword: string) => void;
+  setErrorMessage: (message: string) => void;
 
   resetFilters: () => void;
 }
@@ -28,18 +30,18 @@ const initialState = {
   selectedRadius: "1000",
   isNearbyMode: false,
   keyword: "",
+  mapX: "",
+  mapY: "",
+  errorMessage: "",
 };
 
 export const useSpotFilterStore = create<SpotFilterState>((set) => ({
   ...initialState,
-  mapX: "",
-  mapY: "",
 
   setKeyword: (keyword) =>
     set({
+      ...initialState,
       keyword,
-      selectedArea: initialState.selectedArea,
-      selectedSigungu: initialState.selectedSigungu,
       isNearbyMode: false,
     }),
 
@@ -82,6 +84,8 @@ export const useSpotFilterStore = create<SpotFilterState>((set) => ({
       isNearbyMode: isNearby,
       keyword: isNearby ? "" : state.keyword,
     })),
+
+  setErrorMessage: (message) => set({ errorMessage: message }),
 
   resetFilters: () =>
     set({

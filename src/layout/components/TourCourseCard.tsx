@@ -27,22 +27,15 @@ const convertToTourSpot = (course: CardData): TourSpot => {
     addr2: course.addr2,
     firstimage: course.firstimage,
     firstimage2: course.firstimage2,
-    mapx: "mapx" in course ? (course.mapx || "") : "",
-    mapy: "mapy" in course ? (course.mapy || "") : "",
+    mapx: "mapx" in course ? course.mapx || "" : "",
+    mapy: "mapy" in course ? course.mapy || "" : "",
     tel: "tel" in course ? course.tel : undefined,
     areacode: course.areacode,
     sigungucode: course.sigungucode,
   };
 };
 
-const TourCourseCard = ({
-  course,
-  isSaved,
-  onSave,
-  contentTypeId,
-  showAddress = false,
-  onClick,
-}: TourCourseCardProps) => {
+const TourCourseCard = ({ course, isSaved, onSave, onClick }: TourCourseCardProps) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { selectedSpots, toggleSpot } = useSelectedSpotsStore();
@@ -52,17 +45,12 @@ const TourCourseCard = ({
   const [lastRemovedSpot, setLastRemovedSpot] = useState<TourSpot | null>(null);
 
   // store에서 저장 여부 확인 (onSave가 없을 때만)
-  const isSavedInStore = selectedSpots.some(
-    (spot) => spot.contentid === course.contentid
-  );
+  const isSavedInStore = selectedSpots.some((spot) => spot.contentid === course.contentid);
   const finalIsSaved = isSaved !== undefined ? isSaved : isSavedInStore;
 
   // store 변경 시 localStorage에 자동 저장
   useEffect(() => {
-    localStorage.setItem(
-      "selected-spots-storage",
-      JSON.stringify({ state: { selectedSpots } })
-    );
+    localStorage.setItem("selected-spots-storage", JSON.stringify({ state: { selectedSpots } }));
   }, [selectedSpots]);
 
   const handleCardClick = () => {
@@ -75,7 +63,7 @@ const TourCourseCard = ({
 
   const handleToggleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
-    
+
     if (onSave) {
       onSave(course.contentid);
     } else {
@@ -84,7 +72,7 @@ const TourCourseCard = ({
 
       setSnackbarOpen(false);
       toggleSpot(tourSpot);
-      
+
       // Snackbar 메시지 설정
       if (wasSaved) {
         setSnackbarMessage("찜을 취소했습니다.");
@@ -121,7 +109,7 @@ const TourCourseCard = ({
       toggleSpot(lastRemovedSpot);
       setSnackbarOpen(false);
       setLastRemovedSpot(null);
-      
+
       // 실행 취소 완료 메시지 (선택사항)
       setSnackbarMessage("찜하기가 복구되었습니다.");
       setIsAdded(true);
@@ -135,7 +123,6 @@ const TourCourseCard = ({
     return addrArray.length > 1 ? `${addrArray[0]} ${addrArray[1]}` : addrArray[0];
   };
 
-  const shouldShowAddress = showAddress || contentTypeId === "12";
   const hasImage = !!course.firstimage;
 
   return (
@@ -173,7 +160,7 @@ const TourCourseCard = ({
           {hasImage ? (
             <CardMedia
               component="img"
-              height="200"
+              // height="200px"
               image={course.firstimage}
               alt={course.title}
               sx={{
@@ -186,7 +173,7 @@ const TourCourseCard = ({
           ) : (
             <Box
               sx={{
-                height: "200",
+                // height: "200px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -266,7 +253,7 @@ const TourCourseCard = ({
                 color: theme.palette.primary.main,
                 px: 1,
                 py: 0.5,
-                marginLeft: '-3px',
+                marginLeft: "-3px",
                 borderRadius: "20px",
                 fontSize: "12px",
                 fontWeight: 600,
@@ -276,24 +263,6 @@ const TourCourseCard = ({
               {formatAddress(course.addr1)}
             </Box>
           )}
-
-          {/* 주소 표시 */}
-          {shouldShowAddress && course.addr1 && (
-            <Typography
-              variant="body1"
-              color="text.secondary"
-              sx={{
-                fontSize: "14px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {formatAddress(course.addr1)}
-            </Typography>
-          )}
-
-          
         </CardContent>
       </Card>
 
@@ -303,7 +272,7 @@ const TourCourseCard = ({
         onClose={handleCloseSnackbar}
         message={snackbarMessage}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
-         sx={{
+        sx={{
           marginLeft: { xs: 12, sm: 2, md: 0 },
           marginRight: { xs: 12, sm: 2, md: 0 },
           maxWidth: { xs: "calc(100% - 32px)", sm: "600px" },
@@ -312,9 +281,7 @@ const TourCourseCard = ({
             backgroundColor: theme.palette.background.default,
             color: theme.palette.text.primary,
             border: `6px solid ${
-              isAdded || snackbarMessage.includes("복구")
-                ? theme.palette.primary.main
-                : theme.palette.error.main
+              isAdded || snackbarMessage.includes("복구") ? theme.palette.primary.main : theme.palette.error.main
             }`,
           },
         }}
@@ -347,7 +314,7 @@ const TourCourseCard = ({
             </Button>
           ) : undefined
         }
-      />      
+      />
     </>
   );
 };

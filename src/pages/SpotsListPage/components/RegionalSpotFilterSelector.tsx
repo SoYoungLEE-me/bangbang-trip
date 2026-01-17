@@ -1,18 +1,11 @@
-import { alpha, Box, Button, MenuItem, TextField } from "@mui/material";
+import { alpha, Box, MenuItem, TextField } from "@mui/material";
 import { useSpotFilterStore } from "../../../stores/spotFilterStore";
 import useGetAreaCodes from "../../../hooks/useGetAreaCodes";
 import useGetSigunguCodes from "../../../hooks/useGetSigunguCodes";
 
 const RegionalSpotFilterSelector = () => {
-  const {
-    selectedTouristType,
-    setTouristType,
-    selectedArea,
-    setArea,
-    selectedSigungu,
-    setSigungu,
-    resetRegionalFilters,
-  } = useSpotFilterStore();
+  const { selectedTouristType, setTouristType, selectedArea, setArea, selectedSigungu, setSigungu } =
+    useSpotFilterStore();
 
   const { data: areaCodes } = useGetAreaCodes();
   const { data: sigunguCodes } = useGetSigunguCodes(selectedArea);
@@ -171,9 +164,6 @@ const RegionalSpotFilterSelector = () => {
           </TextField>
         )}
       </Box>
-      <Button variant="contained" onClick={() => resetRegionalFilters()} sx={{ height: "44px" }}>
-        선택 초기화
-      </Button>
     </Box>
   );
 };

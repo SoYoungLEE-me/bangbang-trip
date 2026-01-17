@@ -1,8 +1,12 @@
-import { alpha, Box, Button, MenuItem, TextField } from "@mui/material";
+import { alpha, Box, MenuItem, TextField } from "@mui/material";
 import { useSpotFilterStore } from "../../../stores/spotFilterStore";
 import { useEffect } from "react";
 
-const NearbySpotFilterSelector = () => {
+interface NearbySpotFilterSelectorProps {
+  onFailed: () => void;
+}
+
+const NearbySpotFilterSelector = ({ onFailed }: NearbySpotFilterSelectorProps) => {
   const {
     selectedTouristType,
     setTouristType,
@@ -12,7 +16,7 @@ const NearbySpotFilterSelector = () => {
     selectedRadius,
     setRadius,
     setIsNearbyMode,
-    resetNearbyFilters,
+    setErrorMessage,
   } = useSpotFilterStore();
 
   const handleChangeTouristType = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -24,8 +28,6 @@ const NearbySpotFilterSelector = () => {
   };
 
   const handleGetLocation = (isMounted: boolean) => {
-    if (!navigator.geolocation) return;
-
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const longitude = position.coords.longitude.toString();
@@ -37,15 +39,23 @@ const NearbySpotFilterSelector = () => {
       },
       (error) => {
         if (isMounted) {
-          console.error("위치 정보 획득 실패:", error.message);
+          let errorMessage = "위치 정보를 가져올 수 없습니다.";
+
+          switch (error.code) {
+            case error.PERMISSION_DENIED:
+              errorMessage = "위치 정보 공유 승인을 거절하셨습니다. 설정에서 권한을 허용해주세요.";
+              break;
+            case error.POSITION_UNAVAILABLE:
+              errorMessage = "위치 정보를 사용할 수 없는 환경입니다.";
+              break;
+          }
+
+          setErrorMessage(errorMessage);
+          setIsNearbyMode(false);
+          onFailed();
         }
       }
     );
-  };
-
-  const handleReset = () => {
-    resetNearbyFilters();
-    handleGetLocation(true);
   };
 
   useEffect(() => {
@@ -60,6 +70,7 @@ const NearbySpotFilterSelector = () => {
       isMounted = false;
       setLocation("", "");
       setIsNearbyMode(false);
+      setErrorMessage("");
     };
   }, []);
 
@@ -145,9 +156,6 @@ const NearbySpotFilterSelector = () => {
           </MenuItem>
         ))}
       </TextField>
-      <Button variant="contained" onClick={handleReset}>
-        선택 초기화
-      </Button>
     </Box>
   );
 };

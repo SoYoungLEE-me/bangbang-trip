@@ -5,6 +5,8 @@ const getServiceKey = (): string => {
   return TOUR_API_KEY || "";
 };
 
+// arrange 대표이미지 있는 콘텐츠 우선 정렬: O=제목순, Q=수정일순, R=생성일순)
+
 // 주변 관광지
 export const getNearbyCourses = async (): Promise<TourSpot[]> => {
   const url = `${TOUR_BASE_URL}/areaBasedList2`;
@@ -65,6 +67,7 @@ export const getFestivals = async (): Promise<Festival[]> => {
   const params = new URLSearchParams();
   params.append("numOfRows", "8");
   params.append("pageNo", "1");
+  params.append("arrange", "Q");
   params.append("MobileOS", "ETC");
   params.append("MobileApp", "TourAPI");
   params.append("eventStartDate", eventStartDate);
@@ -128,9 +131,9 @@ export const getPopularSpots = async (): Promise<TourSpot[]> => {
   const otherParams = new URLSearchParams();
   otherParams.append("numOfRows", "8");
   otherParams.append("pageNo", "1");
+  otherParams.append("arrange", "Q");
   otherParams.append("MobileOS", "ETC");
   otherParams.append("MobileApp", "TourAPI");
-  otherParams.append("arrange", "P");
   otherParams.append("contentTypeId", "12");
   otherParams.append("_type", "json");
 

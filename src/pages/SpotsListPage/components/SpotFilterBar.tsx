@@ -10,32 +10,37 @@ const SpotFilterBar = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [isResetSuccessMessageSnackbarOpen, setIsResetSuccessMessageSnackbarOpen] = useState<boolean>(false);
 
-  const [isRegionalFilterActive, setIsRegionalFilterActive] = useState<boolean>(false);
-  const [isNearbyFilterActive, setIsNearbyFilterActive] = useState<boolean>(false);
-
-  const { setIsNearbyMode, setKeyword, resetFilters, errorMessage, setErrorMessage } = useSpotFilterStore();
+  const {
+    setIsNearbyMode,
+    setKeyword,
+    resetFilters,
+    errorMessage,
+    setErrorMessage,
+    isRegionalFilterActive,
+    setIsRegionalFilterActive,
+    isNearbyFilterActive,
+    setIsNearbyFilterActive,
+  } = useSpotFilterStore();
 
   const isErrorMessageSnackbarOpen = !!errorMessage;
 
   const handleActivateFilter = (touristType: "regional" | "nearby") => {
     if (touristType === "regional") {
-      setIsRegionalFilterActive(!isRegionalFilterActive);
+      const nextState = !isRegionalFilterActive;
+      setIsRegionalFilterActive(nextState);
       setIsNearbyFilterActive(false);
-
-      if (!isRegionalFilterActive) {
-        setIsNearbyMode(false);
-      }
+      setIsNearbyMode(false);
     } else {
-      setIsNearbyFilterActive(!isNearbyFilterActive);
+      const nextState = !isNearbyFilterActive;
+      setIsNearbyFilterActive(nextState);
       setIsRegionalFilterActive(false);
+      setIsNearbyMode(nextState);
 
-      if (!isNearbyFilterActive) {
-        setIsNearbyMode(true);
+      if (nextState) {
+        setSearchTerm("");
+        setKeyword("");
       }
     }
-
-    setSearchTerm("");
-    resetFilters();
   };
 
   const handleChangeSearchTerm = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -51,15 +56,12 @@ const SpotFilterBar = () => {
     }
 
     setKeyword(searchTerm.trim());
-    setIsRegionalFilterActive(false);
     setIsNearbyFilterActive(false);
   };
 
   const handleReset = () => {
     setSearchTerm("");
     resetFilters();
-    setIsRegionalFilterActive(false);
-    setIsNearbyFilterActive(false);
     setIsResetSuccessMessageSnackbarOpen(true);
   };
 

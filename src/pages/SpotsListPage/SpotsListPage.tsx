@@ -8,7 +8,7 @@ import { useSpotFilterStore } from "../../stores/spotFilterStore";
 import LoadingSpinner from "../../common/components/LoadingSpinner";
 
 const SpotsListPage = () => {
-  const { selectedTouristType, keyword, resetFilters } = useSpotFilterStore();
+  const { selectedTouristType, keyword } = useSpotFilterStore();
 
   const { ref, inView } = useInView({
     threshold: 0,
@@ -59,7 +59,6 @@ const SpotsListPage = () => {
   };
 
   useEffect(() => {
-    resetFilters();
     window.scrollTo(0, 0);
   }, []);
 

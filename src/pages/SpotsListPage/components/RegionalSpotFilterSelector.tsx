@@ -4,11 +4,11 @@ import useGetAreaCodes from "../../../hooks/useGetAreaCodes";
 import useGetSigunguCodes from "../../../hooks/useGetSigunguCodes";
 
 const RegionalSpotFilterSelector = () => {
-  const { selectedTouristType, setTouristType, selectedArea, setArea, selectedSigungu, setSigungu } =
+  const { selectedTouristType, setTouristType, selectedArea, setArea, selectedSigungu, setSigungu, keyword } =
     useSpotFilterStore();
 
   const { data: areaCodes } = useGetAreaCodes();
-  const { data: sigunguCodes } = useGetSigunguCodes(selectedArea);
+  const { data: sigunguCodes } = useGetSigunguCodes();
 
   const handleChangeTouristType = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setTouristType(e.target.value);
@@ -75,7 +75,12 @@ const RegionalSpotFilterSelector = () => {
           }}
         >
           <MenuItem value="12">관광지</MenuItem>
-          <MenuItem value="25">여행코스</MenuItem>
+          <MenuItem value="25" disabled={!!keyword}>
+            여행코스
+          </MenuItem>
+          <MenuItem value="15" disabled={!!keyword}>
+            축제공연행사
+          </MenuItem>
         </TextField>
         <TextField
           select

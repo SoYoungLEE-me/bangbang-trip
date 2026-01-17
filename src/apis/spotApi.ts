@@ -54,9 +54,14 @@ export const getNearbySpots = async ({
   return response.data;
 };
 
-export const getSearchSpots = async ({ pageParam, keyword }: GetSpotsParams): Promise<SpotApiResponse> => {
+export const getSearchSpots = async ({
+  pageParam,
+  keyword,
+  areaCode,
+  sigunguCode,
+}: GetSpotsParams): Promise<SpotApiResponse> => {
   const response = await axios.get(
-    `http://apis.data.go.kr/B551011/KorService2/searchKeyword2?numOfRows=12&pageNo=${pageParam}&MobileOS=ETC&MobileApp=AppTest&ServiceKey=${TOUR_API_KEY}&arrange=Q&areaCode=&sigunguCode=&cat1=&cat2=&cat3=&keyword=${keyword}&_type=json`
+    `http://apis.data.go.kr/B551011/KorService2/searchKeyword2?numOfRows=12&pageNo=${pageParam}&MobileOS=ETC&MobileApp=AppTest&ServiceKey=${TOUR_API_KEY}&arrange=Q&areaCode=${areaCode === "0" ? "" : areaCode}&sigunguCode=${sigunguCode === "0" ? "" : sigunguCode}&cat1=&cat2=&cat3=&keyword=${keyword}&_type=json`
   );
 
   const header = response.data?.response?.header;

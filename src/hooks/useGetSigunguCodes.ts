@@ -1,7 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { getSigunguCodes } from "../apis/areaCodeApi";
+import { useSpotFilterStore } from "../stores/spotFilterStore";
 
-const useGetSigunguCodes = (areaCode: string) => {
+const useGetSigunguCodes = () => {
+  const { selectedArea: areaCode } = useSpotFilterStore();
+
   return useQuery({
     queryKey: ["sigungu-codes", areaCode],
     queryFn: () => getSigunguCodes(areaCode),

@@ -19,13 +19,13 @@ const useGetSpots = () => {
 
   const queryInfo = useInfiniteQuery({
     queryKey: isSearchMode
-      ? ["search-spots", keyword]
+      ? ["search-spots", keyword, areaCode, sigunguCode]
       : isNearbyMode
-      ? ["nearby-spots", contentTypeId, radius, mapX, mapY]
-      : ["reginal-spots", areaCode, sigunguCode, contentTypeId],
+        ? ["nearby-spots", contentTypeId, radius, mapX, mapY]
+        : ["reginal-spots", areaCode, sigunguCode, contentTypeId],
     queryFn: ({ pageParam }) => {
       if (isSearchMode) {
-        return getSearchSpots({ pageParam, keyword });
+        return getSearchSpots({ pageParam, keyword, areaCode, sigunguCode });
       }
 
       if (isNearbyMode && mapX && mapY) {

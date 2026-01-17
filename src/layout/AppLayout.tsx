@@ -5,6 +5,7 @@ import NavBar from "./components/NavBar";
 import Footer from "./components/Footer";
 import { useSelectedSpotsStore } from "../stores/selectedSpotsStore";
 import type { TourSpot } from "../models/tour";
+import ScrollToTop from "./components/ScrollToTop";
 
 const AppLayout = () => {
   const { toggleSpot } = useSelectedSpotsStore();
@@ -42,6 +43,7 @@ const AppLayout = () => {
         <Outlet />
       </Box>
       <Footer />
+      <ScrollToTop />
     </Box>
   );
 };

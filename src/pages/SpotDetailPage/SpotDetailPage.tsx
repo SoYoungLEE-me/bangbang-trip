@@ -38,17 +38,22 @@ const SpotDetailPage = () => {
     contentId: id!,
     contentTypeId: contentTypeId || "",
   });
+
   const { data: introData, isLoading: isIntroLoading } = useTourSpotDetailIntro(
     {
       contentId: id!,
       contentTypeId: contentTypeId || "",
-    }
+    },
   );
+
   const { data: imageData } = useTourSpotDetailImage({
     contentId: id!,
     imageYN: "Y",
   });
+
   const { data: petTourData } = useTourSpotDetailPetTour({ contentId: id! });
+
+  console.log("introData", introData);
 
   if (isCommonLoading || isIntroLoading || isInfoLoading) {
     return <LoadingSpinner />;
@@ -95,10 +100,10 @@ const SpotDetailPage = () => {
   }
 
   const introDetails = getIntroDetails(
-    introData?.response?.body?.items?.item?.[0]
+    introData?.response?.body?.items?.item?.[0],
   );
   const images = (imageData?.response?.body?.items?.item || []).filter(
-    (img) => img.originimgurl !== spot?.firstimage
+    (img) => img.originimgurl !== spot?.firstimage,
   );
 
   const isTourCourseType = contentTypeId === "25";
@@ -126,7 +131,7 @@ const SpotDetailPage = () => {
         <Course
           courseInfos={infos.filter(
             (i): i is TourCourseInfoItem =>
-              i.contenttypeid === "25" && "subname" in i
+              i.contenttypeid === "25" && "subname" in i,
           )}
         />
       )}
@@ -141,7 +146,7 @@ const SpotDetailPage = () => {
         extraInfos={
           !isTourCourseType
             ? infos.filter(
-                (i) => i.infotext && formatHtmlText(i.infotext).trim()
+                (i) => i.infotext && formatHtmlText(i.infotext).trim(),
               )
             : []
         }

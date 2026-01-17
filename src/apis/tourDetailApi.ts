@@ -13,7 +13,7 @@ import type {
 } from "../models/tourDetail";
 
 export const getSpotDetailCommon = async (
-  params: SpotDetailCommonRequest
+  params: SpotDetailCommonRequest,
 ): Promise<SpotDetailCommonResponse> => {
   const { contentId, numOfRows = 10, pageNo = 1 } = params;
 
@@ -40,11 +40,11 @@ export const getSpotDetailCommon = async (
 };
 
 export const getSpotDetailInfo = async (
-  params: SpotDetailInfoRequest
+  params: SpotDetailInfoRequest,
 ): Promise<SpotDetailInfoResponse> => {
   const { contentId, contentTypeId, numOfRows = 10, pageNo = 1 } = params;
 
-  const baseUrl = "http://apis.data.go.kr/B551011/KorService2/detailInfo2";
+  const baseUrl = `${TOUR_BASE_URL}/detailInfo2`;
 
   const queryParams = new URLSearchParams();
   queryParams.append("contentId", contentId);
@@ -67,7 +67,7 @@ export const getSpotDetailInfo = async (
 };
 
 export const getSpotDetailIntro = async (
-  params: SpotDetailIntroRequest
+  params: SpotDetailIntroRequest,
 ): Promise<SpotDetailIntroResponse> => {
   const { contentId, contentTypeId, numOfRows = 10, pageNo = 1 } = params;
 
@@ -94,7 +94,7 @@ export const getSpotDetailIntro = async (
 };
 
 export const getSpotDetailPetTour = async (
-  params: SpotDetailPetTourRequest
+  params: SpotDetailPetTourRequest,
 ): Promise<SpotDetailPetTourResponse> => {
   const { contentId, numOfRows = 10, pageNo = 1 } = params;
 
@@ -122,11 +122,11 @@ export const getSpotDetailPetTour = async (
 };
 
 export const getSpotDetailImage = async (
-  params: SpotDetailImageRequest
+  params: SpotDetailImageRequest,
 ): Promise<SpotDetailImageResponse> => {
   const { contentId, imageYN = "Y", numOfRows = 10, pageNo = 1 } = params;
 
-  const baseUrl = "http://apis.data.go.kr/B551011/KorService2/detailImage2";
+  const baseUrl = `${TOUR_BASE_URL}/detailImage2`;
 
   const queryParams = new URLSearchParams();
   queryParams.append("contentId", contentId);

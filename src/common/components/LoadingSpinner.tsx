@@ -15,6 +15,7 @@ const LoadingSpinner = ({ size = 40, thickness = 4 }: SpinnerProps) => {
         alignItems: "center",
         justifyContent: "center",
         overflow: "hidden",
+        transform: "translateY(-40px)",
       }}
     >
       <CircularProgress color="primary" size={size} thickness={thickness} />

@@ -5,6 +5,8 @@ import { syncProfileNameFromGoogle } from "./services/auth";
 import { useEffect } from "react";
 import { supabase } from "./lib/supabase";
 import { useAuthStore } from "./stores/authStore";
+import FullScreenLoading from "./common/components/FullScreenLoading";
+import ScrollRestoration from "./common/components/ScrollRestoration";
 
 function App() {
   const setUser = useAuthStore((state) => state.setUser);
@@ -30,7 +32,8 @@ function App() {
   }, []);
 
   return (
-    <Suspense fallback={<div>...loading</div>}>
+    <Suspense fallback={<FullScreenLoading />}>
+      <ScrollRestoration />
       <AppRouter />
     </Suspense>
   );

@@ -151,6 +151,9 @@ const SpotFilterBar = () => {
           sx={(theme) => ({
             display: "flex",
             gap: "16px",
+            "& .MuiButton-root": {
+              padding: "5px 36px",
+            },
             [theme.breakpoints.down("sm")]: {
               minHeight: "44px",
               width: "100%",

@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, IconButton } from "@mui/material";
 import { useParams } from "react-router-dom";
 
 import { useTourSpotDetailCommon } from "../../hooks/useTourSpotDetailCommon";
@@ -75,6 +75,10 @@ const SpotDetailPage = () => {
         px: { lg: 0, md: 10, xs: 4 },
       }}
     >
+      <Box sx={{ position: "fixed", top: 80, right: 20, zIndex: 1000 }}>
+        <IconButton>...</IconButton>
+      </Box>
+
       <Header spot={spot} />
 
       <Description overview={spot.overview} />

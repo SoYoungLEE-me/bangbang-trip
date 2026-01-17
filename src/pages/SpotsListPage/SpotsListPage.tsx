@@ -8,7 +8,7 @@ import { useSpotFilterStore } from "../../stores/spotFilterStore";
 import LoadingSpinner from "../../common/components/LoadingSpinner";
 
 const SpotsListPage = () => {
-  const { keyword, resetFilters } = useSpotFilterStore();
+  const { selectedTouristType, keyword, resetFilters } = useSpotFilterStore();
 
   const { ref, inView } = useInView({
     threshold: 0,
@@ -53,7 +53,7 @@ const SpotsListPage = () => {
 
     return spots.map((spot) => (
       <Grid key={spot.contentid} size={{ xs: 12, sm: 6, md: 3 }}>
-        <TourCourseCard course={spot} showAddress={true} />
+        <TourCourseCard course={spot} contentTypeId={selectedTouristType} showAddress={true} />
       </Grid>
     ));
   };

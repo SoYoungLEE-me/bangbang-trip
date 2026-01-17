@@ -1,14 +1,4 @@
-import {
-  Card,
-  CardMedia,
-  CardContent,
-  IconButton,
-  Typography,
-  useTheme,
-  Box,
-  Snackbar,
-  Button,
-} from "@mui/material";
+import { Card, CardMedia, CardContent, IconButton, Typography, useTheme, Box, Snackbar, Button } from "@mui/material";
 import { Heart, CameraOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -45,7 +35,14 @@ const convertToTourSpot = (course: CardData): TourSpot => {
   };
 };
 
-const TourCourseCard = ({ course, isSaved, onSave, onClick }: TourCourseCardProps) => {
+const TourCourseCard = ({
+  course,
+  isSaved,
+  onSave,
+  contentTypeId,
+  showAddress = false,
+  onClick,
+}: TourCourseCardProps) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const { selectedSpots, toggleSpot } = useSelectedSpotsStore();
@@ -130,11 +127,10 @@ const TourCourseCard = ({ course, isSaved, onSave, onClick }: TourCourseCardProp
   const formatAddress = (addr: string | undefined): string => {
     if (!addr) return "";
     const addrArray = addr.split(" ");
-    return addrArray.length > 1
-      ? `${addrArray[0]} ${addrArray[1]}`
-      : addrArray[0];
+    return addrArray.length > 1 ? `${addrArray[0]} ${addrArray[1]}` : addrArray[0];
   };
 
+  const shouldShowAddress = showAddress || contentTypeId === "12";
   const hasImage = !!course.firstimage;
 
   return (
@@ -165,7 +161,7 @@ const TourCourseCard = ({ course, isSaved, onSave, onClick }: TourCourseCardProp
             // height: "200",
             width: "100%",
             overflow: "hidden",
-            aspectRatio: "1.3",///
+            aspectRatio: "1.3", ///
             "&:hover img": {
               transform: "scale(1.2)",
             },
@@ -193,17 +189,13 @@ const TourCourseCard = ({ course, isSaved, onSave, onClick }: TourCourseCardProp
                 alignItems: "center",
                 justifyContent: "center",
                 backgroundColor: theme.palette.background.paper,
-                /// aspectRatio: "1.3",
+                aspectRatio: "1.3",
                 "& svg": {
                   transition: "transform 1s ease-in-out",
                 },
               }}
             >
-              <CameraOff
-                className="no-image-icon"
-                size={50}
-                color={theme.palette.text.secondary}
-              />
+              <CameraOff className="no-image-icon" size={50} color={theme.palette.text.secondary} />
             </Box>
           )}
         </Box>
@@ -226,14 +218,10 @@ const TourCourseCard = ({ course, isSaved, onSave, onClick }: TourCourseCardProp
           <Heart
             size={20}
             fill={finalIsSaved ? theme.palette.error.main : "none"}
-            color={
-              finalIsSaved
-                ? theme.palette.error.main
-                : theme.palette.text.secondary
-            }
+            color={finalIsSaved ? theme.palette.error.main : theme.palette.text.secondary}
           />
         </IconButton>
-          
+
         <CardContent
           sx={{
             // pt: { xs: 0.5, sm: 1.5 }, ///
@@ -248,7 +236,8 @@ const TourCourseCard = ({ course, isSaved, onSave, onClick }: TourCourseCardProp
             "&:last-child": {
               paddingBottom: { xs: 3, sm: 3 },
             },
-          }}>
+          }}
+        >
           <Typography
             variant="h2"
             sx={{
@@ -267,28 +256,19 @@ const TourCourseCard = ({ course, isSaved, onSave, onClick }: TourCourseCardProp
           </Typography>
 
           {/* 축제 기간 표시 */}
-          {"eventstartdate" in course &&
-            course.eventstartdate &&
-            course.eventenddate && (
-              <Typography
-                variant="body2"
-                sx={{
-                  fontSize: "14px",
-                  color: theme.palette.text.secondary,
-                  mt: 0.5,
-                }}
-              >
-                {course.eventstartdate.replace(
-                  /(\d{4})(\d{2})(\d{2})/,
-                  "$1.$2.$3"
-                )}{" "}
-                ~{" "}
-                {course.eventenddate.replace(
-                  /(\d{4})(\d{2})(\d{2})/,
-                  "$1.$2.$3"
-                )}
-              </Typography>
-            )}
+          {"eventstartdate" in course && course.eventstartdate && course.eventenddate && (
+            <Typography
+              variant="body2"
+              sx={{
+                fontSize: "14px",
+                color: theme.palette.text.secondary,
+                mt: 0.5,
+              }}
+            >
+              {course.eventstartdate.replace(/(\d{4})(\d{2})(\d{2})/, "$1.$2.$3")} ~{" "}
+              {course.eventenddate.replace(/(\d{4})(\d{2})(\d{2})/, "$1.$2.$3")}
+            </Typography>
+          )}
 
           {/* 지역 정보 배지 */}
           {course.addr1 && (
@@ -310,24 +290,6 @@ const TourCourseCard = ({ course, isSaved, onSave, onClick }: TourCourseCardProp
               {formatAddress(course.addr1)}
             </Box>
           )}
-
-          {/* 주소 표시 */}
-          {shouldShowAddress && course.addr1 && (
-            <Typography
-              variant="body1"
-              color="text.secondary"
-              sx={{
-                fontSize: "14px",
-                overflow: "hidden",
-                textOverflow: "ellipsis",
-                whiteSpace: "nowrap",
-              }}
-            >
-              {formatAddress(course.addr1)}
-            </Typography>
-          )}
-
-          
         </CardContent>
       </Card>
 

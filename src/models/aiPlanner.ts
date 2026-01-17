@@ -9,6 +9,7 @@ export interface UserPlannerFormValue {
 export interface AiPlannerResult {
   itinerary: ItineraryDay[];
   preparations: string[];
+  exclusionNotes: string[];
 }
 
 export interface ItineraryDay {

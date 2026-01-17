@@ -92,14 +92,12 @@ const UserPlannerForm = ({
             {/* 출발일 */}
             <Box position="relative" width="100%">
               <TextField
-                label="출발일"
                 type="date"
-                size="medium"
                 value={value.startDate}
                 onChange={(e) => update({ startDate: e.target.value })}
-                InputLabelProps={{ shrink: true }}
                 inputProps={{ min: todayStr }}
                 fullWidth
+                InputLabelProps={{ shrink: false }}
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     height: 56,
@@ -112,11 +110,8 @@ const UserPlannerForm = ({
                       borderWidth: 2,
                     },
                     "& input": {
-                      height: "100%",
-                      boxSizing: "border-box",
                       padding: "16.5px 14px",
-                      WebkitAppearance: "none",
-                      MozAppearance: "textfield",
+                      color: value.startDate ? "text.primary" : "transparent",
                     },
                   },
                 }}
@@ -130,11 +125,11 @@ const UserPlannerForm = ({
                     top: "50%",
                     left: 14,
                     transform: "translateY(-50%)",
-                    color: "text.disabled",
+                    color: "text.secondary",
                     fontSize: 16,
                   }}
                 >
-                  날짜를 선택해주세요
+                  출발 날짜를 선택해주세요
                 </Typography>
               )}
             </Box>
@@ -142,14 +137,12 @@ const UserPlannerForm = ({
             {/* 도착일 */}
             <Box position="relative" width="100%">
               <TextField
-                label="도착일"
                 type="date"
-                size="medium"
                 value={value.endDate}
                 onChange={(e) => update({ endDate: e.target.value })}
-                InputLabelProps={{ shrink: true }}
                 inputProps={{ min: value.startDate || todayStr }}
                 fullWidth
+                InputLabelProps={{ shrink: false }}
                 sx={{
                   "& .MuiOutlinedInput-root": {
                     height: 56,
@@ -162,11 +155,8 @@ const UserPlannerForm = ({
                       borderWidth: 2,
                     },
                     "& input": {
-                      height: "100%",
-                      boxSizing: "border-box",
                       padding: "16.5px 14px",
-                      WebkitAppearance: "none",
-                      MozAppearance: "textfield",
+                      color: value.endDate ? "text.primary" : "transparent",
                     },
                   },
                 }}
@@ -180,11 +170,11 @@ const UserPlannerForm = ({
                     top: "50%",
                     left: 14,
                     transform: "translateY(-50%)",
-                    color: "text.disabled",
+                    color: "text.secondary",
                     fontSize: 16,
                   }}
                 >
-                  날짜를 선택해주세요
+                  도착 날짜를 선택해주세요
                 </Typography>
               )}
             </Box>

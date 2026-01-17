@@ -167,7 +167,7 @@ const TourCourseCard = ({
               transform: "scale(1.2)",
             },
             ".no-image-icon": {
-              transform: "scale(1.4)",
+              transform: "scale(1.2)",
             },
           },
         }}
@@ -175,8 +175,10 @@ const TourCourseCard = ({
       >
         <Box
           sx={{
-            height: "200",
+            // height: "200",
+            width: "100%",
             overflow: "hidden",
+            aspectRatio: "1.3",///
             "&:hover img": {
               transform: "scale(1.2)",
             },
@@ -185,27 +187,30 @@ const TourCourseCard = ({
           {hasImage ? (
             <CardMedia
               component="img"
-              height="200"
+              /// height="200"
               image={course.firstimage}
               alt={course.title}
               sx={{
                 objectFit: "cover",
                 width: "100%",
-                transition: "transform 0.5s",
+                height: "100%", ///
+                transition: "transform 1s ease-in-out",
                 aspectRatio: "1.3",
               }}
             />
           ) : (
             <Box
               sx={{
-                height: "200",
+                /// height: "200",
+                width: "100%", ///
+                height: "100%",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 backgroundColor: theme.palette.background.paper,
-                aspectRatio: "1.3",
+                /// aspectRatio: "1.3",
                 "& svg": {
-                  transition: "transform 0.5s",
+                  transition: "transform 1s ease-in-out",
                 },
               }}
             >
@@ -243,8 +248,22 @@ const TourCourseCard = ({
             }
           />
         </IconButton>
-
-        <CardContent>
+          
+        <CardContent
+          sx={{
+            // pt: { xs: 0.5, sm: 1.5 }, ///
+            // px: { xs: 1.5, sm: 2 }, ///
+            // pb: { xs: 1.5, sm: 2 }, ///
+            // pt: { xs: 1, sm: 1.5 }, ///
+            // px: { xs: 1.5, sm: 2 }, ///
+            // pb: { xs: 1.5, sm: 2 }, ///
+            pt: { xs: 3, sm: 3 },
+            px: { xs: 1.5, sm: 2 },
+            pb: { xs: 3, sm: 3 },
+            "&:last-child": {
+              paddingBottom: { xs: 3, sm: 3 },
+            },
+          }}>
           <Typography
             variant="h2"
             sx={{
@@ -300,6 +319,7 @@ const TourCourseCard = ({
                 fontSize: "12px",
                 fontWeight: 600,
                 mt: 1,
+                mb: shouldShowAddress ? 1 : 0,
               }}
             >
               {formatAddress(course.addr1)}

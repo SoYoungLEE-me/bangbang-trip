@@ -67,10 +67,6 @@ const LoginPage = () => {
     try {
       await signInWithEmail(email, password);
       setAlertOpen(true);
-
-      setTimeout(() => {
-        navigate("/");
-      }, 1500);
     } catch (error: unknown) {
       if (error instanceof Error) {
         const message = error.message;
@@ -91,8 +87,15 @@ const LoginPage = () => {
     }
   };
 
+  const handleAlertConfirm = () => {
+    setAlertOpen(false);
+    navigate("/");
+  };
+
   return (
     <Box
+      component="form"
+      autoComplete="off"
       sx={{
         minHeight: "100vh",
         display: "flex",
@@ -236,8 +239,8 @@ const LoginPage = () => {
         open={alertOpen}
         message="로그인 되었습니다."
         severity="success"
-        onConfirm={() => setAlertOpen(false)}
-        onCancel={() => setAlertOpen(false)}
+        onConfirm={() => handleAlertConfirm}
+        onCancel={() => handleAlertConfirm}
       />
     </Box>
   );

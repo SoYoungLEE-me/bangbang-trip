@@ -110,6 +110,11 @@ const RegisterPage = () => {
     }
   };
 
+  const handleAlertConfirm = () => {
+    setAlertOpen(false);
+    navigate("/");
+  };
+
   return (
     <Box
       component="form"
@@ -275,14 +280,8 @@ const RegisterPage = () => {
         open={alertOpen}
         message="회원가입이 완료되었습니다."
         severity="success"
-        onConfirm={() => {
-          setAlertOpen(false);
-          navigate("/");
-        }}
-        onCancel={() => {
-          setAlertOpen(false);
-          navigate("/");
-        }}
+        onConfirm={handleAlertConfirm}
+        onCancel={handleAlertConfirm}
       />
     </Box>
   );

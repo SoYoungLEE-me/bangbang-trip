@@ -1,4 +1,14 @@
-import { Card, CardMedia, CardContent, IconButton, Typography, useTheme, Box, Snackbar, Button } from "@mui/material";
+import {
+  Card,
+  CardMedia,
+  CardContent,
+  IconButton,
+  Typography,
+  useTheme,
+  Box,
+  Snackbar,
+  Button,
+} from "@mui/material";
 import { Heart, CameraOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -120,7 +130,9 @@ const TourCourseCard = ({ course, isSaved, onSave, onClick }: TourCourseCardProp
   const formatAddress = (addr: string | undefined): string => {
     if (!addr) return "";
     const addrArray = addr.split(" ");
-    return addrArray.length > 1 ? `${addrArray[0]} ${addrArray[1]}` : addrArray[0];
+    return addrArray.length > 1
+      ? `${addrArray[0]} ${addrArray[1]}`
+      : addrArray[0];
   };
 
   const hasImage = !!course.firstimage;
@@ -142,7 +154,7 @@ const TourCourseCard = ({ course, isSaved, onSave, onClick }: TourCourseCardProp
               transform: "scale(1.2)",
             },
             ".no-image-icon": {
-              transform: "scale(1.4)",
+              transform: "scale(1.2)",
             },
           },
         }}
@@ -150,8 +162,10 @@ const TourCourseCard = ({ course, isSaved, onSave, onClick }: TourCourseCardProp
       >
         <Box
           sx={{
-            height: "200",
+            // height: "200",
+            width: "100%",
             overflow: "hidden",
+            aspectRatio: "1.3",///
             "&:hover img": {
               transform: "scale(1.2)",
             },
@@ -161,12 +175,14 @@ const TourCourseCard = ({ course, isSaved, onSave, onClick }: TourCourseCardProp
             <CardMedia
               component="img"
               // height="200px"
+              /// height="200"
               image={course.firstimage}
               alt={course.title}
               sx={{
                 objectFit: "cover",
                 width: "100%",
-                transition: "transform 0.5s",
+                height: "100%", ///
+                transition: "transform 1s ease-in-out",
                 aspectRatio: "1.3",
               }}
             />
@@ -174,17 +190,24 @@ const TourCourseCard = ({ course, isSaved, onSave, onClick }: TourCourseCardProp
             <Box
               sx={{
                 // height: "200px",
+                /// height: "200",
+                width: "100%", ///
+                height: "100%",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
                 backgroundColor: theme.palette.background.paper,
-                aspectRatio: "1.3",
+                /// aspectRatio: "1.3",
                 "& svg": {
-                  transition: "transform 0.5s",
+                  transition: "transform 1s ease-in-out",
                 },
               }}
             >
-              <CameraOff className="no-image-icon" size={50} color={theme.palette.text.secondary} />
+              <CameraOff
+                className="no-image-icon"
+                size={50}
+                color={theme.palette.text.secondary}
+              />
             </Box>
           )}
         </Box>
@@ -207,11 +230,29 @@ const TourCourseCard = ({ course, isSaved, onSave, onClick }: TourCourseCardProp
           <Heart
             size={20}
             fill={finalIsSaved ? theme.palette.error.main : "none"}
-            color={finalIsSaved ? theme.palette.error.main : theme.palette.text.secondary}
+            color={
+              finalIsSaved
+                ? theme.palette.error.main
+                : theme.palette.text.secondary
+            }
           />
         </IconButton>
-
-        <CardContent>
+          
+        <CardContent
+          sx={{
+            // pt: { xs: 0.5, sm: 1.5 }, ///
+            // px: { xs: 1.5, sm: 2 }, ///
+            // pb: { xs: 1.5, sm: 2 }, ///
+            // pt: { xs: 1, sm: 1.5 }, ///
+            // px: { xs: 1.5, sm: 2 }, ///
+            // pb: { xs: 1.5, sm: 2 }, ///
+            pt: { xs: 3, sm: 3 },
+            px: { xs: 1.5, sm: 2 },
+            pb: { xs: 3, sm: 3 },
+            "&:last-child": {
+              paddingBottom: { xs: 3, sm: 3 },
+            },
+          }}>
           <Typography
             variant="h2"
             sx={{
@@ -230,19 +271,28 @@ const TourCourseCard = ({ course, isSaved, onSave, onClick }: TourCourseCardProp
           </Typography>
 
           {/* 축제 기간 표시 */}
-          {"eventstartdate" in course && course.eventstartdate && course.eventenddate && (
-            <Typography
-              variant="body2"
-              sx={{
-                fontSize: "14px",
-                color: theme.palette.text.secondary,
-                mt: 0.5,
-              }}
-            >
-              {course.eventstartdate.replace(/(\d{4})(\d{2})(\d{2})/, "$1.$2.$3")} ~{" "}
-              {course.eventenddate.replace(/(\d{4})(\d{2})(\d{2})/, "$1.$2.$3")}
-            </Typography>
-          )}
+          {"eventstartdate" in course &&
+            course.eventstartdate &&
+            course.eventenddate && (
+              <Typography
+                variant="body2"
+                sx={{
+                  fontSize: "14px",
+                  color: theme.palette.text.secondary,
+                  mt: 0.5,
+                }}
+              >
+                {course.eventstartdate.replace(
+                  /(\d{4})(\d{2})(\d{2})/,
+                  "$1.$2.$3"
+                )}{" "}
+                ~{" "}
+                {course.eventenddate.replace(
+                  /(\d{4})(\d{2})(\d{2})/,
+                  "$1.$2.$3"
+                )}
+              </Typography>
+            )}
 
           {/* 지역 정보 배지 */}
           {course.addr1 && (
@@ -258,10 +308,27 @@ const TourCourseCard = ({ course, isSaved, onSave, onClick }: TourCourseCardProp
                 fontSize: "12px",
                 fontWeight: 600,
                 mt: 1,
+                mb: shouldShowAddress ? 1 : 0,
               }}
             >
               {formatAddress(course.addr1)}
             </Box>
+          )}
+
+          {/* 주소 표시 */}
+          {shouldShowAddress && course.addr1 && (
+            <Typography
+              variant="body1"
+              color="text.secondary"
+              sx={{
+                fontSize: "14px",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+                whiteSpace: "nowrap",
+              }}
+            >
+              {formatAddress(course.addr1)}
+            </Typography>
           )}
         </CardContent>
       </Card>

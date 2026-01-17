@@ -94,7 +94,7 @@ interface BaseInfoItem {
 }
 
 // 여행코스 정보
-interface TourCourseInfoItem extends BaseInfoItem {
+export interface TourCourseInfoItem extends BaseInfoItem {
   contenttypeid: "25";
   subcontentid?: string;
   subdetailalt?: string;
@@ -450,3 +450,39 @@ export const isRestaurant = (
 ): intro is RestaurantIntro => {
   return intro.contenttypeid === "39";
 };
+
+export interface SpotCommon {
+  title: string;
+  firstimage?: string;
+  addr1?: string;
+  overview?: string;
+  homepage?: string;
+  contenttypeid?: string;
+}
+
+export interface SpotImage {
+  originimgurl: string;
+  imgname?: string;
+}
+
+export interface CourseInfoItem {
+  subname?: string;
+  subdetailimg?: string;
+  subdetailoverview?: string;
+  infoname?: string;
+  infotext?: string;
+}
+
+export interface PetTourItem {
+  acmpyTypeCd?: string;
+  acmpyPsblCpam?: string;
+  acmpyNeedMtr?: string;
+  relaPosesFclty?: string;
+  etcAcmpyInfo?: string;
+}
+
+export interface IntroDetailItem {
+  label: string;
+  value: string;
+  isMultiline?: boolean;
+}

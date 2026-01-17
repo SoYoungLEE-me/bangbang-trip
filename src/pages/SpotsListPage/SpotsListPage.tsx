@@ -60,6 +60,7 @@ const SpotsListPage = () => {
 
   useEffect(() => {
     resetFilters();
+    window.scrollTo(0, 0);
   }, []);
 
   return (

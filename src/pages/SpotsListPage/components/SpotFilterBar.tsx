@@ -8,13 +8,14 @@ import { useSpotFilterStore } from "../../../stores/spotFilterStore";
 
 const SpotFilterBar = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [isResetSuccessMessageSnackbarOpen, setIsResetSuccessMessageSnackbarOpen] = useState<boolean>(false);
 
   const [isRegionalFilterActive, setIsRegionalFilterActive] = useState<boolean>(false);
   const [isNearbyFilterActive, setIsNearbyFilterActive] = useState<boolean>(false);
 
   const { setIsNearbyMode, setKeyword, resetFilters, errorMessage, setErrorMessage } = useSpotFilterStore();
 
-  const isSnackbarOpen = !!errorMessage;
+  const isErrorMessageSnackbarOpen = !!errorMessage;
 
   const handleActivateFilter = (touristType: "regional" | "nearby") => {
     if (touristType === "regional") {
@@ -59,19 +60,24 @@ const SpotFilterBar = () => {
     resetFilters();
     setIsRegionalFilterActive(false);
     setIsNearbyFilterActive(false);
+    setIsResetSuccessMessageSnackbarOpen(true);
   };
 
-  const handleCloseSnackbar = () => {
+  const handleCloseErrorMessageSnackbar = () => {
     setErrorMessage("");
+  };
+
+  const handleCloseResetSuccessMessageSnackbar = () => {
+    setIsResetSuccessMessageSnackbarOpen(false);
   };
 
   return (
     <>
       <Snackbar
-        open={isSnackbarOpen}
+        open={isErrorMessageSnackbarOpen}
         autoHideDuration={4000}
         message={errorMessage}
-        onClose={handleCloseSnackbar}
+        onClose={handleCloseErrorMessageSnackbar}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         action={
           <IconButton
@@ -81,7 +87,7 @@ const SpotFilterBar = () => {
             sx={(theme) => ({
               color: theme.palette.error.main,
             })}
-            onClick={handleCloseSnackbar}
+            onClick={handleCloseErrorMessageSnackbar}
           >
             <X />
           </IconButton>
@@ -93,6 +99,35 @@ const SpotFilterBar = () => {
             backgroundColor: theme.palette.background.default,
             color: theme.palette.text.primary,
             border: `6px solid ${theme.palette.error.main}`,
+          },
+        })}
+      />
+      <Snackbar
+        open={isResetSuccessMessageSnackbarOpen}
+        autoHideDuration={4000}
+        message={"모든 검색 조건이 초기화되었습니다."}
+        onClose={handleCloseResetSuccessMessageSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        action={
+          <IconButton
+            size="small"
+            aria-label="close"
+            color="inherit"
+            sx={(theme) => ({
+              color: theme.palette.primary.main,
+            })}
+            onClick={handleCloseResetSuccessMessageSnackbar}
+          >
+            <X />
+          </IconButton>
+        }
+        sx={(theme) => ({
+          wordBreak: "keep-all",
+          "& .MuiSnackbarContent-root": {
+            margin: "4px",
+            backgroundColor: theme.palette.background.default,
+            color: theme.palette.text.primary,
+            border: `6px solid ${theme.palette.primary.main}`,
           },
         })}
       />

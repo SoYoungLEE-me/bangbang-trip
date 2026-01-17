@@ -5,6 +5,7 @@ import {
   Clock,
   Bookmark,
   BookmarkCheck,
+  AlertCircle,
 } from "lucide-react";
 import { alpha, useTheme } from "@mui/material/styles";
 import type { AiPlannerResult } from "../../../models/aiPlanner";
@@ -32,6 +33,7 @@ const AiPlannerResultPanel = ({
 
   const primaryColor = theme.palette.primary.main;
   const paperBg = theme.palette.background.paper;
+  const errorColor = theme.palette.error.main;
 
   return (
     <Box
@@ -224,60 +226,123 @@ const AiPlannerResultPanel = ({
           </Stack>
         </Grid>
 
-        {/* 여행 준비물 */}
+        {/* 여행 준비물 및 제외 동선*/}
         <Grid size={{ xs: 12, md: 4 }}>
-          <Box
-            sx={{
-              p: 4,
-              borderRadius: 6,
-              bgcolor: alpha(primaryColor, 0.05),
-              border: `1px dashed ${alpha(primaryColor, 0.3)}`,
-              mt: { xs: 0, md: 8.5 },
-            }}
-          >
-            <Typography
-              fontWeight={900}
-              fontSize={18}
-              mb={3}
+          <Stack spacing={3}>
+            {/* 필수 준비물 */}
+            <Box
               sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 1.2,
-                color: primaryColor,
+                p: 4,
+                borderRadius: 6,
+                bgcolor: alpha(primaryColor, 0.05),
+                border: `1px dashed ${alpha(primaryColor, 0.3)}`,
               }}
             >
-              <Briefcase size={20} /> 필수 준비물
-            </Typography>
-
-            <Stack spacing={2.5}>
-              {result.preparations.map((item, idx) => (
-                <Stack
-                  key={idx}
-                  direction="row"
-                  spacing={1.5}
-                  alignItems="flex-start"
-                >
-                  <Box
-                    sx={{
-                      mt: 0.8,
-                      width: 12,
-                      height: 12,
-                      borderRadius: "50%",
-                      border: `2px solid ${primaryColor}`,
-                      flexShrink: 0,
-                    }}
-                  />
-                  <Typography
-                    fontSize={14}
-                    color="text.secondary"
-                    lineHeight={1.5}
+              <Typography
+                fontWeight={900}
+                fontSize={18}
+                mb={3}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  gap: 1.2,
+                  color: primaryColor,
+                }}
+              >
+                <Briefcase size={20} /> 필수 준비물
+              </Typography>
+              <Stack spacing={2.5}>
+                {result.preparations.map((item, idx) => (
+                  <Stack
+                    key={idx}
+                    direction="row"
+                    spacing={1.5}
+                    alignItems="flex-start"
                   >
-                    {item}
-                  </Typography>
+                    <Box
+                      sx={{
+                        mt: 0.8,
+                        width: 8,
+                        height: 8,
+                        borderRadius: "50%",
+                        bgcolor: primaryColor,
+                        flexShrink: 0,
+                      }}
+                    />
+                    <Typography
+                      fontSize={14}
+                      color="text.secondary"
+                      lineHeight={1.5}
+                    >
+                      {item}
+                    </Typography>
+                  </Stack>
+                ))}
+              </Stack>
+            </Box>
+
+            {/*제외된 장소*/}
+            {result.exclusionNotes && result.exclusionNotes.length > 0 && (
+              <Box
+                sx={{
+                  p: 4,
+                  borderRadius: 6,
+                  bgcolor: alpha(errorColor, 0.04),
+                  border: `1px solid ${alpha(errorColor, 0.1)}`,
+                }}
+              >
+                <Typography
+                  fontWeight={900}
+                  fontSize={18}
+                  mb={2}
+                  sx={{
+                    display: "flex",
+                    alignItems: "center",
+                    gap: 1.2,
+                    color: errorColor,
+                  }}
+                >
+                  <AlertCircle size={20} /> 동선 최적화 안내
+                </Typography>
+
+                <Typography
+                  fontSize={13}
+                  color="text.secondary"
+                  mb={2}
+                  sx={{ wordBreak: "keep-all" }}
+                >
+                  효율적인 동선과 여행 무드를 위해 아래 장소들은 이번 일정에서
+                  제외되었습니다.
+                </Typography>
+
+                <Stack spacing={2}>
+                  {result.exclusionNotes.map((note, idx) => (
+                    <Stack
+                      key={idx}
+                      direction="row"
+                      spacing={1.5}
+                      alignItems="flex-start"
+                    >
+                      <Typography
+                        fontSize={13}
+                        sx={{
+                          color: errorColor,
+                          lineHeight: 1.6,
+                          fontWeight: 500,
+                          bgcolor: alpha(errorColor, 0.08),
+                          p: 1.5,
+                          borderRadius: 2,
+                          width: "100%",
+                        }}
+                      >
+                        • {note}
+                      </Typography>
+                    </Stack>
+                  ))}
                 </Stack>
-              ))}
-            </Stack>
-          </Box>
+              </Box>
+            )}
+          </Stack>
         </Grid>
       </Grid>
     </Box>

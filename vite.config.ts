@@ -4,7 +4,6 @@ import react from "@vitejs/plugin-react";
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-<<<<<<< HEAD
   server: {
     proxy: {
       // 이제 /api/tour/areaBasedList2 라고 호출하면
@@ -17,6 +16,3 @@ export default defineConfig({
     },
   },
 });
-=======
-})
->>>>>>> d3e186a302c8af7d1fa44270cce00cde025f48e8

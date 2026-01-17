@@ -18,8 +18,7 @@ interface SpotFilterState {
   setIsNearbyMode: (isNearby: boolean) => void;
   setKeyword: (keyword: string) => void;
 
-  resetRegionalFilters: () => void;
-  resetNearbyFilters: () => void;
+  resetFilters: () => void;
 }
 
 const initialState = {
@@ -84,15 +83,8 @@ export const useSpotFilterStore = create<SpotFilterState>((set) => ({
       keyword: isNearby ? "" : state.keyword,
     })),
 
-  resetRegionalFilters: () =>
+  resetFilters: () =>
     set({
       ...initialState,
-      isNearbyMode: false,
-    }),
-
-  resetNearbyFilters: () =>
-    set({
-      ...initialState,
-      isNearbyMode: true,
     }),
 }));

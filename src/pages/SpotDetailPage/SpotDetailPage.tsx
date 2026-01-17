@@ -1,5 +1,5 @@
-import { Box } from "@mui/material";
-import { useParams } from "react-router-dom";
+import { Box, Typography, Button } from "@mui/material";
+import { useParams, useNavigate } from "react-router-dom";
 
 import { useTourSpotDetailCommon } from "../../hooks/useTourSpotDetailCommon";
 import { useTourSpotDetailInfo } from "../../hooks/useTourSpotDetailInfo";
@@ -21,9 +21,12 @@ import type {
   TourCourseInfoItem,
 } from "../../models/tourDetail";
 import LoadingSpinner from "../../common/components/LoadingSpinner";
+import { Frown } from "lucide-react";
+import theme from "../../theme";
 
 const SpotDetailPage = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
   const { data: spotData, isLoading: isCommonLoading } =
     useTourSpotDetailCommon({ contentId: id! });
@@ -51,7 +54,45 @@ const SpotDetailPage = () => {
     return <LoadingSpinner />;
   }
 
-  if (!spot) return <Box sx={{ p: 10, textAlign: "center" }}>정보 없음</Box>;
+  if (!spot) {
+    return (
+      <Box
+        sx={{
+          height: "100vh",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          minHeight: "60vh",
+          textAlign: "center",
+          gap: 3,
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            borderRadius: "1.25rem",
+            padding: "1rem",
+            backgroundColor: theme.palette.background.paper,
+          }}
+        >
+          <Frown />
+        </Box>
+        <Typography variant="h5" color="text.secondary">
+          정보를 찾을 수 없습니다
+        </Typography>
+        <Button
+          variant="contained"
+          onClick={() => navigate("/")}
+          sx={{ mt: 2, borderRadius: "0.625rem" }}
+        >
+          홈으로 돌아가기
+        </Button>
+      </Box>
+    );
+  }
 
   const introDetails = getIntroDetails(
     introData?.response?.body?.items?.item?.[0]

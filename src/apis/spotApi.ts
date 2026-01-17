@@ -22,7 +22,7 @@ export const getReginalSpots = async ({
   const response = await axios.get(
     `${TOUR_BASE_URL}/areaBasedList2?numOfRows=12&pageNo=${pageParam}&MobileOS=ETC&MobileApp=AppTest&ServiceKey=${TOUR_API_KEY}&arrange=C&contentTypeId=${contentTypeId}&areaCode=${
       areaCode === "0" ? "" : areaCode
-    }&sigunguCode=${sigunguCode === "0" ? "" : areaCode}&cat1=&cat2=&cat3=&_type=json`
+    }&sigunguCode=${sigunguCode === "0" ? "" : sigunguCode}&cat1=&cat2=&cat3=&_type=json`
   );
 
   return response.data;

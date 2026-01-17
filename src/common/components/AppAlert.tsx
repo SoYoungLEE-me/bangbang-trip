@@ -14,8 +14,10 @@ interface AppAlertProps {
   open: boolean;
   message: string;
   severity?: AlertSeverity;
-  onClose: () => void;
+  onConfirm: () => void;
+  onCancel: () => void;
   confirmText?: string;
+  cancelText?: string;
 }
 
 const severityConfig = {
@@ -41,7 +43,8 @@ const AppAlert = ({
   open,
   message,
   severity = "success",
-  onClose,
+  onCancel,
+  onConfirm,
   confirmText = "확인",
 }: AppAlertProps) => {
   const config = severityConfig[severity];
@@ -49,7 +52,7 @@ const AppAlert = ({
   return (
     <Dialog
       open={open}
-      onClose={onClose}
+      onClose={onCancel}
       maxWidth="xs"
       fullWidth
       PaperProps={{
@@ -77,7 +80,8 @@ const AppAlert = ({
 
       <DialogActions sx={{ px: 3, pb: 2 }}>
         <Button
-          onClick={onClose}
+          autoFocus
+          onClick={onConfirm}
           variant="contained"
           fullWidth
           sx={{

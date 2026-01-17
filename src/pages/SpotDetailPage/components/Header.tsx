@@ -33,16 +33,14 @@ export const Header = ({ spot }: HeaderProps) => {
   useEffect(() => {
     localStorage.setItem(
       "selected-spots-storage",
-      JSON.stringify({ state: { selectedSpots } })
+      JSON.stringify({ state: { selectedSpots } }),
     );
   }, [selectedSpots]);
 
   if (!spot) return null;
 
-  console.log("spot", spot);
-
   const isSavedInStore = selectedSpots.some(
-    (savedSpot) => savedSpot.contentid === spot.contentid
+    (savedSpot) => savedSpot.contentid === spot.contentid,
   );
 
   const handleToggleFavorite = (e: React.MouseEvent) => {
@@ -147,7 +145,7 @@ export const Header = ({ spot }: HeaderProps) => {
                 display: "inline",
                 background: `linear-gradient(180deg, transparent 60%, ${alpha(
                   theme.palette.primary.main,
-                  0.3
+                  0.3,
                 )} 60%)`,
                 boxDecorationBreak: "clone",
                 WebkitBoxDecorationBreak: "clone",

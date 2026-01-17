@@ -11,11 +11,11 @@ export const getNearbyCourses = async (): Promise<TourSpot[]> => {
   const serviceKey = getServiceKey();
 
   const otherParams = new URLSearchParams();
-  otherParams.append("numOfRows", "8");
+  otherParams.append("numOfRows", "10");
   otherParams.append("pageNo", "1");
   otherParams.append("MobileOS", "ETC");
   otherParams.append("MobileApp", "TourAPI");
-  otherParams.append("arrange", "A");
+  otherParams.append("arrange", "Q");
   otherParams.append("contentTypeId", "25");
   otherParams.append("_type", "json");
 

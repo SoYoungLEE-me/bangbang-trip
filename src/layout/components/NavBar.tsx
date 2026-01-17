@@ -6,6 +6,7 @@ import {
   Button,
   Menu,
   MenuItem,
+  Badge,
 } from "@mui/material";
 import theme from "../../theme";
 import { User } from "lucide-react";
@@ -13,6 +14,7 @@ import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import { useState } from "react";
 import { useAuthStore } from "../../stores/authStore";
+import { useSelectedSpotsStore } from "../../stores/selectedSpotsStore";
 import { signOut } from "../../services/auth";
 
 const NavBar = () => {
@@ -20,6 +22,8 @@ const NavBar = () => {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const { user } = useAuthStore();
+  const { selectedSpots } = useSelectedSpotsStore();
+  const spotCount = selectedSpots.length;
 
   return (
     <Box
@@ -29,7 +33,7 @@ const NavBar = () => {
         justifyContent: "space-between",
         alignItems: "center",
         position: "fixed",
-        zIndex: 2,
+        zIndex: 3,
         padding: "0.625rem 1rem",
         top: 0,
         backgroundColor: "background.default",
@@ -138,25 +142,48 @@ const NavBar = () => {
           >
             탐색
           </Link>
-          <Link
-            component={NavLink}
-            to="/ai-planner"
+          <Badge
+            badgeContent={spotCount}
+            invisible={spotCount === 0}
+            showZero={false}
             sx={{
-              fontSize: { lg: "1rem", md: "0.875rem" },
-              fontWeight: "500",
-              textDecoration: "none",
-              color: "inherit",
-              transition: "all 0.2s ease",
-              "&:hover": {
-                color: "action.hover",
-              },
-              "&.active": {
-                color: "action.active",
+              "& .MuiBadge-badge": {
+                backgroundColor: theme.palette.primary.main,
+                color: theme.palette.background.default,
+                fontSize: "0.75rem",
+                fontWeight: 600,
+                minWidth: "17px",
+                height: "18px",
+                padding: "4px",
+                transform: "translate(100%, -50%)",
               },
             }}
           >
-            AI 플래너
-          </Link>
+            <Link
+              component={NavLink}
+              to="/ai-planner"
+              onClick={() => {
+                setTimeout(() => {
+                  window.scrollTo(0, 0);
+                }, 0);
+              }}
+              sx={{
+                fontSize: { lg: "1rem", md: "0.875rem" },
+                fontWeight: "500",
+                textDecoration: "none",
+                color: "inherit",
+                transition: "all 0.2s ease",
+                "&:hover": {
+                  color: "action.hover",
+                },
+                "&.active": {
+                  color: "action.active",
+                },
+              }}
+            >
+              AI 플래너
+            </Link>
+          </Badge>
         </ul>
       </Box>
       <Box sx={{ display: "flex", alignItems: "center" }} mr={3}>
@@ -244,4 +271,3 @@ const NavBar = () => {
 };
 
 export default NavBar;
-

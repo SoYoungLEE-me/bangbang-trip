@@ -1,6 +1,6 @@
 import { Box, CircularProgress, Grid, Typography } from "@mui/material";
 import useGetSpots from "../../hooks/useGetSpots";
-import SpotCard from "./components/SpotCard";
+import TourCourseCard from "../../layout/components/TourCourseCard";
 import { useInView } from "react-intersection-observer";
 import { useEffect } from "react";
 import SpotFilterBar from "./components/SpotFilterBar";
@@ -31,40 +31,36 @@ const SpotsListPage = () => {
         <SpotFilterBar />
       </Box>
       <Box>
-        {isLoading ? (
-          <Box sx={{ display: "flex", alignItems: "center", justifyContent: "center" }}>
-            <CircularProgress />
-          </Box>
-        ) : (
-          <>
-            <Grid
-              container
-              spacing={2}
-              sx={{
-                maxWidth: "calc(1200px - 48px)",
-                margin: "0 auto",
-              }}
-            >
-              {spots.map((spot) => (
-                <Grid key={spot.contentid} size={{ xs: 12, sm: 6, md: 3 }}>
-                  <SpotCard spot={spot} />
-                </Grid>
-              ))}
+        <Grid
+          container
+          spacing={2}
+          sx={{
+            maxWidth: "calc(1200px - 48px)",
+            margin: "0 auto",
+          }}
+        >
+          {spots.map((spot) => (
+            <Grid key={spot.contentid} size={{ xs: 12, sm: 6, md: 3 }}>
+              <TourCourseCard
+                course={spot}
+                contentTypeId={contentTypeId}
+                showAddress={true}
+              />
             </Grid>
-            <Box ref={ref} sx={{ minHeight: "16px" }}>
-              {(isFetchingNextPage || hasNextPage) && (
-                <Typography
-                  variant="h2"
-                  component="p"
-                  color="text.secondary"
-                  sx={{ textAlign: "center", fontWeight: "700", padding: "16px" }}
-                >
-                  장소 검색 중...
-                </Typography>
-              )}
-            </Box>
-          </>
-        )}
+          ))}
+        </Grid>
+        <Box ref={ref}>
+          {isFetchingNextPage && (
+            <Typography
+              variant="h2"
+              component="p"
+              color="text.secondary"
+              sx={{ textAlign: "center", fontWeight: "700", marginTop: "24px" }}
+            >
+              Loading...
+            </Typography>
+          )}
+        </Box>
       </Box>
     </Box>
   );

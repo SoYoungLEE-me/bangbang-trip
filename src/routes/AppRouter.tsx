@@ -22,6 +22,10 @@ const SpotsListPage = React.lazy(
   () => import("../pages/SpotsListPage/SpotsListPage")
 );
 
+const MyPlanDetailPage = React.lazy(
+  () => import("../pages/MyPlanDetailPage/MyPlanDetailPage")
+);
+
 const AppRouter = () => {
   return (
     <Routes>
@@ -30,6 +34,7 @@ const AppRouter = () => {
         <Route path="spots" element={<SpotsListPage />} />
         <Route path="spots/:id" element={<SpotDetailPage />} />
         <Route path="ai-planner" element={<AiPlannerPage />} />
+        <Route path="my-plan/:id" element={<MyPlanDetailPage />} />
         <Route element={<PrivateRoute />}>
           <Route path="/mypage" element={<MyPage />} />
         </Route>

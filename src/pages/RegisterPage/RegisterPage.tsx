@@ -116,10 +116,11 @@ const RegisterPage = () => {
       autoComplete="off"
       sx={{
         minHeight: "100vh",
-        width: "100%",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
+        boxSizing: "border-box",
+        transform: "translateY(-46px)",
       }}
     >
       <Box sx={{ width: 380, px: 2 }}>
@@ -274,7 +275,11 @@ const RegisterPage = () => {
         open={alertOpen}
         message="회원가입이 완료되었습니다."
         severity="success"
-        onClose={() => {
+        onConfirm={() => {
+          setAlertOpen(false);
+          navigate("/");
+        }}
+        onCancel={() => {
           setAlertOpen(false);
           navigate("/");
         }}

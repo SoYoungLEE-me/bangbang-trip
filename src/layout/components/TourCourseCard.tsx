@@ -175,7 +175,6 @@ const TourCourseCard = ({ course, isSaved, onSave, onClick }: TourCourseCardProp
             <CardMedia
               component="img"
               // height="200px"
-              /// height="200"
               image={course.firstimage}
               alt={course.title}
               sx={{
@@ -190,9 +189,6 @@ const TourCourseCard = ({ course, isSaved, onSave, onClick }: TourCourseCardProp
             <Box
               sx={{
                 // height: "200px",
-                /// height: "200",
-                width: "100%", ///
-                height: "100%",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -330,6 +326,8 @@ const TourCourseCard = ({ course, isSaved, onSave, onClick }: TourCourseCardProp
               {formatAddress(course.addr1)}
             </Typography>
           )}
+
+          
         </CardContent>
       </Card>
 

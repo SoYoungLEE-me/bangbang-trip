@@ -1,12 +1,20 @@
 import { useEffect, useState } from "react";
-import { Box, Grid, Typography, Chip, Stack } from "@mui/material";
+import {
+  Box,
+  Grid,
+  Typography,
+  Chip,
+  Stack,
+  Tooltip,
+  IconButton,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../../lib/supabase";
 import { useAuthStore } from "../../stores/authStore";
 import MyPlanCard from "./components/MyPlanCard";
 import LoadingSpinner from "../../common/components/LoadingSpinner";
 import AppAlert from "../../common/components/AppAlert";
-import { Map as MapIcon } from "lucide-react";
+import { Map as MapIcon, Trash2 } from "lucide-react";
 
 interface MyPlan {
   id: string;
@@ -31,6 +39,7 @@ const MyPage = () => {
   const [loading, setLoading] = useState(true);
 
   const [deleteTargetId, setDeleteTargetId] = useState<string | null>(null);
+  const [deleteAllOpen, setDeleteAllOpen] = useState(false); //전체 삭제용
 
   const [userName, setUserName] = useState<string | null>(null);
 
@@ -67,6 +76,7 @@ const MyPage = () => {
     fetchPlans();
   }, [user]);
 
+  //개별 삭제용
   const handleDeletePlan = (id: string) => {
     setDeleteTargetId(id);
   };
@@ -89,6 +99,32 @@ const MyPage = () => {
     setDeleteTargetId(null);
   };
 
+  //전체 삭제용
+  const handleDeleteAllPlans = () => {
+    setDeleteAllOpen(true);
+  };
+
+  const confirmDeleteAllPlans = async () => {
+    if (!user) return;
+
+    const { error } = await supabase
+      .from("plans")
+      .delete()
+      .eq("user_id", user.id);
+
+    if (error) {
+      console.error("전체 삭제 실패", error);
+      return;
+    }
+
+    setPlans([]);
+    setDeleteAllOpen(false);
+  };
+
+  const cancelDeleteAllPlans = () => {
+    setDeleteAllOpen(false);
+  };
+
   const getPeriodText = (plan: MyPlan["plan"]) => {
     const days = plan?.itinerary?.length ?? 0;
     return days > 0 ? `${days}일 일정` : "기간 정보 없음";
@@ -101,37 +137,68 @@ const MyPage = () => {
   return (
     <Box mt={10} px={{ xs: 3, md: 8 }} mb={10}>
       <Box mb={6}>
-        <Stack direction="row" alignItems="center" spacing={1.5} mb={2}>
-          <Box
-            sx={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              bgcolor: "primary.main",
-              color: "white",
-              p: 1,
-              borderRadius: 2,
-            }}
-          >
-            <MapIcon size={24} />
-          </Box>
-          <Typography
-            variant="h4"
-            fontWeight={900}
-            sx={{ letterSpacing: "-0.5px" }}
-          >
-            나의 여행 기록
-          </Typography>
-          <Chip
-            label={`${plans.length}개`}
-            size="small"
-            sx={{
-              fontWeight: 700,
-              bgcolor: "grey.100",
-              color: "text.secondary",
-              ml: 1,
-            }}
-          />
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={2}
+        >
+          {/* 왼쪽 타이틀 영역 */}
+          <Stack direction="row" alignItems="center" spacing={1.5}>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                bgcolor: "primary.main",
+                color: "white",
+                p: 1,
+                borderRadius: 2,
+              }}
+            >
+              <MapIcon size={24} />
+            </Box>
+
+            <Typography
+              variant="h4"
+              fontWeight={900}
+              sx={{ letterSpacing: "-0.5px" }}
+            >
+              나의 여행 기록
+            </Typography>
+
+            <Chip
+              label={`${plans.length}개`}
+              size="small"
+              sx={{
+                fontWeight: 700,
+                bgcolor: "grey.100",
+                color: "text.secondary",
+              }}
+            />
+          </Stack>
+
+          {/* 오른쪽 액션 영역 */}
+          {plans.length > 0 && (
+            <Tooltip title="전체 여행 일정 삭제">
+              <IconButton
+                onClick={handleDeleteAllPlans}
+                sx={{
+                  color: "error.main",
+                  border: "1px solid",
+                  borderColor: "error.light",
+                  borderRadius: 2,
+
+                  "&:hover": {
+                    bgcolor: "error.light",
+                    color: "error.dark",
+                  },
+                }}
+              >
+                <Trash2 size={20} />
+              </IconButton>
+            </Tooltip>
+          )}
         </Stack>
         <Typography color="text.secondary" fontSize={16}>
           {userName
@@ -170,6 +237,14 @@ const MyPage = () => {
         confirmText="삭제"
         onConfirm={confirmDeletePlan}
         onCancel={cancelDeletePlan}
+      />
+      <AppAlert
+        open={deleteAllOpen}
+        message="저장된 모든 여행 일정을 삭제할까요? 이 작업은 되돌릴 수 없어요."
+        severity="error"
+        confirmText="전체 삭제"
+        onConfirm={confirmDeleteAllPlans}
+        onCancel={cancelDeleteAllPlans}
       />
     </Box>
   );

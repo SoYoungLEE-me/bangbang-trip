@@ -26,6 +26,8 @@ const MyPlanDetailPage = React.lazy(
   () => import("../pages/MyPlanDetailPage/MyPlanDetailPage")
 );
 
+import ResetPasswordPage from "../pages/Reset-Password/ResetPasswordPage";
+
 const AppRouter = () => {
   return (
     <Routes>
@@ -43,6 +45,7 @@ const AppRouter = () => {
           <Route path="/register" element={<RegisterPage />} />
         </Route>
       </Route>
+      <Route path="/reset-password" element={<ResetPasswordPage />} />
     </Routes>
   );
 };

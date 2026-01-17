@@ -21,6 +21,8 @@ interface HeaderProps {
   spot: SpotDetailCommonItem;
 }
 
+const MAX_SPOTS = 10;
+
 export const Header = ({ spot }: HeaderProps) => {
   const muiTheme = useTheme();
   const navigate = useNavigate();
@@ -33,16 +35,14 @@ export const Header = ({ spot }: HeaderProps) => {
   useEffect(() => {
     localStorage.setItem(
       "selected-spots-storage",
-      JSON.stringify({ state: { selectedSpots } })
+      JSON.stringify({ state: { selectedSpots } }),
     );
   }, [selectedSpots]);
 
   if (!spot) return null;
 
-  console.log("spot", spot);
-
   const isSavedInStore = selectedSpots.some(
-    (savedSpot) => savedSpot.contentid === spot.contentid
+    (savedSpot) => savedSpot.contentid === spot.contentid,
   );
 
   const handleToggleFavorite = (e: React.MouseEvent) => {
@@ -64,6 +64,15 @@ export const Header = ({ spot }: HeaderProps) => {
     };
 
     const wasSaved = isSavedInStore;
+
+    if (!wasSaved && selectedSpots.length >= MAX_SPOTS) {
+      setSnackbarMessage("찜은 최대 10개까지만 가능해요.");
+      setIsAdded(false);
+      setLastRemovedSpot(null);
+      setSnackbarOpen(true);
+      return;
+    }
+
     setSnackbarOpen(false);
     toggleSpot(tourSpot);
 
@@ -147,7 +156,7 @@ export const Header = ({ spot }: HeaderProps) => {
                 display: "inline",
                 background: `linear-gradient(180deg, transparent 60%, ${alpha(
                   theme.palette.primary.main,
-                  0.3
+                  0.3,
                 )} 60%)`,
                 boxDecorationBreak: "clone",
                 WebkitBoxDecorationBreak: "clone",
@@ -254,7 +263,19 @@ export const Header = ({ spot }: HeaderProps) => {
             >
               실행 취소
             </Button>
-          ) : undefined
+          ) : (
+            <Button
+              color="inherit"
+              size="small"
+              onClick={handleCloseSnackbar}
+              sx={{
+                fontWeight: 600,
+                textTransform: "none",
+              }}
+            >
+              확인
+            </Button>
+          )
         }
       />
     </>

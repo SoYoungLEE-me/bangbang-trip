@@ -20,6 +20,7 @@ import {
   type SpotDetailIntroItem,
 } from "../../../models/tourDetail";
 import { formatHtmlText } from "./formatters";
+import { formatDateRange, formatTime } from "./formatters";
 
 export const getIcon = (label: string = "") => {
   const iconStyle = { size: 18 };
@@ -66,7 +67,7 @@ export const getIntroDetails = (introData?: SpotDetailIntroItem) => {
     if (introData.usetime)
       details.push({
         label: "이용시간",
-        value: formatHtmlText(introData.usetime),
+        value: formatTime(formatHtmlText(introData.usetime)),
         isMultiline: true,
       });
     if (introData.parking)
@@ -97,7 +98,7 @@ export const getIntroDetails = (introData?: SpotDetailIntroItem) => {
     if (introData.usetimeculture)
       details.push({
         label: "이용시간",
-        value: formatHtmlText(introData.usetimeculture),
+        value: formatTime(formatHtmlText(introData.usetimeculture)),
         isMultiline: true,
       });
     if (introData.parkingculture)
@@ -116,16 +117,22 @@ export const getIntroDetails = (introData?: SpotDetailIntroItem) => {
   if (isFestival(introData)) {
     const contactTel = introData.sponsor1tel || introData.sponsor2tel;
     if (contactTel) details.push({ label: "문의 및 안내", value: contactTel });
+
     if (introData.eventstartdate && introData.eventenddate) {
+      const formattedDateRange = formatDateRange(
+        introData.eventstartdate,
+        introData.eventenddate,
+      );
       details.push({
         label: "행사 기간",
-        value: `${introData.eventstartdate} ~ ${introData.eventenddate}`,
+        value: formattedDateRange,
       });
     }
+
     if (introData.playtime)
       details.push({
         label: "공연시간",
-        value: formatHtmlText(introData.playtime),
+        value: formatTime(formatHtmlText(introData.playtime)),
         isMultiline: true,
       });
     if (introData.eventplace)
@@ -179,7 +186,7 @@ export const getIntroDetails = (introData?: SpotDetailIntroItem) => {
     if (introData.usetimeleports)
       details.push({
         label: "이용시간",
-        value: formatHtmlText(introData.usetimeleports),
+        value: formatTime(formatHtmlText(introData.usetimeleports)),
         isMultiline: true,
       });
     if (introData.parkingleports)
@@ -206,9 +213,15 @@ export const getIntroDetails = (introData?: SpotDetailIntroItem) => {
         value: introData.infocenterlodging,
       });
     if (introData.checkintime)
-      details.push({ label: "체크인", value: introData.checkintime });
+      details.push({
+        label: "체크인",
+        value: formatTime(introData.checkintime),
+      });
     if (introData.checkouttime)
-      details.push({ label: "체크아웃", value: introData.checkouttime });
+      details.push({
+        label: "체크아웃",
+        value: formatTime(introData.checkouttime),
+      });
     if (introData.parkinglodging)
       details.push({ label: "주차시설", value: introData.parkinglodging });
     if (introData.roomcount)
@@ -239,7 +252,7 @@ export const getIntroDetails = (introData?: SpotDetailIntroItem) => {
     if (introData.opentime)
       details.push({
         label: "영업시간",
-        value: formatHtmlText(introData.opentime),
+        value: formatTime(formatHtmlText(introData.opentime)),
         isMultiline: true,
       });
     if (introData.parkingshopping)
@@ -271,7 +284,7 @@ export const getIntroDetails = (introData?: SpotDetailIntroItem) => {
     if (introData.opentimefood)
       details.push({
         label: "영업시간",
-        value: formatHtmlText(introData.opentimefood),
+        value: formatTime(formatHtmlText(introData.opentimefood)),
         isMultiline: true,
       });
     if (introData.parkingfood)

@@ -118,6 +118,7 @@ const NearbySpotFilterSelector = ({ onFailed }: NearbySpotFilterSelectorProps) =
       >
         <MenuItem value="12">관광지</MenuItem>
         <MenuItem value="25">여행코스</MenuItem>
+        <MenuItem value="15">축제공연행사</MenuItem>
       </TextField>
       <TextField
         select

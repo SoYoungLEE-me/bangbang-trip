@@ -22,7 +22,7 @@ export const getReginalSpots = async ({
   const response = await axios.get(
     `${TOUR_BASE_URL}/areaBasedList2?numOfRows=12&pageNo=${pageParam}&MobileOS=ETC&MobileApp=AppTest&ServiceKey=${TOUR_API_KEY}&arrange=Q&contentTypeId=${contentTypeId}&areaCode=${
       areaCode === "0" ? "" : areaCode
-    }&sigunguCode=${sigunguCode === "0" ? "" : sigunguCode}&cat1=&cat2=&cat3=&_type=json`,
+    }&sigunguCode=${sigunguCode === "0" ? "" : sigunguCode}&cat1=&cat2=&cat3=&_type=json`
   );
 
   const header = response.data?.response?.header;
@@ -42,7 +42,7 @@ export const getNearbySpots = async ({
   radius,
 }: GetSpotsParams): Promise<SpotApiResponse> => {
   const response = await axios.get(
-    `${TOUR_BASE_URL}/locationBasedList2?ServiceKey=${TOUR_API_KEY}&contentTypeId=${contentTypeId}&mapX=${mapX}&mapY=${mapY}&radius=${radius}&MobileOS=ETC&MobileApp=AppTest&arrange=Q&numOfRows=12&pageNo=${pageParam}&_type=json`,
+    `${TOUR_BASE_URL}/locationBasedList2?ServiceKey=${TOUR_API_KEY}&contentTypeId=${contentTypeId}&mapX=${mapX}&mapY=${mapY}&radius=${radius}&MobileOS=ETC&MobileApp=AppTest&arrange=Q&numOfRows=12&pageNo=${pageParam}&_type=json`
   );
 
   const header = response.data?.response?.header;
@@ -57,9 +57,31 @@ export const getNearbySpots = async ({
 export const getSearchSpots = async ({
   pageParam,
   keyword,
+  areaCode,
+  sigunguCode,
 }: GetSpotsParams): Promise<SpotApiResponse> => {
   const response = await axios.get(
-    `${TOUR_BASE_URL}/searchKeyword2?numOfRows=12&pageNo=${pageParam}&MobileOS=ETC&MobileApp=AppTest&ServiceKey=${TOUR_API_KEY}&arrange=Q&areaCode=&sigunguCode=&cat1=&cat2=&cat3=&keyword=${keyword}&_type=json`,
+    `${TOUR_BASE_URL}/searchKeyword2?numOfRows=12&pageNo=${pageParam}&MobileOS=ETC&MobileApp=AppTest&ServiceKey=${TOUR_API_KEY}&arrange=Q&areaCode=${areaCode === "0" ? "" : areaCode}&sigunguCode=${sigunguCode === "0" ? "" : sigunguCode}&cat1=&cat2=&cat3=&keyword=${keyword}&_type=json`
+  );
+
+  const header = response.data?.response?.header;
+
+  if (header && header.resultCode !== "0000" && header.resultCode !== "00") {
+    throw new Error(`[${header.resultCode}] ${header.resultMsg}`);
+  }
+
+  return response.data;
+};
+
+export const getOngoingFestivals = async ({
+  pageParam,
+  areaCode,
+  sigunguCode,
+}: GetSpotsParams): Promise<SpotApiResponse> => {
+  const currentDate = new Date().toISOString().split("T")[0].replace(/-/g, "");
+
+  const response = await axios.get(
+    `${TOUR_BASE_URL}/searchFestival2?eventStartDate=${currentDate}&eventEndDate=&areaCode=${areaCode === "0" ? "" : areaCode}&sigunguCode=${sigunguCode === "0" ? "" : sigunguCode}&ServiceKey=${TOUR_API_KEY}&MobileOS=ETC&MobileApp=AppTest&arrange=Q&numOfRows=12&pageNo=${pageParam}&_type=json`
   );
 
   const header = response.data?.response?.header;

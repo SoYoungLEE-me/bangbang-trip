@@ -1,5 +1,5 @@
 import { useInfiniteQuery } from "@tanstack/react-query";
-import { getNearbySpots, getReginalSpots, getSearchSpots } from "../apis/spotApi";
+import { getNearbySpots, getOngoingFestivals, getReginalSpots, getSearchSpots } from "../apis/spotApi";
 import type { SpotApiResponse } from "../models/spot";
 import { useSpotFilterStore } from "../stores/spotFilterStore";
 
@@ -17,12 +17,16 @@ const useGetSpots = () => {
 
   const isSearchMode = !!keyword;
 
+  const isFestivalMode = contentTypeId === "15";
+
   const queryInfo = useInfiniteQuery({
     queryKey: isSearchMode
       ? ["search-spots", keyword, areaCode, sigunguCode]
       : isNearbyMode
         ? ["nearby-spots", contentTypeId, radius, mapX, mapY]
-        : ["reginal-spots", areaCode, sigunguCode, contentTypeId],
+        : isFestivalMode
+          ? ["festivals", areaCode, sigunguCode]
+          : ["reginal-spots", areaCode, sigunguCode, contentTypeId],
     queryFn: ({ pageParam }) => {
       if (isSearchMode) {
         return getSearchSpots({ pageParam, keyword, areaCode, sigunguCode });
@@ -30,6 +34,10 @@ const useGetSpots = () => {
 
       if (isNearbyMode && mapX && mapY) {
         return getNearbySpots({ pageParam, contentTypeId, radius, mapX, mapY });
+      }
+
+      if (isFestivalMode) {
+        return getOngoingFestivals({ pageParam, areaCode, sigunguCode });
       }
 
       return getReginalSpots({ pageParam, areaCode, sigunguCode, contentTypeId });

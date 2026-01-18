@@ -8,33 +8,39 @@ import { useSpotFilterStore } from "../../../stores/spotFilterStore";
 
 const SpotFilterBar = () => {
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [isResetSuccessMessageSnackbarOpen, setIsResetSuccessMessageSnackbarOpen] = useState<boolean>(false);
 
-  const [isRegionalFilterActive, setIsRegionalFilterActive] = useState<boolean>(false);
-  const [isNearbyFilterActive, setIsNearbyFilterActive] = useState<boolean>(false);
+  const {
+    setIsNearbyMode,
+    setKeyword,
+    resetFilters,
+    errorMessage,
+    setErrorMessage,
+    isRegionalFilterActive,
+    setIsRegionalFilterActive,
+    isNearbyFilterActive,
+    setIsNearbyFilterActive,
+  } = useSpotFilterStore();
 
-  const { setIsNearbyMode, setKeyword, resetFilters, errorMessage, setErrorMessage } = useSpotFilterStore();
-
-  const isSnackbarOpen = !!errorMessage;
+  const isErrorMessageSnackbarOpen = !!errorMessage;
 
   const handleActivateFilter = (touristType: "regional" | "nearby") => {
     if (touristType === "regional") {
-      setIsRegionalFilterActive(!isRegionalFilterActive);
+      const nextState = !isRegionalFilterActive;
+      setIsRegionalFilterActive(nextState);
       setIsNearbyFilterActive(false);
-
-      if (!isRegionalFilterActive) {
-        setIsNearbyMode(false);
-      }
+      setIsNearbyMode(false);
     } else {
-      setIsNearbyFilterActive(!isNearbyFilterActive);
+      const nextState = !isNearbyFilterActive;
+      setIsNearbyFilterActive(nextState);
       setIsRegionalFilterActive(false);
+      setIsNearbyMode(nextState);
 
-      if (!isNearbyFilterActive) {
-        setIsNearbyMode(true);
+      if (nextState) {
+        setSearchTerm("");
+        setKeyword("");
       }
     }
-
-    setSearchTerm("");
-    resetFilters();
   };
 
   const handleChangeSearchTerm = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -43,35 +49,31 @@ const SpotFilterBar = () => {
 
   const handleSearchByKeyword = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!searchTerm.trim()) {
-      setErrorMessage("검색어를 입력해주세요.");
-      return;
-    }
-
     setKeyword(searchTerm.trim());
-    setIsRegionalFilterActive(false);
     setIsNearbyFilterActive(false);
   };
 
   const handleReset = () => {
     setSearchTerm("");
     resetFilters();
-    setIsRegionalFilterActive(false);
-    setIsNearbyFilterActive(false);
+    setIsResetSuccessMessageSnackbarOpen(true);
   };
 
-  const handleCloseSnackbar = () => {
+  const handleCloseErrorMessageSnackbar = () => {
     setErrorMessage("");
+  };
+
+  const handleCloseResetSuccessMessageSnackbar = () => {
+    setIsResetSuccessMessageSnackbarOpen(false);
   };
 
   return (
     <>
       <Snackbar
-        open={isSnackbarOpen}
+        open={isErrorMessageSnackbarOpen}
         autoHideDuration={4000}
         message={errorMessage}
-        onClose={handleCloseSnackbar}
+        onClose={handleCloseErrorMessageSnackbar}
         anchorOrigin={{ vertical: "top", horizontal: "center" }}
         action={
           <IconButton
@@ -81,20 +83,47 @@ const SpotFilterBar = () => {
             sx={(theme) => ({
               color: theme.palette.error.main,
             })}
-            onClick={handleCloseSnackbar}
+            onClick={handleCloseErrorMessageSnackbar}
           >
-            <X fontSize="small" />
+            <X />
           </IconButton>
         }
         sx={(theme) => ({
-          marginLeft: { xs: 12, sm: 2, md: 0 },
-          marginRight: { xs: 12, sm: 2, md: 0 },
-          maxWidth: { xs: "calc(100% - 32px)", sm: "600px" },
+          wordBreak: "keep-all",
           "& .MuiSnackbarContent-root": {
             margin: "4px",
             backgroundColor: theme.palette.background.default,
             color: theme.palette.text.primary,
             border: `6px solid ${theme.palette.error.main}`,
+          },
+        })}
+      />
+      <Snackbar
+        open={isResetSuccessMessageSnackbarOpen}
+        autoHideDuration={4000}
+        message={"모든 검색 조건이 초기화되었습니다."}
+        onClose={handleCloseResetSuccessMessageSnackbar}
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        action={
+          <IconButton
+            size="small"
+            aria-label="close"
+            color="inherit"
+            sx={(theme) => ({
+              color: theme.palette.primary.main,
+            })}
+            onClick={handleCloseResetSuccessMessageSnackbar}
+          >
+            <X />
+          </IconButton>
+        }
+        sx={(theme) => ({
+          wordBreak: "keep-all",
+          "& .MuiSnackbarContent-root": {
+            margin: "4px",
+            backgroundColor: theme.palette.background.default,
+            color: theme.palette.text.primary,
+            border: `6px solid ${theme.palette.primary.main}`,
           },
         })}
       />
@@ -151,6 +180,9 @@ const SpotFilterBar = () => {
           sx={(theme) => ({
             display: "flex",
             gap: "16px",
+            "& .MuiButton-root": {
+              padding: "5px 36px",
+            },
             [theme.breakpoints.down("sm")]: {
               minHeight: "44px",
               width: "100%",

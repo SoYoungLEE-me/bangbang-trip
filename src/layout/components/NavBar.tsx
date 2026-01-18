@@ -20,31 +20,31 @@ import { useSelectedSpotsStore } from "../../stores/selectedSpotsStore";
 import { signOut } from "../../services/auth";
 
 // 공통 컴포넌트 추가
-const ResponsiveNavItem = ({ 
-  icon: Icon, 
-  text 
-}: { 
-  icon: LucideIcon; 
+const ResponsiveNavItem = ({
+  icon: Icon,
+  text,
+}: {
+  icon: LucideIcon;
   text: string;
 }) => (
-  <Box 
-    sx={{ 
-      display: "flex", 
-      alignItems: "center", 
+  <Box
+    sx={{
+      display: "flex",
+      alignItems: "center",
       justifyContent: "center",
       lineHeight: 1,
     }}
   >
-    <Box 
-      sx={{ 
+    <Box
+      sx={{
         display: { xs: "block", sm: "none" },
         lineHeight: 0,
       }}
     >
       <Icon size={20} />
     </Box>
-    <Box 
-      sx={{ 
+    <Box
+      sx={{
         display: { xs: "none", sm: "inline" },
         lineHeight: 1.5,
       }}
@@ -95,7 +95,7 @@ const NavBar = () => {
         backgroundColor: "background.default",
         boxShadow: `0 0.1rem 0.5rem ${alpha(
           theme.palette.text.secondary,
-          0.2
+          0.2,
         )}`,
       }}
     >
@@ -112,6 +112,7 @@ const NavBar = () => {
           to="/"
           sx={{
             display: "flex",
+            justifyContent: "center",
             alignItems: "center",
             gap: { xs: "0.2rem", sm: "0.25rem" },
             color: "text.primary",
@@ -146,8 +147,9 @@ const NavBar = () => {
               fontWeight: 900,
               fontSize: { xs: "1.125rem", sm: "1.25rem", md: "1.5rem" },
               color: "text.primary",
-              mt: 0.5,
               display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
             }}
           >
             전국: 방방곡곡
@@ -166,10 +168,16 @@ const NavBar = () => {
             margin: 0,
             height: "100%",
           }}
-        >          
-        </Box>
+        ></Box>
       </Box>
-      <Box sx={{ display: "flex", alignItems: "center", height: "100%", gap: "1rem", }}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          height: "100%",
+          gap: "1rem",
+        }}
+      >
         {/* 모바일: 탐색, AI 플래너 */}
         <Box
           sx={{
@@ -179,11 +187,7 @@ const NavBar = () => {
             height: "100%",
           }}
         >
-          <Link
-            component={NavLink}
-            to="/spots"
-            sx={commonLinkSx}
-          >
+          <Link component={NavLink} to="/spots" sx={commonLinkSx}>
             <ResponsiveNavItem icon={Search} text="탐색" />
           </Link>
           <Badge
@@ -276,7 +280,7 @@ const NavBar = () => {
           sx: {
             mt: 1,
             borderRadius: 2,
-            minWidth: 'auto',
+            minWidth: "auto",
             boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
           },
         }}

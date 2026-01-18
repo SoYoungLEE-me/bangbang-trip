@@ -8,7 +8,7 @@ import { useSpotFilterStore } from "../../stores/spotFilterStore";
 import LoadingSpinner from "../../common/components/LoadingSpinner";
 
 const SpotsListPage = () => {
-  const { selectedTouristType, keyword, resetFilters } = useSpotFilterStore();
+  const { selectedTouristType, keyword } = useSpotFilterStore();
 
   const { ref, inView } = useInView({
     threshold: 0,
@@ -23,12 +23,6 @@ const SpotsListPage = () => {
     isFetchingNextPage,
     fetchNextPage,
   } = useGetSpots();
-
-  useEffect(() => {
-    if (inView && hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
-  }, [inView, hasNextPage, isFetchingNextPage]);
 
   const renderContent = () => {
     if (isLoading || (isFetching && spots.length === 0)) {
@@ -59,12 +53,18 @@ const SpotsListPage = () => {
   };
 
   useEffect(() => {
-    resetFilters();
+    if (inView && hasNextPage && !isFetchingNextPage) {
+      fetchNextPage();
+    }
+  }, [inView, hasNextPage, isFetchingNextPage]);
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
   }, []);
 
   return (
-    <Box sx={{ padding: "16px 16px 0" }}>
-      <Box sx={{ maxWidth: "calc(1200px - 48px)", margin: "0 auto 16px" }}>
+    <Box sx={{ padding: "32px 16px 16px" }}>
+      <Box sx={{ maxWidth: "calc(1200px - 48px)", margin: "0px auto 32px" }}>
         <SpotFilterBar />
       </Box>
       <Box>
@@ -85,7 +85,7 @@ const SpotsListPage = () => {
                 variant="h2"
                 component="p"
                 color="text.secondary"
-                sx={{ textAlign: "center", fontWeight: "700", padding: "16px" }}
+                sx={{ textAlign: "center", fontWeight: "700", padding: "36px 0 16px" }}
               >
                 장소 검색 중...
               </Typography>

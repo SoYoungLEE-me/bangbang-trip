@@ -7,6 +7,7 @@ import {
   Box,
 } from "@mui/material";
 import { CheckCircle2, AlertCircle, Info, TriangleAlert } from "lucide-react";
+import { useEffect } from "react";
 
 export type AlertSeverity = "success" | "error" | "info" | "warning";
 
@@ -39,6 +40,8 @@ const severityConfig = {
   },
 };
 
+const AUTO_CLOSE_MS = 5000;
+
 const AppAlert = ({
   open,
   message,
@@ -48,6 +51,28 @@ const AppAlert = ({
   confirmText = "확인",
 }: AppAlertProps) => {
   const config = severityConfig[severity];
+
+  useEffect(() => {
+    if (!open) return;
+
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === "Enter" || e.key === "Escape") {
+        e.preventDefault();
+        onCancel();
+      }
+    };
+
+    const timer = setTimeout(() => {
+      onCancel();
+    }, AUTO_CLOSE_MS);
+
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [open, onCancel]);
 
   return (
     <Dialog

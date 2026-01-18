@@ -49,12 +49,6 @@ const SpotFilterBar = () => {
 
   const handleSearchByKeyword = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!searchTerm.trim()) {
-      setErrorMessage("검색어를 입력해주세요.");
-      return;
-    }
-
     setKeyword(searchTerm.trim());
     setIsNearbyFilterActive(false);
   };

@@ -43,45 +43,43 @@ const RegionalSpotFilterSelector = () => {
           },
         })}
       >
-        <TextField
-          select
-          label="관광타입"
-          value={selectedTouristType}
-          onChange={handleChangeTouristType}
-          size="small"
-          slotProps={{
-            select: {
-              MenuProps: {
-                sx: {
-                  "& .MuiMenuItem-root:hover": {
-                    backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.16),
+        {!keyword && (
+          <TextField
+            select
+            label="관광타입"
+            value={selectedTouristType}
+            onChange={handleChangeTouristType}
+            size="small"
+            slotProps={{
+              select: {
+                MenuProps: {
+                  sx: {
+                    "& .MuiMenuItem-root:hover": {
+                      backgroundColor: (theme) => alpha(theme.palette.primary.main, 0.16),
+                    },
                   },
                 },
               },
-            },
-          }}
-          sx={{
-            minWidth: "120px",
-            "& .MuiOutlinedInput-root": {
-              height: "44px",
-              "& fieldset": {
-                borderColor: (theme) => alpha(theme.palette.primary.main, 0.4),
+            }}
+            sx={{
+              minWidth: "120px",
+              "& .MuiOutlinedInput-root": {
+                height: "44px",
+                "& fieldset": {
+                  borderColor: (theme) => alpha(theme.palette.primary.main, 0.4),
+                },
+                "&:hover fieldset": {
+                  borderColor: "primary.main",
+                  borderWidth: 2,
+                },
               },
-              "&:hover fieldset": {
-                borderColor: "primary.main",
-                borderWidth: 2,
-              },
-            },
-          }}
-        >
-          <MenuItem value="12">관광지</MenuItem>
-          <MenuItem value="25" disabled={!!keyword}>
-            여행코스
-          </MenuItem>
-          <MenuItem value="15" disabled={!!keyword}>
-            축제공연행사
-          </MenuItem>
-        </TextField>
+            }}
+          >
+            <MenuItem value="12">관광지</MenuItem>
+            <MenuItem value="25">여행코스</MenuItem>
+            <MenuItem value="15">축제공연행사</MenuItem>
+          </TextField>
+        )}
         <TextField
           select
           label="광역시/도"

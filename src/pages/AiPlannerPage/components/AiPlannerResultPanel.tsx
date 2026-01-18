@@ -311,8 +311,8 @@ const AiPlannerResultPanel = ({
                   mb={2}
                   sx={{ wordBreak: "keep-all" }}
                 >
-                  효율적인 동선과 여행 무드를 위해 아래 장소들은 이번 일정에서
-                  제외되었습니다.
+                  여행 동선과 분위기를 균형 있게 맞추기 위해, 아래와 같이 장소가
+                  조정되었습니다.
                 </Typography>
 
                 <Stack spacing={2}>

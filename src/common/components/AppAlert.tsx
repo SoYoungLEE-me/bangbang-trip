@@ -54,6 +54,9 @@ const AppAlert = ({
       open={open}
       onClose={onCancel}
       maxWidth="xs"
+      disableAutoFocus
+      disableEnforceFocus
+      disableRestoreFocus
       fullWidth
       PaperProps={{
         sx: {
@@ -80,7 +83,6 @@ const AppAlert = ({
 
       <DialogActions sx={{ px: 3, pb: 2 }}>
         <Button
-          autoFocus
           onClick={onConfirm}
           variant="contained"
           fullWidth

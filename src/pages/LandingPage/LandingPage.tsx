@@ -24,11 +24,18 @@ import {
   useNearbyCourses,
   useFestivals,
 } from "../../hooks/useTourSpots";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import TourCourseCard from "../../layout/components/TourCourseCard";
+import AppAlert from "../../common/components/AppAlert";
 
 const LandingPage = () => {
   const navigate = useNavigate();
+
+  const location = useLocation();
+
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState("");
+
   const theme = useTheme();
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
@@ -69,6 +76,28 @@ const LandingPage = () => {
   const handleNextSlide = () => {
     setCurrentSlide((prev) => (prev === actualSlideCount - 1 ? 0 : prev + 1));
   };
+
+  //로그인 회원 가입 알림 처리를 위한 것
+  useEffect(() => {
+    if (!location.state?.authSuccess) return;
+
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+
+    if (location.state.authSuccess === "login") {
+      setAlertMessage("로그인 되었습니다.");
+      setAlertOpen(true);
+    }
+
+    if (location.state.authSuccess === "register") {
+      setAlertMessage("회원가입이 완료되었습니다.");
+      setAlertOpen(true);
+    }
+
+    // ⭐ state 초기화 (뒤로가기 / 새로고침 방지)
+    window.history.replaceState({}, document.title);
+  }, [location.state]);
 
   // 4초마다 자동으로 슬라이드 넘기기
   useEffect(() => {
@@ -481,6 +510,13 @@ const LandingPage = () => {
           </Box>
         </Box>
       </Container>
+      <AppAlert
+        open={alertOpen}
+        message={alertMessage}
+        severity="success"
+        onConfirm={() => setAlertOpen(false)}
+        onCancel={() => setAlertOpen(false)}
+      />
     </Box>
   );
 };

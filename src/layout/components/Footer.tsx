@@ -7,16 +7,78 @@ import {
   Instagram,
   Twitter,
 } from "lucide-react";
+import { NavLink } from "react-router-dom";
 
 const Footer = () => {
   const theme = useTheme();
+
+  // 공통 스타일 정의
+  const sectionTitleSx = {
+    fontSize: "16px",
+    fontWeight: 600,
+    mb: 2,
+  };
+
+  const sectionContainerSx = {
+    display: "flex",
+    flexDirection: "column",
+    gap: 1.5,
+  };
+
+  const socialLinkSx = {
+    color: "rgba(255,255,255,0.8)",
+    "&:hover": { color: theme.palette.background.default },
+    transition: "color 0.3s ease",
+  };
+
+  const internalLinkSx = {
+    color: "rgba(255,255,255,0.8)",
+    textDecoration: "none",
+    fontSize: "14px",
+    "&:hover": {
+      color: theme.palette.background.default,
+      textDecoration: "underline",
+    },
+    transition: "color 0.3s ease",
+  };
+
+  const bottomLinkSx = {
+    color: "rgba(255,255,255,0.6)",
+    textDecoration: "none",
+    fontSize: "12px",
+    "&:hover": {
+      color: "rgba(255,255,255,0.8)",
+      textDecoration: "underline",
+    },
+    transition: "color 0.3s ease",
+  };
+
+  // 소셜 미디어 링크 데이터
+  const socialLinks = [
+    { href: "https://facebook.com", icon: Facebook, label: "Facebook" },
+    { href: "https://instagram.com", icon: Instagram, label: "Instagram" },
+    { href: "https://x.com", icon: Twitter, label: "Twitter" },
+  ] as const;
+
+  // 빠른 링크 데이터
+  const quickLinks = [
+    { to: "/spots", label: "관광지 둘러보기" },
+    { to: "/ai-planner", label: "AI 여행 플래너" },
+    { to: "/mypage", label: "마이페이지" },
+  ] as const;
+
+  // 하단 링크 데이터
+  const bottomLinks = [
+    { href: "#", label: "이용약관" },
+    { href: "#", label: "개인정보처리방침" },
+  ] as const;
 
   return (
     <Box
       component="footer"
       sx={{
         backgroundColor: theme.palette.primary.main,
-        color: "white",
+        color: theme.palette.background.default,
         py: { xs: 4, md: 6 },
         mt: "auto",
       }}
@@ -40,7 +102,7 @@ const Footer = () => {
                 mb: 2,
               }}
             >
-              <MapPin size={24} color="white" />
+              <MapPin size={24} color={theme.palette.background.default} />
               <Typography
                 variant="h2"
                 sx={{
@@ -65,139 +127,52 @@ const Footer = () => {
             </Typography>
             {/* 소셜 미디어 링크 */}
             <Box sx={{ display: "flex", gap: 2 }}>
-              <Link
-                href="https://facebook.com"
-                sx={{
-                  color: "rgba(255,255,255,0.8)",
-                  "&:hover": { color: "white" },
-                  transition: "color 0.3s ease",
-                }}
-              >
-                <Facebook size={20} />
-              </Link>
-              <Link
-                href="https://instagram.com"
-                sx={{
-                  color: "rgba(255,255,255,0.8)",
-                  "&:hover": { color: "white" },
-                  transition: "color 0.3s ease",
-                }}
-              >
-                <Instagram size={20} />
-              </Link>
-              <Link
-                href="https://x.com"
-                sx={{
-                  color: "rgba(255,255,255,0.8)",
-                  "&:hover": { color: "white" },
-                  transition: "color 0.3s ease",
-                }}
-              >
-                <Twitter size={20} />
-              </Link>
+              {socialLinks.map(({ href, icon: Icon, label }) => (
+                <Link
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  sx={socialLinkSx}
+                  aria-label={label}
+                >
+                  <Icon size={20} />
+                </Link>
+              ))}
             </Box>
           </Box>
 
           {/* 빠른 링크 섹션 */}
           <Box sx={{ flex: 1 }}>
-            <Typography
-              variant="h3"
-              sx={{
-                fontSize: "16px",
-                fontWeight: 600,
-                mb: 2,
-              }}
-            >
+            <Typography variant="h3" sx={sectionTitleSx}>
               빠른 링크
             </Typography>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 1.5,
-              }}
-            >
-              <Link
-                href="/spots"
-                sx={{
-                  color: "rgba(255,255,255,0.8)",
-                  textDecoration: "none",
-                  fontSize: "14px",
-                  "&:hover": {
-                    color: "white",
-                    textDecoration: "underline",
-                  },
-                  transition: "color 0.3s ease",
-                }}
-              >
-                관광지 둘러보기
-              </Link>
-              <Link
-                href="/ai-planner"
-                sx={{
-                  color: "rgba(255,255,255,0.8)",
-                  textDecoration: "none",
-                  fontSize: "14px",
-                  "&:hover": {
-                    color: "white",
-                    textDecoration: "underline",
-                  },
-                  transition: "color 0.3s ease",
-                }}
-              >
-                AI 여행 플래너
-              </Link>
-              <Link
-                href="/mypage"
-                sx={{
-                  color: "rgba(255,255,255,0.8)",
-                  textDecoration: "none",
-                  fontSize: "14px",
-                  "&:hover": {
-                    color: "white",
-                    textDecoration: "underline",
-                  },
-                  transition: "color 0.3s ease",
-                }}
-              >
-                마이페이지
-              </Link>
+            <Box sx={sectionContainerSx}>
+              {quickLinks.map(({ to, label }) => (
+                <Link
+                  key={to}
+                  component={NavLink}
+                  to={to}
+                  onClick={() => window.scrollTo(0, 0)}
+                  sx={internalLinkSx}
+                >
+                  {label}
+                </Link>
+              ))}
             </Box>
           </Box>
 
           {/* 연락처 정보 섹션 */}
           <Box sx={{ flex: 1 }}>
-            <Typography
-              variant="h3"
-              sx={{
-                fontSize: "16px",
-                fontWeight: 600,
-                mb: 2,
-              }}
-            >
+           <Typography variant="h3" sx={sectionTitleSx}>
               문의하기
             </Typography>
-            <Box
-              sx={{
-                display: "flex",
-                flexDirection: "column",
-                gap: 1.5,
-              }}
-            >
+            <Box sx={sectionContainerSx}>
               <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
                 <Mail size={16} color="rgba(255,255,255,0.8)" />
                 <Link
                   href="mailto:contact@example.com"
-                  sx={{
-                    color: "rgba(255,255,255,0.8)",
-                    textDecoration: "none",
-                    fontSize: "14px",
-                    "&:hover": {
-                      color: "white",
-                      textDecoration: "underline",
-                    },
-                    transition: "color 0.3s ease",
-                  }}
+                  sx={internalLinkSx}
                 >
                   contact@example.com
                 </Link>
@@ -251,36 +226,11 @@ const Footer = () => {
                 flexWrap: "wrap",
               }}
             >
-              <Link
-                href="#"
-                sx={{
-                  color: "rgba(255,255,255,0.6)",
-                  textDecoration: "none",
-                  fontSize: "12px",
-                  "&:hover": {
-                    color: "rgba(255,255,255,0.8)",
-                    textDecoration: "underline",
-                  },
-                  transition: "color 0.3s ease",
-                }}
-              >
-                이용약관
-              </Link>
-              <Link
-                href="#"
-                sx={{
-                  color: "rgba(255,255,255,0.6)",
-                  textDecoration: "none",
-                  fontSize: "12px",
-                  "&:hover": {
-                    color: "rgba(255,255,255,0.8)",
-                    textDecoration: "underline",
-                  },
-                  transition: "color 0.3s ease",
-                }}
-              >
-                개인정보처리방침
-              </Link>
+              {bottomLinks.map(({ href, label }) => (
+                <Link key={label} href={href} sx={bottomLinkSx}>
+                  {label}
+                </Link>
+              ))}
               <Typography
                 variant="body1"
                 sx={{

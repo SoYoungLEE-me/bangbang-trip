@@ -11,7 +11,6 @@ import { useNavigate } from "react-router-dom";
 import { signInWithEmail, signInWithGoogle } from "../../services/auth";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
-import AppAlert from "../../common/components/AppAlert";
 import ForgotPasswordDialog from "./components/ForgotPasswordDialog";
 
 const LoginPage = () => {
@@ -24,9 +23,6 @@ const LoginPage = () => {
   //에러 제어
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-
-  //알림창 제어
-  const [alertOpen, setAlertOpen] = useState(false);
 
   //이메일 유효성 검사 함수
   const isValidEmail = (email: string) => {
@@ -66,7 +62,11 @@ const LoginPage = () => {
 
     try {
       await signInWithEmail(email, password);
-      setAlertOpen(true);
+
+      navigate("/", {
+        replace: true,
+        state: { authSuccess: "login" },
+      });
     } catch (error: unknown) {
       if (error instanceof Error) {
         const message = error.message;
@@ -87,9 +87,13 @@ const LoginPage = () => {
     }
   };
 
-  const handleAlertConfirm = () => {
-    setAlertOpen(false);
-    navigate("/");
+  const handleGoogleLogin = async () => {
+    await signInWithGoogle();
+
+    navigate("/", {
+      replace: true,
+      state: { authSuccess: "login" },
+    });
   };
 
   return (
@@ -201,7 +205,7 @@ const LoginPage = () => {
           sx={{
             height: 48,
           }}
-          onClick={signInWithGoogle}
+          onClick={handleGoogleLogin}
         >
           Google 계정으로 시작하기
         </Button>
@@ -235,13 +239,6 @@ const LoginPage = () => {
           </Typography>
         </Box>
       </Box>
-      <AppAlert
-        open={alertOpen}
-        message="로그인 되었습니다."
-        severity="success"
-        onConfirm={() => handleAlertConfirm}
-        onCancel={() => handleAlertConfirm}
-      />
     </Box>
   );
 };

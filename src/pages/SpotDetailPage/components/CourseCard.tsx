@@ -24,6 +24,8 @@ interface CourseItemProps {
   idx: number;
 }
 
+const MAX_SPOTS = 10;
+
 export const CourseCard = ({ course, idx }: CourseItemProps) => {
   const navigate = useNavigate();
   const { selectedSpots, toggleSpot } = useSelectedSpotsStore();
@@ -78,6 +80,15 @@ export const CourseCard = ({ course, idx }: CourseItemProps) => {
     };
 
     const wasSaved = isSavedInStore;
+
+    if (!wasSaved && selectedSpots.length >= MAX_SPOTS) {
+      setSnackbarMessage("찜은 최대 10개까지만 가능해요.");
+      setIsAdded(false);
+      setLastRemovedSpot(null);
+      setSnackbarOpen(true);
+      return;
+    }
+
     setSnackbarOpen(false);
     toggleSpot(tourSpot);
 
@@ -106,7 +117,7 @@ export const CourseCard = ({ course, idx }: CourseItemProps) => {
       toggleSpot(lastRemovedSpot);
       setSnackbarOpen(false);
       setLastRemovedSpot(null);
-      setSnackbarMessage("찜하기가 복구되었습니다.");
+      setSnackbarMessage("찜을 복구했습니다.");
       setIsAdded(true);
       setSnackbarOpen(true);
     }
@@ -268,7 +279,19 @@ export const CourseCard = ({ course, idx }: CourseItemProps) => {
             >
               실행 취소
             </Button>
-          ) : undefined
+          ) : (
+            <Button
+              color="inherit"
+              size="small"
+              onClick={handleCloseSnackbar}
+              sx={{
+                fontWeight: 600,
+                textTransform: "none",
+              }}
+            >
+              확인
+            </Button>
+          )
         }
       />
     </>

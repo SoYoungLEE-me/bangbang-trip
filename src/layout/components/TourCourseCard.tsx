@@ -1,4 +1,14 @@
-import { Card, CardMedia, CardContent, IconButton, Typography, useTheme, Box, Snackbar, Button } from "@mui/material";
+import {
+  Card,
+  CardMedia,
+  CardContent,
+  IconButton,
+  Typography,
+  useTheme,
+  Box,
+  Snackbar,
+  Button,
+} from "@mui/material";
 import { Heart, CameraOff } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -7,6 +17,8 @@ import type { SpotItem } from "../../models/spot";
 import { useSelectedSpotsStore } from "../../stores/selectedSpotsStore";
 
 type CardData = TourSpot | Festival | SpotItem;
+
+const MAX_SPOTS = 10;
 
 interface TourCourseCardProps {
   course: CardData;
@@ -52,12 +64,17 @@ const TourCourseCard = ({
   const [lastRemovedSpot, setLastRemovedSpot] = useState<TourSpot | null>(null);
 
   // store에서 저장 여부 확인 (onSave가 없을 때만)
-  const isSavedInStore = selectedSpots.some((spot) => spot.contentid === course.contentid);
+  const isSavedInStore = selectedSpots.some(
+    (spot) => spot.contentid === course.contentid
+  );
   const finalIsSaved = isSaved !== undefined ? isSaved : isSavedInStore;
 
   // store 변경 시 localStorage에 자동 저장
   useEffect(() => {
-    localStorage.setItem("selected-spots-storage", JSON.stringify({ state: { selectedSpots } }));
+    localStorage.setItem(
+      "selected-spots-storage",
+      JSON.stringify({ state: { selectedSpots } })
+    );
   }, [selectedSpots]);
 
   const handleCardClick = () => {
@@ -76,6 +93,14 @@ const TourCourseCard = ({
     } else {
       const tourSpot = convertToTourSpot(course);
       const wasSaved = isSavedInStore;
+
+      if (!wasSaved && selectedSpots.length >= MAX_SPOTS) {
+        setSnackbarMessage("찜은 최대 10개까지만 가능해요.");
+        setIsAdded(false);
+        setLastRemovedSpot(null);
+        setSnackbarOpen(true);
+        return;
+      }
 
       setSnackbarOpen(false);
       toggleSpot(tourSpot);
@@ -118,7 +143,7 @@ const TourCourseCard = ({
       setLastRemovedSpot(null);
 
       // 실행 취소 완료 메시지 (선택사항)
-      setSnackbarMessage("찜하기가 복구되었습니다.");
+      setSnackbarMessage("찜을 복구했습니다.");
       setIsAdded(true);
       setSnackbarOpen(true);
     }
@@ -127,7 +152,9 @@ const TourCourseCard = ({
   const formatAddress = (addr: string | undefined): string => {
     if (!addr) return "";
     const addrArray = addr.split(" ");
-    return addrArray.length > 1 ? `${addrArray[0]} ${addrArray[1]}` : addrArray[0];
+    return addrArray.length > 1
+      ? `${addrArray[0]} ${addrArray[1]}`
+      : addrArray[0];
   };
 
   const shouldShowAddress = showAddress || contentTypeId === "12";
@@ -158,10 +185,9 @@ const TourCourseCard = ({
       >
         <Box
           sx={{
-            // height: "200",
             width: "100%",
             overflow: "hidden",
-            aspectRatio: "1.3", ///
+            aspectRatio: "1.3",
             "&:hover img": {
               transform: "scale(1.2)",
             },
@@ -170,13 +196,12 @@ const TourCourseCard = ({
           {hasImage ? (
             <CardMedia
               component="img"
-              // height="200px"
               image={course.firstimage}
               alt={course.title}
               sx={{
                 objectFit: "cover",
                 width: "100%",
-                height: "100%", ///
+                height: "100%",
                 transition: "transform 1s ease-in-out",
                 aspectRatio: "1.3",
               }}
@@ -184,7 +209,6 @@ const TourCourseCard = ({
           ) : (
             <Box
               sx={{
-                // height: "200px",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
@@ -195,7 +219,11 @@ const TourCourseCard = ({
                 },
               }}
             >
-              <CameraOff className="no-image-icon" size={50} color={theme.palette.text.secondary} />
+              <CameraOff
+                className="no-image-icon"
+                size={50}
+                color={theme.palette.text.secondary}
+              />
             </Box>
           )}
         </Box>
@@ -218,18 +246,16 @@ const TourCourseCard = ({
           <Heart
             size={20}
             fill={finalIsSaved ? theme.palette.error.main : "none"}
-            color={finalIsSaved ? theme.palette.error.main : theme.palette.text.secondary}
+            color={
+              finalIsSaved
+                ? theme.palette.error.main
+                : theme.palette.text.secondary
+            }
           />
         </IconButton>
 
         <CardContent
           sx={{
-            // pt: { xs: 0.5, sm: 1.5 }, ///
-            // px: { xs: 1.5, sm: 2 }, ///
-            // pb: { xs: 1.5, sm: 2 }, ///
-            // pt: { xs: 1, sm: 1.5 }, ///
-            // px: { xs: 1.5, sm: 2 }, ///
-            // pb: { xs: 1.5, sm: 2 }, ///
             pt: { xs: 3, sm: 3 },
             px: { xs: 1.5, sm: 2 },
             pb: { xs: 3, sm: 3 },
@@ -256,19 +282,28 @@ const TourCourseCard = ({
           </Typography>
 
           {/* 축제 기간 표시 */}
-          {"eventstartdate" in course && course.eventstartdate && course.eventenddate && (
-            <Typography
-              variant="body2"
-              sx={{
-                fontSize: "14px",
-                color: theme.palette.text.secondary,
-                mt: 0.5,
-              }}
-            >
-              {course.eventstartdate.replace(/(\d{4})(\d{2})(\d{2})/, "$1.$2.$3")} ~{" "}
-              {course.eventenddate.replace(/(\d{4})(\d{2})(\d{2})/, "$1.$2.$3")}
-            </Typography>
-          )}
+          {"eventstartdate" in course &&
+            course.eventstartdate &&
+            course.eventenddate && (
+              <Typography
+                variant="body2"
+                sx={{
+                  fontSize: "14px",
+                  color: theme.palette.text.secondary,
+                  mt: 0.5,
+                }}
+              >
+                {course.eventstartdate.replace(
+                  /(\d{4})(\d{2})(\d{2})/,
+                  "$1.$2.$3"
+                )}{" "}
+                ~{" "}
+                {course.eventenddate.replace(
+                  /(\d{4})(\d{2})(\d{2})/,
+                  "$1.$2.$3"
+                )}
+              </Typography>
+            )}
 
           {/* 지역 정보 배지 */}
           {course.addr1 && (
@@ -308,7 +343,9 @@ const TourCourseCard = ({
             backgroundColor: theme.palette.background.default,
             color: theme.palette.text.primary,
             border: `6px solid ${
-              isAdded || snackbarMessage.includes("복구") ? theme.palette.primary.main : theme.palette.error.main
+              isAdded || snackbarMessage.includes("복구")
+                ? theme.palette.primary.main
+                : theme.palette.error.main
             }`,
           },
         }}
@@ -339,7 +376,19 @@ const TourCourseCard = ({
             >
               실행 취소
             </Button>
-          ) : undefined
+          ) : (
+            <Button
+              color="inherit"
+              size="small"
+              onClick={handleCloseSnackbar}
+              sx={{
+                fontWeight: 600,
+                textTransform: "none",
+              }}
+            >
+              확인
+            </Button>
+          )
         }
       />
     </>

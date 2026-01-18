@@ -68,6 +68,14 @@ const SavePlanDialog = ({
           inputRef.current?.select();
         },
       }}
+      onKeyDown={(e) => {
+        if (status === "success") {
+          if (e.key === "Enter" || e.key === "Escape") {
+            e.preventDefault();
+            onClose();
+          }
+        }
+      }}
       maxWidth="xs"
       fullWidth
       PaperProps={{ sx: { borderRadius: 3, p: 2 } }}
@@ -149,16 +157,7 @@ const SavePlanDialog = ({
         )}
 
         {status === "success" && (
-          <Button
-            onClick={onClose}
-            variant="contained"
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                onClose();
-              }
-            }}
-          >
+          <Button onClick={onClose} variant="contained">
             확인
           </Button>
         )}

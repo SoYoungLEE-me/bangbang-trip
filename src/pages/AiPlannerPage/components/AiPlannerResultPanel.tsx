@@ -1,4 +1,12 @@
-import { Box, Typography, Stack, Divider, Grid, Button } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Stack,
+  Divider,
+  Grid,
+  Button,
+  useMediaQuery,
+} from "@mui/material";
 import {
   CalendarDays,
   Briefcase,
@@ -22,6 +30,8 @@ const AiPlannerResultPanel = ({
   saveStatus,
 }: AiPlannerResultPanelProps) => {
   const theme = useTheme();
+
+  const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
   if (
     !result ||
@@ -59,50 +69,79 @@ const AiPlannerResultPanel = ({
           sx={{
             display: "flex",
             alignItems: "center",
-            gap: 1.5,
+            gap: { xs: 1, md: 1.5 },
             color: primaryColor,
             mb: 0,
+            fontWeight: 800,
+            fontSize: { xs: 23, md: 28 },
           }}
         >
           <CalendarDays size={26} /> 여행 타임라인
         </Typography>
 
         {/* 저장 버튼 */}
-        {onSave && (
-          <Button
-            variant={saveStatus === "saved" ? "contained" : "outlined"}
-            disabled={saveStatus !== "unsaved"}
-            onClick={onSave}
-            startIcon={
-              saveStatus === "saved" ? (
-                <BookmarkCheck size={18} />
+        {onSave &&
+          (isMobile ? (
+            <Button
+              onClick={onSave}
+              disabled={saveStatus !== "unsaved"}
+              sx={{
+                ml: "auto",
+                minWidth: 0,
+                p: 1,
+                borderRadius: "50%",
+                "&.Mui-disabled": {
+                  opacity: 1,
+                  color:
+                    saveStatus === "saved"
+                      ? "primary.contrastText"
+                      : "text.secondary",
+                  backgroundColor:
+                    saveStatus === "saved" ? "primary.main" : "transparent",
+                },
+              }}
+            >
+              {saveStatus === "saved" ? (
+                <BookmarkCheck size={20} />
               ) : (
-                <Bookmark size={18} />
-              )
-            }
-            sx={{
-              ml: "auto",
-              borderRadius: 999,
-              px: 2.5,
-              fontWeight: 700,
-              textTransform: "none",
-              whiteSpace: "nowrap",
-              "&.Mui-disabled": {
-                opacity: 1,
-                color:
-                  saveStatus === "saved"
-                    ? "primary.contrastText"
-                    : "text.secondary",
-                backgroundColor:
-                  saveStatus === "saved" ? "primary.main" : "transparent",
-                borderColor:
-                  saveStatus === "saved" ? "primary.main" : "divider",
-              },
-            }}
-          >
-            {saveStatus === "saved" ? "저장됨" : "일정 저장하기"}
-          </Button>
-        )}
+                <Bookmark size={20} />
+              )}
+            </Button>
+          ) : (
+            <Button
+              variant={saveStatus === "saved" ? "contained" : "outlined"}
+              disabled={saveStatus !== "unsaved"}
+              onClick={onSave}
+              startIcon={
+                saveStatus === "saved" ? (
+                  <BookmarkCheck size={18} />
+                ) : (
+                  <Bookmark size={18} />
+                )
+              }
+              sx={{
+                ml: "auto",
+                borderRadius: 999,
+                px: 2.5,
+                fontWeight: 700,
+                textTransform: "none",
+                whiteSpace: "nowrap",
+                "&.Mui-disabled": {
+                  opacity: 1,
+                  color:
+                    saveStatus === "saved"
+                      ? "primary.contrastText"
+                      : "text.secondary",
+                  backgroundColor:
+                    saveStatus === "saved" ? "primary.main" : "transparent",
+                  borderColor:
+                    saveStatus === "saved" ? "primary.main" : "divider",
+                },
+              }}
+            >
+              {saveStatus === "saved" ? "저장됨" : "일정 저장하기"}
+            </Button>
+          ))}
       </Box>
       <Grid container spacing={5} alignItems="flex-start">
         {/* 타임라인 */}
@@ -115,16 +154,16 @@ const AiPlannerResultPanel = ({
                   sx={{
                     display: "inline-flex",
                     alignItems: "center",
-                    px: 3,
+                    px: { xs: 2, md: 3 },
                     py: 0.8,
                     borderRadius: "20px",
                     bgcolor: primaryColor,
                     color: "#fff",
-                    mb: 4,
+                    mb: { xs: 3, md: 4 },
                   }}
                 >
                   {/* 컨셉 제목 */}
-                  <Typography fontWeight={800} fontSize={14}>
+                  <Typography fontWeight={800} fontSize={{ xs: 12, md: 14 }}>
                     Day {day.day} &nbsp; {day.title}
                   </Typography>
                 </Box>

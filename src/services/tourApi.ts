@@ -5,8 +5,6 @@ const getServiceKey = (): string => {
   return TOUR_API_KEY || "";
 };
 
-// arrange 대표이미지 있는 콘텐츠 우선 정렬: O=제목순, Q=수정일순, R=생성일순)
-
 // 주변 관광지
 export const getNearbyCourses = async (): Promise<TourSpot[]> => {
   const url = `${TOUR_BASE_URL}/areaBasedList2`;

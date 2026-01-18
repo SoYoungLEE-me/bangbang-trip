@@ -12,8 +12,6 @@ import { SignUpWithEmail } from "../../services/auth";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
-import AppAlert from "../../common/components/AppAlert";
-
 const RegisterPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState("");
@@ -26,9 +24,6 @@ const RegisterPage = () => {
   const [passwordError, setPasswordError] = useState("");
   const [nameError, setNameError] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
-  //알림창 제어
-  const [alertOpen, setAlertOpen] = useState(false);
 
   //비밀번호 확인
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -87,8 +82,10 @@ const RegisterPage = () => {
         email,
         password,
       });
-
-      setAlertOpen(true);
+      navigate("/", {
+        replace: true,
+        state: { authSuccess: "register" },
+      });
     } catch (error: unknown) {
       if (error instanceof Error) {
         const message = error.message;
@@ -108,11 +105,6 @@ const RegisterPage = () => {
     if (e.key === "Enter") {
       handleEmailSignUp();
     }
-  };
-
-  const handleAlertConfirm = () => {
-    setAlertOpen(false);
-    navigate("/");
   };
 
   return (
@@ -276,13 +268,6 @@ const RegisterPage = () => {
           </Typography>
         </Box>
       </Box>
-      <AppAlert
-        open={alertOpen}
-        message="회원가입이 완료되었습니다."
-        severity="success"
-        onConfirm={handleAlertConfirm}
-        onCancel={handleAlertConfirm}
-      />
     </Box>
   );
 };

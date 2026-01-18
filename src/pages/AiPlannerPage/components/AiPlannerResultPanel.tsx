@@ -311,7 +311,7 @@ const AiPlannerResultPanel = ({
                   mb={2}
                   sx={{ wordBreak: "keep-all" }}
                 >
-                  여행 동선과 분위기를 균형 있게 맞추기 위해, 아래와 같이
+                  여행 동선과 분위기를 균형 있게 맞추기 위해, 아래와 같이 장소가
                   조정되었습니다.
                 </Typography>
 

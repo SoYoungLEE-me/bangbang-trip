@@ -109,7 +109,7 @@ export const Header = ({ spot }: HeaderProps) => {
       toggleSpot(lastRemovedSpot);
       setSnackbarOpen(false);
       setLastRemovedSpot(null);
-      setSnackbarMessage("찜하기가 복구되었습니다.");
+      setSnackbarMessage("찜을 복구했습니다.");
       setIsAdded(true);
       setSnackbarOpen(true);
     }

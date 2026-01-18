@@ -1,28 +1,62 @@
 import { Box, Typography, Stack, IconButton } from "@mui/material";
 import { Trash2, ImageOff, Heart } from "lucide-react";
 import type { TourSpot } from "../../../models/tour";
+import { useNavigate } from "react-router-dom";
 
 interface SelectedSpotsPanelProps {
   spots: TourSpot[];
   onRemove: (contentid: string) => void;
+  onClearAll: () => void;
 }
 
-const SelectedSpotsPanel = ({ spots, onRemove }: SelectedSpotsPanelProps) => {
+const SelectedSpotsPanel = ({
+  spots,
+  onRemove,
+  onClearAll,
+}: SelectedSpotsPanelProps) => {
+  const navigate = useNavigate();
+
   const isEmpty = spots.length === 0;
 
   return (
     <Box>
-      <Typography
-        fontWeight={900}
-        fontSize={20}
-        mb={2}
-        display="flex"
+      <Stack
+        direction="row"
         alignItems="center"
-        gap={1}
+        justifyContent="space-between"
+        mb={2}
       >
-        <Heart size={20} />
-        찜한 장소 ({spots.length})
-      </Typography>
+        <Typography
+          fontWeight={900}
+          fontSize={20}
+          display="flex"
+          alignItems="center"
+          gap={1}
+        >
+          <Heart size={20} />
+          찜한 장소 ({spots.length})
+        </Typography>
+
+        {!isEmpty && (
+          <IconButton
+            size="small"
+            onClick={onClearAll}
+            sx={{
+              color: "error.main",
+              border: "1px solid",
+              borderColor: "error.light",
+              borderRadius: 2,
+
+              "&:hover": {
+                bgcolor: "error.light",
+                color: "error.dark",
+              },
+            }}
+          >
+            <Trash2 size={18} />
+          </IconButton>
+        )}
+      </Stack>
 
       <Box
         sx={{
@@ -39,18 +73,39 @@ const SelectedSpotsPanel = ({ spots, onRemove }: SelectedSpotsPanelProps) => {
       >
         {isEmpty ? (
           /* 빈 상태 */
-          <Typography fontWeight={700} color="grey.500" textAlign="center">
+          <Typography
+            fontWeight={700}
+            color="primary.main"
+            textAlign="center"
+            sx={{
+              cursor: "pointer",
+              textDecoration: "underline",
+              "&:hover": {
+                color: "primary.dark",
+              },
+            }}
+            onClick={() => navigate("/spots")}
+          >
             가고 싶은 장소를 찜해보세요.
           </Typography>
         ) : (
           /* 찜한 장소 카드들 */
-          <Stack spacing={2} width="100%">
+          <Stack
+            spacing={2}
+            width="100%"
+            sx={{
+              maxHeight: 280,
+              overflowY: "auto",
+              pr: 1,
+            }}
+          >
             {spots.map((spot) => {
               const image = spot.firstimage || spot.firstimage2 || null;
 
               return (
                 <Box
                   key={spot.contentid}
+                  onClick={() => navigate(`/spots/${spot.contentid}`)}
                   sx={{
                     display: "flex",
                     alignItems: "center",
@@ -60,6 +115,7 @@ const SelectedSpotsPanel = ({ spots, onRemove }: SelectedSpotsPanelProps) => {
                     borderRadius: 5,
                     border: "1px solid",
                     borderColor: "grey.300",
+                    cursor: "pointer",
                     "&:hover": {
                       borderColor: "primary.light",
                       backgroundColor: "primary.50",
@@ -110,7 +166,10 @@ const SelectedSpotsPanel = ({ spots, onRemove }: SelectedSpotsPanelProps) => {
                   {/* 삭제 */}
                   <IconButton
                     size="small"
-                    onClick={() => onRemove(spot.contentid)}
+                    onClick={(e) => {
+                      e.stopPropagation(); // 부모 클릭 막기
+                      onRemove(spot.contentid);
+                    }}
                   >
                     <Trash2 size={16} />
                   </IconButton>

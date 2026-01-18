@@ -125,11 +125,10 @@ const MyPlanDetailPage = () => {
           </IconButton>
         </Tooltip>
       </Box>
-
       <Box
         sx={{
           mb: 6,
-          p: 4,
+          p: { xs: 2.5, sm: 4 },
           borderRadius: 6,
           bgcolor: alpha(primary, 0.05),
           border: `1px solid ${alpha(primary, 0.25)}`,
@@ -138,9 +137,25 @@ const MyPlanDetailPage = () => {
         <Stack spacing={2.5}>
           {/* 여행 기간 */}
           <Stack direction="row" alignItems="center" spacing={1.5}>
-            <CalendarDays size={18} color={primary} />
-            <Typography fontWeight={800}>여행 기간</Typography>
-            <Typography color="text.secondary">
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={1}
+              sx={{ flexShrink: 0 }}
+            >
+              <CalendarDays size={18} color={primary} />
+              <Typography fontWeight={800} sx={{ whiteSpace: "nowrap" }}>
+                여행 기간
+              </Typography>
+            </Stack>
+
+            <Typography
+              color="text.secondary"
+              sx={{
+                fontSize: { xs: 11, sm: 14 },
+                wordBreak: "keep-all",
+              }}
+            >
               {planData.start_date && planData.end_date
                 ? `${planData.start_date} ~ ${planData.end_date}`
                 : "설정한 기간 없음"}
@@ -149,16 +164,39 @@ const MyPlanDetailPage = () => {
 
           {/* 방문 장소 */}
           <Stack direction="row" alignItems="flex-start" spacing={1.5}>
-            <MapPin size={18} color={primary} />
-            <Typography fontWeight={800}>방문 장소</Typography>
+            <Stack
+              direction="row"
+              alignItems="center"
+              spacing={1}
+              sx={{ flexShrink: 0, mt: 0.3 }}
+            >
+              <MapPin size={18} color={primary} />
+              <Typography fontWeight={800} sx={{ whiteSpace: "nowrap" }}>
+                방문 장소
+              </Typography>
+            </Stack>
 
-            <Stack direction="row" spacing={1} flexWrap="wrap">
+            <Stack
+              direction="row"
+              spacing={1}
+              flexWrap="wrap"
+              useFlexGap
+              sx={{ rowGap: 1 }}
+            >
               {planData.spots.map((spot) => (
                 <Chip
                   key={spot.contentid}
                   label={spot.title}
                   size="small"
-                  sx={{ fontWeight: 600 }}
+                  sx={{
+                    fontWeight: 600,
+                    fontSize: { xs: 11, sm: 12 },
+                    maxWidth: { xs: "120px", sm: "200px" },
+                    "& .MuiChip-label": {
+                      overflow: "hidden",
+                      textOverflow: "ellipsis",
+                    },
+                  }}
                 />
               ))}
             </Stack>

@@ -7,15 +7,52 @@ import {
   Menu,
   MenuItem,
   Badge,
+  Typography,
 } from "@mui/material";
 import theme from "../../theme";
-import { User } from "lucide-react";
+import { User, Search, Sparkles } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { NavLink, useNavigate } from "react-router-dom";
 import logo from "../../assets/logo.png";
 import { useState } from "react";
 import { useAuthStore } from "../../stores/authStore";
 import { useSelectedSpotsStore } from "../../stores/selectedSpotsStore";
 import { signOut } from "../../services/auth";
+
+// 공통 컴포넌트 추가
+const ResponsiveNavItem = ({ 
+  icon: Icon, 
+  text 
+}: { 
+  icon: LucideIcon; 
+  text: string;
+}) => (
+  <Box 
+    sx={{ 
+      display: "flex", 
+      alignItems: "center", 
+      justifyContent: "center",
+      lineHeight: 1,
+    }}
+  >
+    <Box 
+      sx={{ 
+        display: { xs: "block", sm: "none" },
+        lineHeight: 0,
+      }}
+    >
+      <Icon size={20} />
+    </Box>
+    <Box 
+      sx={{ 
+        display: { xs: "none", sm: "inline" },
+        lineHeight: 1.5,
+      }}
+    >
+      {text}
+    </Box>
+  </Box>
+);
 
 const NavBar = () => {
   const navigate = useNavigate();
@@ -24,6 +61,25 @@ const NavBar = () => {
   const { user } = useAuthStore();
   const { selectedSpots } = useSelectedSpotsStore();
   const spotCount = selectedSpots.length;
+
+  // 공통 Link 스타일
+  const commonLinkSx = {
+    fontSize: "1rem",
+    fontWeight: "500",
+    textDecoration: "none",
+    color: "inherit",
+    transition: "all 0.2s ease",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    height: "100%",
+    "&:hover": {
+      color: "action.hover",
+    },
+    "&.active": {
+      color: "action.active",
+    },
+  };
 
   return (
     <Box
@@ -57,8 +113,7 @@ const NavBar = () => {
           sx={{
             display: "flex",
             alignItems: "center",
-            gap: "0.5rem",
-
+            gap: { xs: "0.2rem", sm: "0.25rem" },
             color: "text.primary",
             fontFamily: "KnpsOdaesan",
             fontWeight: 900,
@@ -68,7 +123,7 @@ const NavBar = () => {
               lg: "1.5rem",
               md: "1.375rem",
               sm: "1.375rem",
-              xs: "1.25rem",
+              xs: "1rem",
             },
           }}
           mt={0.5}
@@ -77,76 +132,68 @@ const NavBar = () => {
           <Box
             component="img"
             src={logo}
-            alt="전국 방방곡곡 로고"
+            alt="전국: 방방곡곡 로고"
             sx={{
-              height: {
-                xs: "1.75rem",
-                sm: "2rem",
-                md: "2.125rem",
-                lg: "2.7rem",
-              },
+              height: { xs: "2rem", sm: "2.35rem", md: "2.7rem" },
               width: "auto",
             }}
-            mr={1}
-            ml={0.5}
+            mr={0.5}
           />
-          전국: 방방곡곡
+          <Typography
+            component="span"
+            sx={{
+              fontFamily: "KnpsOdaesan",
+              fontWeight: 900,
+              fontSize: { xs: "1.125rem", sm: "1.25rem", md: "1.5rem" },
+              color: "text.primary",
+              mt: 0.5,
+              display: "flex",
+            }}
+          >
+            전국: 방방곡곡
+          </Typography>
         </Link>
 
-        <ul
-          style={{
-            display: "flex",
+        <Box
+          component="ul"
+          sx={{
+            display: { xs: "none", md: "flex" },
             alignItems: "center",
             justifyContent: "center",
             gap: "1.875rem",
             listStyle: "none",
             padding: 0,
             margin: 0,
+            height: "100%",
+          }}
+        >          
+        </Box>
+      </Box>
+      <Box sx={{ display: "flex", alignItems: "center", height: "100%", gap: "1rem", }}>
+        {/* 모바일: 탐색, AI 플래너 */}
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            gap: "1.4rem",
+            height: "100%",
           }}
         >
           <Link
             component={NavLink}
-            to="/"
-            sx={{
-              fontSize: { lg: "1rem", md: "0.875rem" },
-              fontWeight: "500",
-              textDecoration: "none",
-              color: "inherit",
-              transition: "all 0.2s ease",
-              "&:hover": {
-                color: "action.hover",
-              },
-              "&.active": {
-                color: "action.active",
-              },
-            }}
-          >
-            홈
-          </Link>
-          <Link
-            component={NavLink}
             to="/spots"
-            sx={{
-              fontSize: { lg: "1rem", md: "0.875rem" },
-              fontWeight: "500",
-              textDecoration: "none",
-              color: "inherit",
-              transition: "all 0.2s ease",
-              "&:hover": {
-                color: "action.hover",
-              },
-              "&.active": {
-                color: "action.active",
-              },
-            }}
+            sx={commonLinkSx}
           >
-            탐색
+            <ResponsiveNavItem icon={Search} text="탐색" />
           </Link>
           <Badge
             badgeContent={spotCount}
             invisible={spotCount === 0}
             showZero={false}
             sx={{
+              display: "flex",
+              alignItems: "center",
+              height: "100%",
               "& .MuiBadge-badge": {
                 backgroundColor: theme.palette.primary.main,
                 color: theme.palette.background.default,
@@ -167,45 +214,33 @@ const NavBar = () => {
                   window.scrollTo(0, 0);
                 }, 0);
               }}
-              sx={{
-                fontSize: { lg: "1rem", md: "0.875rem" },
-                fontWeight: "500",
-                textDecoration: "none",
-                color: "inherit",
-                transition: "all 0.2s ease",
-                "&:hover": {
-                  color: "action.hover",
-                },
-                "&.active": {
-                  color: "action.active",
-                },
-              }}
+              sx={commonLinkSx}
             >
-              AI 플래너
+              <ResponsiveNavItem icon={Sparkles} text="AI 플래너" />
             </Link>
           </Badge>
-        </ul>
-      </Box>
-      <Box sx={{ display: "flex", alignItems: "center" }} mr={3}>
+        </Box>
         {!user ? (
           <Button
             onClick={() => navigate("/login")}
             variant="text"
             sx={{
               fontWeight: 500,
-              fontSize: "0.875rem",
+              fontSize: "1rem",
               color: "text.primary",
               textTransform: "none",
-              px: 1.5,
               minWidth: "auto",
-
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              height: "100%",
               "&:hover": {
                 backgroundColor: "transparent",
                 color: "action.hover",
               },
             }}
           >
-            로그인
+            <ResponsiveNavItem icon={User} text="로그인" />
           </Button>
         ) : (
           <IconButton
@@ -214,7 +249,6 @@ const NavBar = () => {
               width: "2.5rem",
               height: "2.5rem",
               color: "text.primary",
-
               "&:hover": {
                 color: "action.hover",
               },
@@ -242,7 +276,7 @@ const NavBar = () => {
           sx: {
             mt: 1,
             borderRadius: 2,
-            minWidth: 140,
+            minWidth: 'auto',
             boxShadow: "0 8px 24px rgba(0,0,0,0.4)",
           },
         }}

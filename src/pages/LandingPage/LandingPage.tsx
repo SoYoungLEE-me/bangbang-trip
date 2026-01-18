@@ -27,6 +27,7 @@ import {
 import { useNavigate, useLocation } from "react-router-dom";
 import TourCourseCard from "../../layout/components/TourCourseCard";
 import AppAlert from "../../common/components/AppAlert";
+import LoadingSpinner from "../../common/components/LoadingSpinner";
 
 const LandingPage = () => {
   const navigate = useNavigate();
@@ -180,18 +181,7 @@ const LandingPage = () => {
 
   // 로딩 상태
   if (isLoadingFestivals || isLoadingCourses || isLoadingSpots) {
-    return (
-      <Box
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          minHeight: "50vh",
-        }}
-      >
-        <CircularProgress />
-      </Box>
-    );
+    return <LoadingSpinner />;
   }
 
   // 에러 상태
@@ -285,7 +275,10 @@ const LandingPage = () => {
 
                   {/* 자세히 보기 버튼 */}
                   <Button
-                    onClick={() => { navigate(`/spots/${course.contentid}`); window.scrollTo(0, 0); }}
+                    onClick={() => {
+                      navigate(`/spots/${course.contentid}`);
+                      window.scrollTo(0, 0);
+                    }}
                     sx={{
                       backgroundColor: "rgba(0, 0, 0, 0.3)",
                       border: "1px solid rgba(255, 255, 255, 0.5)",
@@ -414,8 +407,14 @@ const LandingPage = () => {
 
       <Container maxWidth="lg" sx={{ py: { xs: 4, md: 6 } }}>
         {/* 진행 중인 축제 카드 섹션 */}
-        <Box sx={{ mb: { xs: 6, md: 8 } }}>          
-        <SectionHeader title="진행 중인 축제" onMoreClick={() => { navigate("/spots"); window.scrollTo(0, 0); } } />
+        <Box sx={{ mb: { xs: 6, md: 8 } }}>
+          <SectionHeader
+            title="진행 중인 축제"
+            onMoreClick={() => {
+              navigate("/spots");
+              window.scrollTo(0, 0);
+            }}
+          />
           {/* 진행 중인 축제 카드 */}
           <Grid container spacing={3}>
             {festivals.map((festival) => (
@@ -427,9 +426,15 @@ const LandingPage = () => {
         </Box>
 
         {/* 인기 관광지 카드 섹션 */}
-        <Box sx={{ mt: { xs: 6, md: 8 } }}>          
-        <SectionHeader title="인기 관광지" onMoreClick={() => { navigate("/spots"); window.scrollTo(0, 0); }} />
-          {/* 인기 관광지 카드 */}          
+        <Box sx={{ mt: { xs: 6, md: 8 } }}>
+          <SectionHeader
+            title="인기 관광지"
+            onMoreClick={() => {
+              navigate("/spots");
+              window.scrollTo(0, 0);
+            }}
+          />
+          {/* 인기 관광지 카드 */}
           <Grid container spacing={3}>
             {popularSpots.slice(0, 8).map((spot) => (
               <Grid size={{ xs: 12, sm: 6, md: 3 }} key={spot.contentid}>

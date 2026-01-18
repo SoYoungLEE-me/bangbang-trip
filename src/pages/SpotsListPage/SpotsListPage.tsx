@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import SpotFilterBar from "./components/SpotFilterBar";
 import { useSpotFilterStore } from "../../stores/spotFilterStore";
 import LoadingSpinner from "../../common/components/LoadingSpinner";
+import { Compass } from "lucide-react";
 
 const SpotsListPage = () => {
   const { selectedTouristType, keyword } = useSpotFilterStore();
@@ -64,7 +65,7 @@ const SpotsListPage = () => {
 
   return (
     <Box sx={{ padding: "16px 16px 0" }}>
-      <Box sx={{ maxWidth: "calc(1200px - 48px)", margin: "0 auto 16px" }}>
+      <Box sx={{ maxWidth: "calc(1200px - 48px)", margin: "16px auto 32px" }}>
         <SpotFilterBar />
       </Box>
       <Box>
@@ -85,7 +86,7 @@ const SpotsListPage = () => {
                 variant="h2"
                 component="p"
                 color="text.secondary"
-                sx={{ textAlign: "center", fontWeight: "700", padding: "16px" }}
+                sx={{ textAlign: "center", fontWeight: "700", padding: "36px" }}
               >
                 장소 검색 중...
               </Typography>

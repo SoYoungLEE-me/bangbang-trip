@@ -1,4 +1,4 @@
-import { alpha, Box, Button, IconButton, Snackbar, TextField, Typography } from "@mui/material";
+import { alpha, Box, Button, IconButton, Snackbar, TextField } from "@mui/material";
 import { Search, RotateCcw, X } from "lucide-react";
 
 import { useState } from "react";

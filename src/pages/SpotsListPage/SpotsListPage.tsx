@@ -6,7 +6,6 @@ import { useEffect } from "react";
 import SpotFilterBar from "./components/SpotFilterBar";
 import { useSpotFilterStore } from "../../stores/spotFilterStore";
 import LoadingSpinner from "../../common/components/LoadingSpinner";
-import { Compass } from "lucide-react";
 
 const SpotsListPage = () => {
   const { selectedTouristType, keyword } = useSpotFilterStore();

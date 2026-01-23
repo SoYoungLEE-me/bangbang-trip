@@ -35,6 +35,7 @@ const LandingPage = () => {
 
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [redirectToLogin, setRedirectToLogin] = useState(false);
 
   const theme = useTheme();
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -91,8 +92,9 @@ const LandingPage = () => {
     }
 
     if (location.state.authSuccess === "register") {
-      setAlertMessage("회원가입이 완료되었습니다.");
+      setAlertMessage("회원가입이 완료되었습니다. 로그인해주세요.");
       setAlertOpen(true);
+      setRedirectToLogin(true);
     }
 
     // ⭐ state 초기화 (뒤로가기 / 새로고침 방지)
@@ -518,7 +520,13 @@ const LandingPage = () => {
         open={alertOpen}
         message={alertMessage}
         severity="success"
-        onConfirm={() => setAlertOpen(false)}
+        onConfirm={() => {
+          setAlertOpen(false);
+
+          if (redirectToLogin) {
+            navigate("/login", { replace: true });
+          }
+        }}
         onCancel={() => setAlertOpen(false)}
       />
     </Box>

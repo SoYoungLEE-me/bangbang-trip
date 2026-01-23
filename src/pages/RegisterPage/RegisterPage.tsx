@@ -8,7 +8,7 @@ import {
 } from "@mui/material";
 
 import { useNavigate } from "react-router-dom";
-import { SignUpWithEmail } from "../../services/auth";
+import { signOut, SignUpWithEmail } from "../../services/auth";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
 
@@ -82,6 +82,8 @@ const RegisterPage = () => {
         email,
         password,
       });
+
+      signOut();
       navigate("/", {
         replace: true,
         state: { authSuccess: "register" },

@@ -78,6 +78,15 @@ const LandingPage = () => {
     setCurrentSlide((prev) => (prev === actualSlideCount - 1 ? 0 : prev + 1));
   };
 
+  useEffect(() => {
+    const pending = sessionStorage.getItem("oauthLoginPending");
+    if (!pending) return;
+
+    sessionStorage.removeItem("oauthLoginPending");
+    setAlertMessage("로그인 되었습니다.");
+    setAlertOpen(true);
+  }, []);
+
   //로그인 회원 가입 알림 처리를 위한 것
   useEffect(() => {
     if (!location.state?.authSuccess) return;
@@ -97,7 +106,7 @@ const LandingPage = () => {
       setRedirectToLogin(true);
     }
 
-    // ⭐ state 초기화 (뒤로가기 / 새로고침 방지)
+    // state 초기화 (뒤로가기 / 새로고침 방지)
     window.history.replaceState({}, document.title);
   }, [location.state]);
 

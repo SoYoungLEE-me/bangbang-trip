@@ -22,7 +22,7 @@ export const SignUpWithEmail = async ({
   if (!data.user) throw new Error("User not created");
 
   // profiles에 저장
-  const { error: profileError } = await supabase.from("profiles").insert({
+  const { error: profileError } = await supabase.from("profiles").upsert({
     id: data.user.id,
     name,
   });

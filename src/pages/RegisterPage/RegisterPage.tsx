@@ -11,9 +11,11 @@ import { useNavigate } from "react-router-dom";
 import { signOut, SignUpWithEmail } from "../../services/auth";
 import { useState } from "react";
 import { Eye, EyeOff } from "lucide-react";
+import { useAuthStore } from "../../stores/authStore";
 
 const RegisterPage = () => {
   const navigate = useNavigate();
+  const setSigningUp = useAuthStore((state) => state.setSigningUp);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -77,6 +79,8 @@ const RegisterPage = () => {
     if (!validateForm()) return;
 
     try {
+      setSigningUp(true);
+
       await SignUpWithEmail({
         name,
         email,
@@ -100,6 +104,8 @@ const RegisterPage = () => {
       } else {
         setErrorMessage("회원가입 중 오류가 발생했습니다.");
       }
+    } finally {
+      setSigningUp(false);
     }
   };
 

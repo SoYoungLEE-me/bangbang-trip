@@ -83,8 +83,8 @@ const RegisterPage = () => {
         password,
       });
 
-      signOut();
-      navigate("/", {
+      await signOut();
+      navigate("/login", {
         replace: true,
         state: { authSuccess: "register" },
       });

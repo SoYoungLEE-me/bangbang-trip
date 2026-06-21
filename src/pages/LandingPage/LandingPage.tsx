@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Box,
   Container,
@@ -27,12 +27,12 @@ import { useNavigate, useLocation } from "react-router-dom";
 import TourCourseCard from "../../layout/components/TourCourseCard";
 import AppAlert from "../../common/components/AppAlert";
 import LoadingSpinner from "../../common/components/LoadingSpinner";
+import { supabase } from "../../lib/supabase";
 
 const LandingPage = () => {
   const navigate = useNavigate();
 
   const location = useLocation();
-
   const [alertOpen, setAlertOpen] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
   const [redirectToLogin, setRedirectToLogin] = useState(false);
@@ -63,7 +63,6 @@ const LandingPage = () => {
   // SLIDE_COUNT를 축제 데이터 길이에 맞게 조정
   const actualSlideCount = Math.min(nearbyCourses.length, SLIDE_COUNT);
 
-  // currentSlide가 데이터 범위를 벗어나지 않도록 보정
   useEffect(() => {
     if (actualSlideCount > 0 && currentSlide >= actualSlideCount) {
       setCurrentSlide(0);
@@ -79,36 +78,91 @@ const LandingPage = () => {
   };
 
   useEffect(() => {
-    const pending = sessionStorage.getItem("oauthLoginPending");
-    if (!pending) return;
+    let isMounted = true;
 
-    sessionStorage.removeItem("oauthLoginPending");
-    setAlertMessage("로그인 되었습니다.");
-    setAlertOpen(true);
+    const checkOAuthLoginSuccess = async () => {
+      const pending = sessionStorage.getItem("oauthLoginPending");
+      if (!pending) return;
+
+      sessionStorage.removeItem("oauthLoginPending");
+
+      const {
+        data: { session },
+      } = await supabase.auth.getSession();
+
+      if (!isMounted) return;
+
+      // Supabase 로그인 세션이 없으면 모달 띄우지 않도록 수정
+      if (!session?.user) return;
+
+      setAlertMessage("로그인 되었습니다.");
+      setAlertOpen(true);
+    };
+
+    checkOAuthLoginSuccess();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const isBfcacheRestoredRef = useRef(false);
+
+  useEffect(() => {
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (event.persisted) {
+        isBfcacheRestoredRef.current = true;
+      }
+    };
+    window.addEventListener("pageshow", handlePageShow);
+    return () => window.removeEventListener("pageshow", handlePageShow);
+  }, []);
+
+  useEffect(() => {
+    const handlePopState = () => {
+      isBfcacheRestoredRef.current = true;
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
   //로그인 회원 가입 알림 처리를 위한 것
   useEffect(() => {
     if (!location.state?.authSuccess) return;
 
-    if (document.activeElement instanceof HTMLElement) {
-      document.activeElement.blur();
-    }
+    const handleAuthSuccessAlert = async () => {
+      // 뒤로가기/앞으로가기로 bfcache 복원된 경우, 옛날 state로 모달이
+      // 다시 뜨는 것을 방지
+      if (isBfcacheRestoredRef.current) {
+        isBfcacheRestoredRef.current = false;
+        navigate(location.pathname, { replace: true, state: null });
+        return;
+      }
 
-    if (location.state.authSuccess === "login") {
-      setAlertMessage("로그인 되었습니다.");
-      setAlertOpen(true);
-    }
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
 
-    if (location.state.authSuccess === "register") {
-      setAlertMessage("회원가입이 완료되었습니다. 로그인해주세요.");
-      setAlertOpen(true);
-      setRedirectToLogin(true);
-    }
+      if (location.state.authSuccess === "login") {
+        supabase.auth.getSession().then(({ data: { session } }) => {
+          if (!session?.user) return;
 
-    // state 초기화 (뒤로가기 / 새로고침 방지)
-    window.history.replaceState({}, document.title);
-  }, [location.state]);
+          setAlertMessage("로그인 되었습니다.");
+          setAlertOpen(true);
+        });
+      }
+
+      if (location.state.authSuccess === "register") {
+        setAlertMessage("회원가입이 완료되었습니다. 로그인해주세요.");
+        setAlertOpen(true);
+        setRedirectToLogin(true);
+      }
+
+      // state 초기화
+      navigate(location.pathname, { replace: true, state: null });
+    };
+    handleAuthSuccessAlert();
+  }, [location.state, location.pathname, navigate]);
 
   // 4초마다 자동으로 슬라이드 넘기기
   useEffect(() => {

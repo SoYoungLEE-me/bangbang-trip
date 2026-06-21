@@ -88,12 +88,16 @@ const LoginPage = () => {
   };
 
   const handleGoogleLogin = async () => {
-    await signInWithGoogle();
-
-    navigate("/", {
-      replace: true,
-      state: { authSuccess: "login" },
-    });
+    try {
+      sessionStorage.setItem("oauthLoginPending", "1");
+      await signInWithGoogle();
+      // signInWithOAuth는 브라우저를 Google 페이지로 리다이렉트시키므로
+      // 이 시점 이후 코드는 실행되지 않아야 함. navigate를 호출하지 않는다.
+    } catch (error) {
+      sessionStorage.removeItem("oauthLoginPending");
+      setErrorMessage("구글 로그인 중 오류가 발생했습니다.");
+      console.error(error);
+    }
   };
 
   return (
@@ -176,6 +180,7 @@ const LoginPage = () => {
           size="large"
           variant="contained"
           color="primary"
+          type="button"
           sx={{
             mt: 4,
             height: 48,
@@ -195,6 +200,7 @@ const LoginPage = () => {
           fullWidth
           size="large"
           variant="outlined"
+          type="button"
           startIcon={
             <img
               src="https://images.icon-icons.com/2642/PNG/512/google_logo_g_logo_icon_159348.png"
